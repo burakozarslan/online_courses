@@ -1,26 +1,164 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Colors */
+  --color-brand-50: rgb(236, 253, 245);
+  --color-brand-100: rgb(209, 250, 229);
+  --color-brand-200: rgb(167, 243, 208);
+  --color-brand-300: rgb(110, 231, 183);
+  --color-brand-400: rgb(52, 211, 153);
+  --color-brand-500: rgb(16, 185, 129);
+  --color-brand-600: rgb(5, 150, 105);
+  --color-brand-700: rgb(4, 120, 87);
+  --color-brand-800: rgb(6, 95, 70);
+  --color-brand-900: rgb(6, 78, 59);
+  --color-neutral-0: rgb(255, 255, 255);
+  --color-neutral-50: rgb(249, 250, 251);
+  --color-neutral-100: rgb(243, 244, 246);
+  --color-neutral-200: rgb(229, 231, 235);
+  --color-neutral-300: rgb(209, 213, 219);
+  --color-neutral-400: rgb(156, 163, 175);
+  --color-neutral-500: rgb(107, 114, 128);
+  --color-neutral-600: rgb(75, 85, 99);
+  --color-neutral-700: rgb(55, 65, 81);
+  --color-neutral-800: rgb(31, 41, 55);
+  --color-neutral-900: rgb(17, 24, 39);
+  --color-neutral-950: rgb(3, 7, 18);
+  --color-error-50: rgb(253, 242, 248);
+  --color-error-100: rgb(252, 231, 243);
+  --color-error-200: rgb(251, 207, 232);
+  --color-error-300: rgb(249, 168, 212);
+  --color-error-400: rgb(244, 114, 182);
+  --color-error-500: rgb(236, 72, 153);
+  --color-error-600: rgb(219, 39, 119);
+  --color-error-700: rgb(190, 24, 93);
+  --color-error-800: rgb(157, 23, 77);
+  --color-error-900: rgb(131, 24, 67);
+  --color-warning-50: rgb(254, 252, 232);
+  --color-warning-100: rgb(254, 249, 195);
+  --color-warning-200: rgb(254, 240, 138);
+  --color-warning-300: rgb(253, 224, 71);
+  --color-warning-400: rgb(250, 204, 21);
+  --color-warning-500: rgb(234, 179, 8);
+  --color-warning-600: rgb(202, 138, 4);
+  --color-warning-700: rgb(161, 98, 7);
+  --color-warning-800: rgb(133, 77, 14);
+  --color-warning-900: rgb(113, 63, 18);
+  --color-success-50: rgb(236, 253, 245);
+  --color-success-100: rgb(209, 250, 229);
+  --color-success-200: rgb(167, 243, 208);
+  --color-success-300: rgb(110, 231, 183);
+  --color-success-400: rgb(52, 211, 153);
+  --color-success-500: rgb(16, 185, 129);
+  --color-success-600: rgb(5, 150, 105);
+  --color-success-700: rgb(4, 120, 87);
+  --color-success-800: rgb(6, 95, 70);
+  --color-success-900: rgb(6, 78, 59);
+  --color-brand-primary: rgb(5, 150, 105);
+  --color-default-font: rgb(17, 24, 39);
+  --color-subtext-color: rgb(107, 114, 128);
+  --color-neutral-border: rgb(229, 231, 235);
+  --color-white: rgb(255, 255, 255);
+  --color-default-background: rgb(255, 255, 255);
+
+  /* Fonts */
+  --text-caption: 12px;
+  --text-caption--font-weight: 400;
+  --text-caption--letter-spacing: 0em;
+  --text-caption--line-height: 16px;
+  --text-caption-bold: 12px;
+  --text-caption-bold--font-weight: 500;
+  --text-caption-bold--letter-spacing: 0em;
+  --text-caption-bold--line-height: 16px;
+  --text-body: 14px;
+  --text-body--font-weight: 400;
+  --text-body--letter-spacing: 0em;
+  --text-body--line-height: 20px;
+  --text-body-bold: 14px;
+  --text-body-bold--font-weight: 500;
+  --text-body-bold--letter-spacing: 0em;
+  --text-body-bold--line-height: 20px;
+  --text-heading-3: 16px;
+  --text-heading-3--font-weight: 600;
+  --text-heading-3--letter-spacing: 0em;
+  --text-heading-3--line-height: 20px;
+  --text-heading-2: 20px;
+  --text-heading-2--font-weight: 600;
+  --text-heading-2--letter-spacing: 0em;
+  --text-heading-2--line-height: 24px;
+  --text-heading-1: 30px;
+  --text-heading-1--font-weight: 600;
+  --text-heading-1--letter-spacing: 0em;
+  --text-heading-1--line-height: 36px;
+  --text-monospace-body: 14px;
+  --text-monospace-body--font-weight: 400;
+  --text-monospace-body--letter-spacing: 0em;
+  --text-monospace-body--line-height: 20px;
+
+  /* Font families */
+  --font-caption: "IBM Plex Mono";
+  --font-caption-bold: "IBM Plex Mono";
+  --font-body: "IBM Plex Mono";
+  --font-body-bold: "IBM Plex Mono";
+  --font-heading-3: "IBM Plex Mono";
+  --font-heading-2: "IBM Plex Mono";
+  --font-heading-1: "IBM Plex Mono";
+  --font-monospace-body: monospace;
+
+  /* Box shadows */
+  --shadow-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+  --shadow-default: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0px 4px 16px -2px rgba(0, 0, 0, 0.08),
+    0px 2px 4px -1px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0px 12px 32px -4px rgba(0, 0, 0, 0.08),
+    0px 4px 8px -2px rgba(0, 0, 0, 0.08);
+  --shadow-overlay: 0px 12px 32px -4px rgba(0, 0, 0, 0.08),
+    0px 4px 8px -2px rgba(0, 0, 0, 0.08);
+
+  /* Border radiuses */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-DEFAULT: 0px;
+  --radius-lg: 0px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --spacing-112: 28rem;
+  --spacing-144: 36rem;
+  --spacing-192: 48rem;
+  --spacing-256: 64rem;
+  --spacing-320: 80rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* Container */
+@utility container {
+  padding-left: 16px;
+  padding-right: 16px;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  @media (width >= theme(--breakpoint-sm)) {
+    padding-left: calc((100vw + 16px - 640px) / 2);
+    padding-right: calc((100vw + 16px - 640px) / 2);
+  }
+
+  @media (width >= theme(--breakpoint-md)) {
+    padding-left: calc((100vw + 16px - 768px) / 2);
+    padding-right: calc((100vw + 16px - 768px) / 2);
+  }
+
+  @media (width >= theme(--breakpoint-lg)) {
+    padding-left: calc((100vw + 16px - 1024px) / 2);
+    padding-right: calc((100vw + 16px - 1024px) / 2);
+  }
+
+  @media (width >= theme(--breakpoint-xl)) {
+    padding-left: calc((100vw + 16px - 1280px) / 2);
+    padding-right: calc((100vw + 16px - 1280px) / 2);
+  }
+
+  @media (width >= theme(--breakpoint-2xl)) {
+    padding-left: calc((100vw + 16px - 1536px) / 2);
+    padding-right: calc((100vw + 16px - 1536px) / 2);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+@custom-variant mobile (@media (max-width: 767px));
