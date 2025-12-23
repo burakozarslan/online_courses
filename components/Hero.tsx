@@ -57,7 +57,34 @@ export default function Hero() {
                 server.ts
               </span>
             </div>
-            <div></div>
+            <div className="p-6 font-mono text-sm overflow-hidden">
+              <div className="text-neutral-500 mb-2">
+                {"// Initialize payment subscription"}
+              </div>
+              <div className="pl-4 text-neutral-300">
+                name: <span className="text-brand-200">{"Pro Plan"}</span>,
+              </div>
+              <div className="pl-4 text-neutral-300">
+                price: <span className="text-brand-200">29.00</span>,
+              </div>
+              <div className="pl-4 text-neutral-300">
+                interval:{" "}
+                <span className="text-brand-200">{"EVERY_30_DAYS"}</span>
+              </div>
+              <div className="mt-4 text-neutral-500">
+                {"// Update user status in NeonDB"}
+              </div>
+              <div className="text-brand-300">await</div>{" "}
+              <div className="pl-4 text-neutral-300">
+                {"prisma.user.update("}
+
+                {"{where: { id: userId },"}
+              </div>
+              <div className="pl-4 text-neutral-300">
+                {"data: { isPro: "}
+                <span className="text-brand-300">{"true"}</span> {" }})"}
+              </div>
+            </div>
 
             {/* <!-- Overlay Badge --> */}
             <div className="absolute -bottom-6 -right-6 bg-neutral-0 border border-neutral-200 p-4 shadow-md hidden lg:block">
