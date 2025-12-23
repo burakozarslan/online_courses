@@ -1,9 +1,9 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import Footer from "@/components/Footer";
-import Pricing from "@/components/Pricing";
-import FeaturedCourses from "@/components/FeaturedCourses";
-import StatsBar from "@/components/StatsBar";
+import Navbar from "@/components/wrappers/Navbar";
+import Hero from "@/components/wrappers/Hero";
+import Footer from "@/components/wrappers/Footer";
+import Pricing from "@/components/wrappers/Pricing";
+import FeaturedCourses from "@/components/wrappers/FeaturedCourses";
+import StatsBar from "@/components/wrappers/StatsBar";
 
 export default function LandingPage() {
   return (

@@ -51,8 +51,8 @@ export default function Hero() {
           {/* <!-- Technical Graphic --> */}
           <div className="bg-neutral-950 border border-neutral-800 p-1 shadow-lg relative">
             <div className="flex items-center gap-2 px-4 py-2 border-b border-neutral-800 bg-neutral-900">
-              <div className="w-3 h-3 bg-neutral-700"></div>
-              <div className="w-3 h-3 bg-neutral-700"></div>
+              <div className="size-3 bg-neutral-700"></div>
+              <div className="size-3 bg-neutral-700"></div>
               <span className="text-caption text-neutral-500 ml-2">
                 server.ts
               </span>
