@@ -8,23 +8,14 @@ import StatsBar from "@/components/wrappers/StatsBar";
 export default function LandingPage() {
   return (
     <div>
-      {/* Navigation */}
-      <Navbar />
-
       {/* <!-- Hero Section --> */}
       <Hero />
-
       {/* <!-- Stats Bar --> */}
       <StatsBar />
-
       {/* <!-- Featured Courses Grid --> */}
       <FeaturedCourses />
-
       {/* <!-- Pricing Section --> */}
       <Pricing />
-
-      {/* <!-- Footer --> */}
-      <Footer />
     </div>
   );
 }
