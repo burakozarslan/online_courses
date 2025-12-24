@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-neutral-0 border-b border-neutral-border">
@@ -7,9 +9,11 @@ export default function Navbar() {
             <div className="w-8 h-8 bg-brand-600 flex items-center justify-center text-neutral-0 font-bold">
               &lt;/&gt;
             </div>
-            <span className="text-heading-3 text-neutral-900 tracking-tight">
-              DEV_PLATFORM
-            </span>
+            <Link href={"/"}>
+              <span className="text-heading-3 text-neutral-900 tracking-tight">
+                DEV_PLATFORM
+              </span>
+            </Link>
           </div>
 
           <div className="hidden md:flex space-x-8">
