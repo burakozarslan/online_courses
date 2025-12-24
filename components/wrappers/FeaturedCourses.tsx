@@ -31,7 +31,7 @@ export default function FeaturedCourses() {
                 Prisma, and Shopify Webhooks."
             modules={12}
             duration="6h 30m"
-            categories={["FULLSTACK"]}
+            category="Fullstack"
             difficulty={1}
           />
 
@@ -42,7 +42,7 @@ export default function FeaturedCourses() {
                 migrations in a serverless environment."
             modules={8}
             duration="4h 15m"
-            categories={["Backend"]}
+            category="Backend"
             difficulty={2}
           />
 
@@ -53,7 +53,7 @@ export default function FeaturedCourses() {
                 standard libraries and custom middleware."
             modules={15}
             duration="8h 00m"
-            categories={["security"]}
+            category="Security"
             difficulty={3}
           />
         </div>

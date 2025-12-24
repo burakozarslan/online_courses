@@ -6,7 +6,7 @@ interface CourseCardProps {
   description: string;
   modules: number;
   duration: string;
-  categories: string[];
+  category: string;
   difficulty: 1 | 2 | 3;
 }
 
@@ -16,7 +16,7 @@ export default function CourseCard({
   description,
   modules,
   duration,
-  categories,
+  category,
   difficulty,
 }: CourseCardProps) {
   return (
@@ -31,14 +31,9 @@ export default function CourseCard({
       </div>
       <div className="p-6 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-3">
-          {categories.map((category, index) => (
-            <span
-              key={index}
-              className="text-[10px] uppercase tracking-wider text-brand-600 font-semibold border border-brand-100 bg-brand-50 px-1.5 py-0.5"
-            >
-              {category}
-            </span>
-          ))}
+          <span className="text-[10px] uppercase tracking-wider text-brand-600 font-semibold border border-brand-100 bg-brand-50 px-1.5 py-0.5">
+            {category}
+          </span>
           <div className="flex gap-0.5">
             {Array.from({ length: 3 }).map((_, index) => (
               <div
