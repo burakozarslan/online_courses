@@ -1,21 +1,23 @@
 import { Layers } from "lucide-react";
 
 interface CourseCardProps {
-  isPro: boolean;
+  isPro?: boolean;
   title: string;
   description: string;
   modules: number;
   duration: string;
   categories: string[];
+  difficulty: 1 | 2 | 3;
 }
 
 export default function CourseCard({
-  isPro,
+  isPro = false,
   title,
   description,
   modules,
   duration,
   categories,
+  difficulty,
 }: CourseCardProps) {
   return (
     <div className="group border border-neutral-200 bg-neutral-0 hover:border-brand-500 transition-colors cursor-pointer flex flex-col h-full">
@@ -28,11 +30,26 @@ export default function CourseCard({
         )}
       </div>
       <div className="p-6 flex-1 flex flex-col">
-        {categories.map((category, index) => (
-          <div key={index} className="text-caption text-brand-600 mb-2">
-            {category}
+        <div className="flex justify-between items-start mb-3">
+          {categories.map((category, index) => (
+            <span
+              key={index}
+              className="text-[10px] uppercase tracking-wider text-brand-600 font-semibold border border-brand-100 bg-brand-50 px-1.5 py-0.5"
+            >
+              {category}
+            </span>
+          ))}
+          <div className="flex gap-0.5">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={index}
+                className={`w-1.5 h-1.5 ${
+                  index < difficulty ? "bg-neutral-800" : "bg-neutral-300"
+                }`}
+              ></div>
+            ))}
           </div>
-        ))}
+        </div>
         <h3 className="text-heading-3 mb-2 group-hover:text-brand-600 transition-colors">
           {title}
         </h3>
