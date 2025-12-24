@@ -16,10 +16,10 @@ export default function Pricing() {
 
           {/* <!-- Toggle --> */}
           <div className="mt-8 inline-flex items-center p-1 border border-neutral-200 bg-neutral-0">
-            <button className="px-6 py-2 text-caption font-medium bg-neutral-900 text-neutral-0 shadow-sm">
+            <button className="cursor-pointer px-6 py-2 text-caption font-medium bg-neutral-900 text-neutral-0 shadow-sm">
               Monthly
             </button>
-            <button className="px-6 py-2 text-caption font-medium text-neutral-500 hover:text-neutral-900">
+            <button className="cursor-pointer px-6 py-2 text-caption font-medium text-neutral-500 hover:text-neutral-900">
               Yearly (-20%)
             </button>
           </div>
