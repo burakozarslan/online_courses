@@ -1,3 +1,12 @@
+import {
+  Settings,
+  CreditCard,
+  Award,
+  LayoutDashboard,
+  BookOpen,
+} from "lucide-react";
+import DashboardLogoutButton from "@/components/auth/DashboardLogoutButton";
+
 export default function DashboardPage() {
   return (
     <div className="bg-neutral-50 min-h-screen flex">
@@ -32,28 +41,28 @@ export default function DashboardPage() {
             href="#"
             className="flex items-center gap-3 px-3 py-2 bg-neutral-800 text-neutral-0 border-l-2 border-brand-500"
           >
-            <i data-lucide="layout-dashboard" className="w-4 h-4"></i>
+            <LayoutDashboard className="size-4" />
             <span className="text-body font-medium">Overview</span>
           </a>
           <a
             href="/my-courses"
             className="flex items-center gap-3 px-3 py-2 text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-l-2 border-transparent transition-colors"
           >
-            <i data-lucide="book-open" className="w-4 h-4"></i>
+            <BookOpen className="size-4" />
             <span className="text-body font-medium">My Learning</span>
           </a>
           <a
             href="/achievements"
             className="flex items-center gap-3 px-3 py-2 text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-l-2 border-transparent transition-colors"
           >
-            <i data-lucide="award" className="w-4 h-4"></i>
+            <Award className="size-4" />
             <span className="text-body font-medium">Certificates</span>
           </a>
           <a
             href="/billing"
             className="flex items-center gap-3 px-3 py-2 text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-l-2 border-transparent transition-colors"
           >
-            <i data-lucide="credit-card" className="w-4 h-4"></i>
+            <CreditCard className="size-4" />
             <span className="text-body font-medium">Billing</span>
           </a>
         </nav>
@@ -64,16 +73,10 @@ export default function DashboardPage() {
             href="#"
             className="flex items-center gap-3 px-3 py-2 text-neutral-500 hover:text-neutral-300 transition-colors"
           >
-            <i data-lucide="settings" className="w-4 h-4"></i>
+            <Settings className="size-4" />
             <span className="text-caption">Settings</span>
           </a>
-          <a
-            href="#"
-            className="flex items-center gap-3 px-3 py-2 text-neutral-500 hover:text-error-500 transition-colors"
-          >
-            <i data-lucide="log-out" className="w-4 h-4"></i>
-            <span className="text-caption">Log Out</span>
-          </a>
+          <DashboardLogoutButton />
         </div>
       </aside>
 
