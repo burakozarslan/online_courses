@@ -46,7 +46,7 @@ export default async function Navbar() {
             {/* Conditional Rendering based on Session */}
             {session ? (
               <Link
-                href="/dashboard"
+                href="/overview"
                 className="text-caption text-neutral-900 font-medium hover:text-brand-600"
               >
                 [ DASHBOARD ]

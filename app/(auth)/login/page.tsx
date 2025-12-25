@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react";
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const callbackUrl = searchParams.get("callbackUrl") || "/overview";
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
