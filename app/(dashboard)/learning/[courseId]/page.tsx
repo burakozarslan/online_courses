@@ -1,22 +1,39 @@
+import {
+  Share2,
+  PlayCircle,
+  Check,
+  ChevronDown,
+  Play,
+  ChevronUp,
+  Pause,
+  Lock,
+  Folder,
+  Github,
+  FileText,
+  Figma,
+  MessageSquare,
+} from "lucide-react";
+import Link from "next/link";
+
 export default function CourseDetails() {
   return (
     <main className="">
       {/* <!-- Breadcrumb / Header --> */}
       <header className="h-16 bg-neutral-0 border-b border-neutral-200 flex items-center justify-between px-6 sticky top-0 z-10">
         <div className="flex items-center gap-2 text-caption text-neutral-500">
-          <a href="/dashboard" className="hover:text-neutral-900">
+          <Link href="/dashboard" className="hover:text-neutral-900">
             DASHBOARD
-          </a>
+          </Link>
           <span>/</span>
-          <a href="/my-courses" className="hover:text-neutral-900">
+          <Link href="/my-courses" className="hover:text-neutral-900">
             COURSES
-          </a>
+          </Link>
           <span>/</span>
           <span className="text-neutral-900 font-bold">NEXTJS_FULLSTACK</span>
         </div>
         <div className="flex items-center gap-4">
           <button className="text-caption text-neutral-500 hover:text-neutral-900 flex items-center gap-1">
-            <i data-lucide="share-2" className="w-3 h-3"></i> Share
+            <Share2 className="w-3 h-3" /> Share
           </button>
         </div>
       </header>
@@ -35,14 +52,14 @@ export default function CourseDetails() {
               </h1>
               <p className="text-body text-neutral-400 mb-8 max-w-2xl leading-relaxed">
                 Master the art of building headless e-commerce. Learn to connect
-                Next.js App Router with Shopify;s Storefront API and handle
+                Next.js App Router with Shopifys Storefront API and handle
                 webhooks securely with Prisma and NextAuth.
               </p>
 
               {/* <!-- Main Action & Progress --> */}
               <div className="flex flex-col sm:flex-row items-center gap-6">
                 <button className="w-full sm:w-auto bg-brand-600 text-white px-8 py-3 text-body font-medium hover:bg-brand-500 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-brand-900/20">
-                  <i data-lucide="play-circle" className="w-5 h-5"></i>
+                  <PlayCircle className="w-5 h-5" />
                   Resume: Module 4, Lesson 2
                 </button>
 
@@ -127,7 +144,7 @@ export default function CourseDetails() {
                 <div className="px-6 py-4 bg-neutral-50 border-b border-neutral-200 flex items-center justify-between cursor-pointer hover:bg-neutral-100 transition-colors">
                   <div className="flex items-center gap-4">
                     <div className="w-6 h-6 bg-brand-100 text-brand-600 flex items-center justify-center rounded-full">
-                      <i data-lucide="check" className="w-3 h-3"></i>
+                      <Check className="w-3 h-3" />
                     </div>
                     <div>
                       <span className="text-caption text-neutral-500 block">
@@ -142,10 +159,7 @@ export default function CourseDetails() {
                     <span className="text-caption text-neutral-500">
                       4/4 Completed
                     </span>
-                    <i
-                      data-lucide="chevron-down"
-                      className="w-4 h-4 text-neutral-400"
-                    ></i>
+                    <ChevronDown className="w-4 h-4 text-neutral-400" />
                   </div>
                 </div>
 
@@ -155,16 +169,13 @@ export default function CourseDetails() {
                   <div className="p-4 flex gap-4 hover:bg-neutral-50 transition-colors group">
                     <div className="pt-1">
                       <div className="w-5 h-5 border-2 border-brand-500 bg-brand-500 flex items-center justify-center text-white">
-                        <i data-lucide="check" className="w-3 h-3"></i>
+                        <Check className="w-3 h-3" />
                       </div>
                     </div>
                     {/* <!-- Thumbnail --> */}
                     <div className="w-32 h-20 bg-neutral-900 relative shrink-0 border border-neutral-200 group-hover:border-neutral-400 transition-colors">
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <i
-                          data-lucide="play"
-                          className="w-6 h-6 text-white opacity-50"
-                        ></i>
+                        <Play className="w-6 h-6 text-white opacity-50" />
                       </div>
                       <span className="absolute bottom-1 right-1 bg-neutral-900 text-white text-[10px] px-1">
                         10:24
@@ -189,15 +200,12 @@ export default function CourseDetails() {
                   <div className="p-4 flex gap-4 hover:bg-neutral-50 transition-colors group">
                     <div className="pt-1">
                       <div className="w-5 h-5 border-2 border-brand-500 bg-brand-500 flex items-center justify-center text-white">
-                        <i data-lucide="check" className="w-3 h-3"></i>
+                        <Check className="w-3 h-3" />
                       </div>
                     </div>
                     <div className="w-32 h-20 bg-neutral-900 relative shrink-0 border border-neutral-200 group-hover:border-neutral-400 transition-colors">
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <i
-                          data-lucide="play"
-                          className="w-6 h-6 text-white opacity-50"
-                        ></i>
+                        <Play className="w-6 h-6 text-white opacity-50" />
                       </div>
                       <span className="absolute bottom-1 right-1 bg-neutral-900 text-white text-[10px] px-1">
                         08:15
@@ -240,10 +248,7 @@ export default function CourseDetails() {
                     <span className="text-caption text-brand-700 font-medium">
                       1/5 Completed
                     </span>
-                    <i
-                      data-lucide="chevron-up"
-                      className="w-4 h-4 text-brand-700"
-                    ></i>
+                    <ChevronUp className="w-4 h-4 text-brand-700" />
                   </div>
                 </div>
 
@@ -257,10 +262,7 @@ export default function CourseDetails() {
                     </div>
                     <div className="w-32 h-20 bg-neutral-800 relative shrink-0 border-2 border-brand-500">
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <i
-                          data-lucide="pause"
-                          className="w-6 h-6 text-white"
-                        ></i>
+                        <Pause className="w-6 h-6 text-white" />
                       </div>
                       <div className="absolute bottom-0 left-0 right-0 h-1 bg-neutral-600">
                         <div className="h-full bg-brand-500 w-1/3"></div>
@@ -293,10 +295,7 @@ export default function CourseDetails() {
                       <div className="w-5 h-5 border-2 border-neutral-300 rounded-full"></div>
                     </div>
                     <div className="w-32 h-20 bg-neutral-100 relative shrink-0 border border-neutral-200 flex items-center justify-center">
-                      <i
-                        data-lucide="lock"
-                        className="w-5 h-5 text-neutral-400"
-                      ></i>
+                      <Lock className="w-5 h-5 text-neutral-400" />
                       <span className="absolute bottom-1 right-1 bg-neutral-900 text-white text-[10px] px-1">
                         15:00
                       </span>
@@ -330,10 +329,7 @@ export default function CourseDetails() {
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <i
-                      data-lucide="lock"
-                      className="w-4 h-4 text-neutral-400"
-                    ></i>
+                    <Lock className="w-4 h-4 text-neutral-400" />
                   </div>
                 </div>
               </div>
@@ -345,10 +341,7 @@ export default function CourseDetails() {
                 {/* <!-- Resource Box --> */}
                 <div className="bg-neutral-0 border border-neutral-200 p-6">
                   <h3 className="text-heading-3 text-neutral-900 mb-4 flex items-center gap-2">
-                    <i
-                      data-lucide="folder"
-                      className="w-4 h-4 text-brand-600"
-                    ></i>
+                    <Folder className="w-4 h-4 text-brand-600" />
                     Resources
                   </h3>
                   <ul className="space-y-3">
@@ -357,10 +350,7 @@ export default function CourseDetails() {
                         href="#"
                         className="flex items-center gap-2 text-caption text-neutral-600 hover:text-brand-600 group"
                       >
-                        <i
-                          data-lucide="github"
-                          className="w-4 h-4 text-neutral-400 group-hover:text-brand-600"
-                        ></i>
+                        <Github className="w-4 h-4 text-neutral-400 group-hover:text-brand-600" />
                         Source Code (Module 2)
                       </a>
                     </li>
@@ -369,10 +359,7 @@ export default function CourseDetails() {
                         href="#"
                         className="flex items-center gap-2 text-caption text-neutral-600 hover:text-brand-600 group"
                       >
-                        <i
-                          data-lucide="file-text"
-                          className="w-4 h-4 text-neutral-400 group-hover:text-brand-600"
-                        ></i>
+                        <FileText className="w-4 h-4 text-neutral-400 group-hover:text-brand-600" />
                         Shopify API Cheatsheet
                       </a>
                     </li>
@@ -381,10 +368,7 @@ export default function CourseDetails() {
                         href="#"
                         className="flex items-center gap-2 text-caption text-neutral-600 hover:text-brand-600 group"
                       >
-                        <i
-                          data-lucide="figma"
-                          className="w-4 h-4 text-neutral-400 group-hover:text-brand-600"
-                        ></i>
+                        <Figma className="w-4 h-4 text-neutral-400 group-hover:text-brand-600" />
                         UI Kit Design Files
                       </a>
                     </li>
@@ -394,7 +378,7 @@ export default function CourseDetails() {
                 {/* <!-- Instructor Note --> */}
                 <div className="bg-brand-50 border border-brand-100 p-6 relative overflow-hidden">
                   <div className="absolute -right-4 -top-4 text-brand-100 opacity-50">
-                    <i data-lucide="message-square" className="w-24 h-24"></i>
+                    <MessageSquare className="w-24 h-24" />
                   </div>
                   <h3 className="text-heading-3 text-brand-800 mb-2 relative z-10">
                     Pro Tip

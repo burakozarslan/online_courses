@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { PlayCircle, Menu, Flame } from "lucide-react";
+
 export default function DashboardPage() {
   return (
     <>
@@ -7,7 +10,7 @@ export default function DashboardPage() {
         <header className="h-16 bg-neutral-0 border-b border-neutral-200 flex items-center justify-between px-4 md:hidden sticky top-0 z-10">
           <span className="text-heading-3 text-neutral-900">DASHBOARD</span>
           <button className="text-neutral-500">
-            <i data-lucide="menu" className="w-6 h-6"></i>
+            <Menu className="size-6" />
           </button>
         </header>
 
@@ -24,7 +27,7 @@ export default function DashboardPage() {
             <div className="text-right hidden md:block">
               <p className="text-caption text-neutral-400">CURRENT STREAK</p>
               <div className="flex items-center justify-end gap-2 text-brand-600">
-                <i data-lucide="flame" className="w-5 h-5 fill-current"></i>
+                <Flame className="w-5 h-5 fill-current" />
                 <span className="text-heading-2">12 Days</span>
               </div>
             </div>
@@ -94,10 +97,13 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  <button className="bg-brand-600 text-white px-6 py-3 text-body font-medium hover:bg-brand-500 transition-colors flex items-center gap-2">
-                    <i data-lucide="play-circle" className="w-4 h-4"></i>
+                  <Link
+                    href={"/learning/course"}
+                    className="w-48 bg-brand-600 text-white px-6 py-3 text-body font-medium hover:bg-brand-500 transition-colors flex items-center gap-2"
+                  >
+                    <PlayCircle className="size-4" />
                     Continue Lesson
-                  </button>
+                  </Link>
                 </div>
               </div>
 
