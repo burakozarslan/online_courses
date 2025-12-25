@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   Settings,
   CreditCard,
@@ -35,45 +37,45 @@ export default function Sidebar() {
 
       {/* <!-- Navigation --> */}
       <nav className="flex-1 py-6 px-3 space-y-1">
-        <a
-          href="#"
+        <Link
+          href="/overview"
           className="flex items-center gap-3 px-3 py-2 bg-neutral-800 text-neutral-0 border-l-2 border-brand-500"
         >
           <LayoutDashboard className="size-4" />
           <span className="text-body font-medium">Overview</span>
-        </a>
-        <a
-          href="/my-courses"
+        </Link>
+        <Link
+          href="/learning"
           className="flex items-center gap-3 px-3 py-2 text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-l-2 border-transparent transition-colors"
         >
           <BookOpen className="size-4" />
           <span className="text-body font-medium">My Learning</span>
-        </a>
-        <a
+        </Link>
+        <Link
           href="/achievements"
           className="flex items-center gap-3 px-3 py-2 text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-l-2 border-transparent transition-colors"
         >
           <Award className="size-4" />
           <span className="text-body font-medium">Certificates</span>
-        </a>
-        <a
+        </Link>
+        <Link
           href="/billing"
           className="flex items-center gap-3 px-3 py-2 text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-l-2 border-transparent transition-colors"
         >
           <CreditCard className="size-4" />
           <span className="text-body font-medium">Billing</span>
-        </a>
+        </Link>
       </nav>
 
       {/* <!-- Bottom Links --> */}
       <div className="p-4 border-t border-neutral-800">
-        <a
+        <Link
           href="#"
           className="flex items-center gap-3 px-3 py-2 text-neutral-500 hover:text-neutral-300 transition-colors"
         >
           <Settings className="size-4" />
           <span className="text-caption">Settings</span>
-        </a>
+        </Link>
         <DashboardLogoutButton />
       </div>
     </aside>
