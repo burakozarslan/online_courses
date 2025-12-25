@@ -66,6 +66,14 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs (e.g., /dashboard)
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      if (new URL(url).origin === baseUrl) return url;
+      // Default to dashboard if the URL is invalid or external
+      return `${baseUrl}/dashboard`;
+    },
   },
   secret: process.env.NEXTAUTH_SECRET || "fallback-secret-dont-use-in-prod",
 };
