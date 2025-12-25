@@ -1,6 +1,6 @@
 export default function CourseDetails() {
   return (
-    <main className="flex-1 md:ml-64 flex flex-col min-h-screen">
+    <main className="">
       {/* <!-- Breadcrumb / Header --> */}
       <header className="h-16 bg-neutral-0 border-b border-neutral-200 flex items-center justify-between px-6 sticky top-0 z-10">
         <div className="flex items-center gap-2 text-caption text-neutral-500">

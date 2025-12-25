@@ -2,7 +2,7 @@ export default function DashboardPage() {
   return (
     <>
       {/* <!-- Main Content --> */}
-      <main className="flex-1 md:ml-64 flex flex-col min-h-screen">
+      <main>
         {/* <!-- Mobile Header --> */}
         <header className="h-16 bg-neutral-0 border-b border-neutral-200 flex items-center justify-between px-4 md:hidden sticky top-0 z-10">
           <span className="text-heading-3 text-neutral-900">DASHBOARD</span>
