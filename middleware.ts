@@ -11,5 +11,6 @@ export default withAuth({
 
 export const config = {
   // Protect only the dashboard and sub-routes
-  matcher: ["/dashboard/:path*"],
+  // TODO: Add Private routes here
+  matcher: ["/overview/:path*"],
 };
