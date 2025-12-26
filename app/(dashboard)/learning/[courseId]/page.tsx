@@ -14,6 +14,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import Link from "next/link";
+import VideoPlayer from "@/components/ui/VideoPlayer";
 
 export default function CourseDetails() {
   return (
@@ -129,6 +130,8 @@ export default function CourseDetails() {
       {/* <!-- Curriculum Content --> */}
       <div className="flex-1 bg-dash-grid">
         <div className="max-w-7xl mx-auto px-6 py-12">
+          <VideoPlayer />
+
           <div className="flex flex-col lg:flex-row gap-8">
             {/* <!-- Main Curriculum Column --> */}
             <div className="flex-1">
