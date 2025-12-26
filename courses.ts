@@ -1,4 +1,27 @@
-export const courses = [
+export interface Lesson {
+  title: string;
+  description: string;
+  duration: string;
+  progress: number;
+  isCurrent: boolean;
+}
+
+export interface Module {
+  number: string;
+  title: string;
+  progress: number;
+  isCompleted: boolean;
+  isActive: boolean;
+  lessons: Lesson[];
+}
+
+export interface Course {
+  title: string;
+  description: string;
+  modules: Module[];
+}
+
+export const courses: Course[] = [
   {
     title: "MERN Stack Tutorial",
     description:
@@ -7,7 +30,7 @@ export const courses = [
       {
         number: "01",
         title: "Introduction",
-        progress: 50,
+        progress: 75,
         isCompleted: false,
         isActive: true,
         lessons: [
@@ -16,7 +39,7 @@ export const courses = [
             description:
               "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
             duration: "7m 5s",
-            progress: 40,
+            progress: 100,
             isCurrent: true,
           },
           {
@@ -24,7 +47,7 @@ export const courses = [
             description:
               "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
             duration: "15m 31s",
-            progress: 0,
+            progress: 50,
             isCurrent: false,
           },
         ],
@@ -41,7 +64,7 @@ export const courses = [
             description:
               "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
             duration: "13m 38s",
-            progress: 40,
+            progress: 0,
             isCurrent: false,
           },
           {
