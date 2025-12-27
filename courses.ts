@@ -35,6 +35,7 @@ export interface Lesson {
   id: string;
   title: string;
   description: string;
+  src: string;
   duration: number;
   timePlayed: number;
 }
@@ -74,6 +75,7 @@ export const courses: Course[] = [
             title: "What is the MERN Stack?",
             description:
               "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
+            src: "https://youtu.be/98BzS5Oz5E4",
             duration: 425,
             timePlayed: 410,
           },
@@ -82,6 +84,7 @@ export const courses: Course[] = [
             title: "Express App Setup",
             description:
               "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
+            src: "https://youtu.be/8DploTqLstE",
             duration: 931,
             timePlayed: 920,
           },
@@ -97,6 +100,7 @@ export const courses: Course[] = [
             title: "Express Router & API Routes",
             description:
               "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
+            src: "https://youtu.be/Ll6knx7sFis",
             duration: 818,
             timePlayed: 400,
           },
@@ -105,6 +109,7 @@ export const courses: Course[] = [
             title: "MongoDB Atlas & Mongoose",
             description:
               "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
+            src: "https://youtu.be/s0anSjEeua8",
             duration: 529,
             timePlayed: 0,
           },
