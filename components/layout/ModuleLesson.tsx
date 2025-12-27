@@ -1,7 +1,7 @@
 "use client";
 
 import type { Lesson } from "@/courses";
-import { Check, Play } from "lucide-react";
+import { Check, Play, RotateCw } from "lucide-react";
 import { COMPLETION_THRESHOLD } from "@/config";
 
 interface ModuleLessonProps {
@@ -22,6 +22,7 @@ export default function ModuleLesson({
   const isCompleted =
     (lesson.timePlayed / lesson.duration) * 100 > COMPLETION_THRESHOLD;
   const isActive = lesson.id === activeLessonId;
+  const isPlayed = lesson.timePlayed !== 0;
 
   return (
     <div className="p-4 flex gap-4 hover:bg-neutral-50 transition-colors group">
@@ -68,9 +69,15 @@ export default function ModuleLesson({
           >
             Continue
           </button>
-        ) : (
-          <button className="cursor-pointer text-caption text-neutral-400 hover:text-neutral-900 px-3 py-1 border border-neutral-200">
+        ) : isPlayed ? (
+          <button className="flex items-center cursor-pointer text-caption text-neutral-400 hover:text-neutral-900 px-3 py-1 border border-neutral-200">
+            <RotateCw className="size-3 mr-2" />
             Replay
+          </button>
+        ) : (
+          <button className="flex items-center cursor-pointer text-caption text-neutral-400 hover:text-neutral-900 px-3 py-1 border border-neutral-200">
+            <Play className="size-3 mr-2" />
+            Start
           </button>
         )}
       </div>
