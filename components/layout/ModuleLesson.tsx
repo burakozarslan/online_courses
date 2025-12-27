@@ -48,11 +48,10 @@ export default function ModuleLesson({
   activeLessonId,
   setCourse,
 }: ModuleLessonProps) {
-  const isCompleted =
-    (lesson.timePlayed / lesson.duration) * 100 > COMPLETION_THRESHOLD;
   const isActive = lesson.id === activeLessonId;
   const isPlayed = lesson.timePlayed !== 0;
   const progress = (lesson.timePlayed / lesson.duration) * 100;
+  const isCompleted = progress > COMPLETION_THRESHOLD;
   const progressBarWidth = Math.floor((progress / 100) * 128);
 
   function handleStartLesson() {
@@ -61,6 +60,29 @@ export default function ModuleLesson({
       activeLessonId: lesson.id,
     }));
     handleScrollToVideoPlayer();
+  }
+
+  function handleReplayLesson() {
+    setCourse((course: Course) => ({
+      ...course,
+      activeLessonId: lesson.id,
+      modules: course.modules.map((module) => {
+        if (module.id === lesson.moduleId) {
+          return {
+            ...module,
+            lessons: module.lessons.map((lesson) => {
+              if (lesson.id === lesson.id)
+                return {
+                  ...lesson,
+                  timePlayed: 0,
+                };
+              return lesson;
+            }),
+          };
+        }
+        return module;
+      }),
+    }));
   }
 
   return (
@@ -115,10 +137,21 @@ export default function ModuleLesson({
           >
             Continue
           </button>
-        ) : isPlayed ? (
-          <button className="flex items-center cursor-pointer text-caption text-neutral-400 hover:text-neutral-900 px-3 py-1 border border-neutral-200">
+        ) : isCompleted ? (
+          <button
+            className="flex items-center cursor-pointer text-caption text-neutral-400 hover:text-neutral-900 px-3 py-1 border border-neutral-200"
+            onClick={() => handleReplayLesson()}
+          >
             <RotateCw className="size-3 mr-2" />
             Replay
+          </button>
+        ) : isPlayed ? (
+          <button
+            className="flex items-center cursor-pointer text-caption text-neutral-400 hover:text-neutral-900 px-3 py-1 border border-neutral-200"
+            onClick={() => handleStartLesson()}
+          >
+            <Play className="size-3 mr-2" />
+            Continue
           </button>
         ) : (
           <button
