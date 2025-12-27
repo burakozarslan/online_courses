@@ -281,9 +281,7 @@ export default function CourseDetails() {
                 </div>
               </div>
               {/* <!-- Module 2: In Progress (Active) --> */}
-              <div
-                className={`mb-6 bg-neutral-0 border-2 border-brand-500 shadow-md`}
-              >
+              <div className="mb-6 bg-neutral-0 border-2 border-brand-500 shadow-md">
                 <div className="px-6 py-4 bg-brand-50 border-b border-brand-200 flex items-center justify-between cursor-pointer">
                   <div className="flex items-center gap-4">
                     <div className="w-6 h-6 bg-brand-600 text-white flex items-center justify-center text-caption font-bold">

@@ -34,7 +34,11 @@ export default function CourseModule({
       }`}
       onClick={() => setIsOpen((cur) => !cur)}
     >
-      <div className="px-6 py-4 bg-neutral-50 border-b border-neutral-200 flex items-center justify-between cursor-pointer hover:bg-neutral-100 transition-colors">
+      <div
+        className={`px-6 py-4 border-b border-neutral-200 flex items-center justify-between cursor-pointer hover:bg-neutral-100 transition-colors ${
+          isActiveModule ? "bg-brand-50" : "bg-neutral-50"
+        }`}
+      >
         <div className="flex items-center gap-4">
           <div className="w-6 h-6 bg-brand-100 text-brand-600 flex items-center justify-center rounded-full overflow-hidden">
             {isModuleCompleted ? (
