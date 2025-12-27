@@ -33,9 +33,9 @@ export default function CourseModule({
       className={`mb-6 bg-neutral-0 border shadow-sm ${
         isActiveModule ? "border-brand-500 border-2" : "border-neutral-200"
       }`}
-      onClick={() => setIsOpen((prev) => !prev)}
     >
       <div
+        onClick={() => setIsOpen((prev) => !prev)}
         className={`px-6 py-4 border-b border-neutral-200 flex items-center justify-between cursor-pointer hover:bg-neutral-100 transition-colors ${
           isActiveModule ? "bg-brand-50" : "bg-neutral-50"
         }`}
