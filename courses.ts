@@ -62,7 +62,7 @@ export const courses: Course[] = [
     description:
       "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
     difficulty: 2,
-    activeLessonId: "expresssetup1",
+    activeLessonId: "expressrouter1",
     modules: [
       {
         id: "firstmodule1",
