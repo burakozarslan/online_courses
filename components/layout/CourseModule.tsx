@@ -1,14 +1,18 @@
 "use client";
 
 import ModuleLesson from "./ModuleLesson";
-import { Check, ChevronDown, Play } from "lucide-react";
+import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import type { Module } from "@/courses";
+import { useState } from "react";
 
 interface CourseModuleProps {
   module: Module;
 }
 
 export default function CourseModule({ module }: CourseModuleProps) {
+  // TODO: Default this to isActive state
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const numberOfLessons = module.lessons.length;
   const numberOfCompletedLessons = module.lessons.filter(
     (l) => (l.timePlayed / l.duration) * 100 > 95
@@ -19,6 +23,7 @@ export default function CourseModule({ module }: CourseModuleProps) {
     <div
       key={module.id}
       className="mb-6 bg-neutral-0 border border-neutral-200 shadow-sm"
+      onClick={() => setIsOpen((cur) => !cur)}
     >
       <div className="px-6 py-4 bg-neutral-50 border-b border-neutral-200 flex items-center justify-between cursor-pointer hover:bg-neutral-100 transition-colors">
         <div className="flex items-center gap-4">
@@ -42,16 +47,21 @@ export default function CourseModule({ module }: CourseModuleProps) {
           <span className="text-caption text-neutral-500">
             {numberOfCompletedLessons}/{numberOfLessons} Completed
           </span>
-          <ChevronDown className="w-4 h-4 text-neutral-400" />
+          {isOpen ? (
+            <ChevronUp className="w-4 h-4 text-neutral-400" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-neutral-400" />
+          )}
         </div>
       </div>
-
       {/* <!-- Lesson List --> */}
-      <div className="divide-y divide-neutral-100">
-        {module.lessons.map((lesson) => (
-          <ModuleLesson key={lesson.id} lesson={lesson} />
-        ))}
-      </div>
+      {isOpen && (
+        <div className="divide-y divide-neutral-100">
+          {module.lessons.map((lesson) => (
+            <ModuleLesson key={lesson.id} lesson={lesson} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
