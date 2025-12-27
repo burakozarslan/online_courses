@@ -9,6 +9,11 @@ interface CourseModuleProps {
 }
 
 export default function CourseModule({ module }: CourseModuleProps) {
+  const numberOfLessons = module.lessons.length;
+  const numberOfCompletedLessons = module.lessons.filter(
+    (l) => (l.timePlayed / l.duration) * 100 > 95
+  ).length;
+
   return (
     <div
       key={module.id}
@@ -27,7 +32,9 @@ export default function CourseModule({ module }: CourseModuleProps) {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-caption text-neutral-500">4/4 Completed</span>
+          <span className="text-caption text-neutral-500">
+            {numberOfCompletedLessons}/{numberOfLessons} Completed
+          </span>
           <ChevronDown className="w-4 h-4 text-neutral-400" />
         </div>
       </div>
