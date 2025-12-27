@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Share2,
   PlayCircle,
@@ -15,8 +17,19 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import VideoPlayer from "@/components/ui/VideoPlayer";
+import { useState } from "react";
+import { courses } from "@/courses";
+import type { Course } from "@/courses";
 
 export default function CourseDetails() {
+  const [course, setCourse] = useState<Course>(courses[0]);
+
+  function formatCourseDifficulty(difficulty: number) {
+    if (difficulty === 1) return "Beginner";
+    else if (difficulty === 2) return "Intermediate";
+    else return "Advanced";
+  }
+
   return (
     <main className="">
       {/* <!-- Breadcrumb / Header --> */}
@@ -48,13 +61,9 @@ export default function CourseDetails() {
                 <span className="w-1.5 h-1.5 bg-brand-500"></span>
                 IN PROGRESS
               </div>
-              <h1 className="text-heading-1 mb-4">
-                Next.js & Shopify Integration
-              </h1>
+              <h1 className="text-heading-1 mb-4">{course.title}</h1>
               <p className="text-body text-neutral-400 mb-8 max-w-2xl leading-relaxed">
-                Master the art of building headless e-commerce. Learn to connect
-                Next.js App Router with Shopifys Storefront API and handle
-                webhooks securely with Prisma and NextAuth.
+                {course.description}
               </p>
 
               {/* <!-- Main Action & Progress --> */}
@@ -66,6 +75,7 @@ export default function CourseDetails() {
 
                 <div className="w-full sm:max-w-xs flex-1">
                   <div className="flex justify-between text-caption text-neutral-400 mb-2">
+                    {/* TODO: Calculate overall progress */}
                     <span>OVERALL PROGRESS</span>
                     <span className="text-brand-400">42%</span>
                   </div>
@@ -100,7 +110,9 @@ export default function CourseDetails() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-caption text-neutral-500 mb-1">LEVEL</p>
-                    <p className="text-body">Intermediate</p>
+                    <p className="text-body">
+                      {formatCourseDifficulty(course.difficulty)}
+                    </p>
                   </div>
                   <div>
                     <p className="text-caption text-neutral-500 mb-1">
@@ -112,7 +124,7 @@ export default function CourseDetails() {
                     <p className="text-caption text-neutral-500 mb-1">
                       MODULES
                     </p>
-                    <p className="text-body">12</p>
+                    <p className="text-body">{course.modules.length}</p>
                   </div>
                   <div>
                     <p className="text-caption text-neutral-500 mb-1">
@@ -337,7 +349,6 @@ export default function CourseDetails() {
                 </div>
               </div>
             </div>
-
             {/* <!-- Right Sidebar (Sticky) --> */}
             <div className="w-full lg:w-80 shrink-0">
               <div className="sticky top-24 space-y-6">
