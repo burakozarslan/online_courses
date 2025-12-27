@@ -19,7 +19,7 @@ import Link from "next/link";
 import VideoPlayer from "@/components/ui/VideoPlayer";
 import { useState } from "react";
 import { courses } from "@/courses";
-import type { Course } from "@/courses";
+import type { Course, Lesson } from "@/courses";
 
 export default function CourseDetails() {
   const [course, setCourse] = useState<Course>(courses[0]);
@@ -28,6 +28,16 @@ export default function CourseDetails() {
     if (difficulty === 1) return "Beginner";
     else if (difficulty === 2) return "Intermediate";
     else return "Advanced";
+  }
+
+  function formatToHoursMinutes(totalSeconds: number) {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+    if (hours > 0) {
+      return `${hours}H ${minutes}M`;
+    }
+    return `${minutes}M`;
   }
 
   return (
