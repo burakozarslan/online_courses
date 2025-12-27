@@ -50,6 +50,7 @@ export interface Course {
   id: string;
   title: string;
   description: string;
+  difficulty: 1 | 2 | 3;
   activeLessonId: string;
   modules: Module[];
 }
@@ -60,6 +61,7 @@ export const courses: Course[] = [
     title: "MERN Stack Tutorial",
     description:
       "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
+    difficulty: 2,
     activeLessonId: "expresssetup1",
     modules: [
       {
