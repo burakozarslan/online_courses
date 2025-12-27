@@ -83,7 +83,7 @@ export const courses: Course[] = [
             description:
               "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
             duration: 931,
-            timePlayed: 100,
+            timePlayed: 920,
           },
         ],
       },
@@ -98,7 +98,7 @@ export const courses: Course[] = [
             description:
               "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
             duration: 818,
-            timePlayed: 0,
+            timePlayed: 400,
           },
           {
             id: "mongodbatlas1",
