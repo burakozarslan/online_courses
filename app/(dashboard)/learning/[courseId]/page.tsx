@@ -19,7 +19,7 @@ import Link from "next/link";
 import VideoPlayer from "@/components/ui/VideoPlayer";
 import { useState } from "react";
 import { courses } from "@/courses";
-import type { Course, Lesson } from "@/courses";
+import type { Course, Lesson, Module } from "@/courses";
 
 export default function CourseDetails() {
   const [course, setCourse] = useState<Course>(courses[0]);
@@ -35,9 +35,26 @@ export default function CourseDetails() {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
 
     if (hours > 0) {
-      return `${hours}H ${minutes}M`;
+      return `${hours}h ${minutes}m`;
     }
-    return `${minutes}M`;
+    return `${minutes}m`;
+  }
+
+  function calculateModuleDurationInSeconds(lessons: Lesson[]) {
+    const totalDurationInSeconds = lessons.reduce(
+      (prev, current) => prev + current.duration,
+      0
+    );
+    return totalDurationInSeconds;
+  }
+
+  function calculateFormattedCourseDuration(modules: Module[]) {
+    const totalDurationInSeconds = modules.reduce(
+      (prev, current) =>
+        prev + calculateModuleDurationInSeconds(current.lessons),
+      0
+    );
+    return formatToHoursMinutes(totalDurationInSeconds);
   }
 
   return (
@@ -128,7 +145,9 @@ export default function CourseDetails() {
                     <p className="text-caption text-neutral-500 mb-1">
                       DURATION
                     </p>
-                    <p className="text-body">6h 30m</p>
+                    <p className="text-body">
+                      {calculateFormattedCourseDuration(course.modules)}
+                    </p>
                   </div>
                   <div>
                     <p className="text-caption text-neutral-500 mb-1">
