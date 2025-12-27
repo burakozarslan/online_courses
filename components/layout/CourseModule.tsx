@@ -2,17 +2,17 @@
 
 import ModuleLesson from "./ModuleLesson";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
-import type { Module } from "@/courses";
+import type { Module, Lesson } from "@/courses";
 import { useState } from "react";
 
 interface CourseModuleProps {
   module: Module;
-  activeLessonId: string;
+  activeLesson: Lesson;
 }
 
 export default function CourseModule({
   module,
-  activeLessonId,
+  activeLesson,
 }: CourseModuleProps) {
   // TODO: Default this to isActive state
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -23,7 +23,7 @@ export default function CourseModule({
   ).length;
   const isModuleCompleted = numberOfLessons === numberOfCompletedLessons;
   const isActiveModule = !!module.lessons.find(
-    (lesson) => lesson.id === activeLessonId
+    (lesson) => lesson.id === activeLesson.id
   );
 
   return (
@@ -32,7 +32,7 @@ export default function CourseModule({
       className={`mb-6 bg-neutral-0 border shadow-sm ${
         isActiveModule ? "border-brand-500 border-2" : "border-neutral-200"
       }`}
-      onClick={() => setIsOpen((cur) => !cur)}
+      onClick={() => setIsOpen((prev) => !prev)}
     >
       <div
         className={`px-6 py-4 border-b border-neutral-200 flex items-center justify-between cursor-pointer hover:bg-neutral-100 transition-colors ${

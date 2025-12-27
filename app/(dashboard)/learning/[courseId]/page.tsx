@@ -26,6 +26,18 @@ export default function CourseDetails() {
   // TODO: Consider context provider
   const [course, setCourse] = useState<Course>(courses[0]);
 
+  const activeLesson = findActiveLesson(course.activeLessonId) as Lesson;
+
+  function findActiveLesson(lessonId: string) {
+    let activeLesson;
+    course.modules.forEach((module) => {
+      module.lessons.forEach((lesson) => {
+        if (lesson.id === lessonId) activeLesson = lesson;
+      });
+    });
+    return activeLesson as Lesson | undefined;
+  }
+
   function formatCourseDifficulty(difficulty: number) {
     if (difficulty === 1) return "Beginner";
     else if (difficulty === 2) return "Intermediate";
@@ -188,7 +200,7 @@ export default function CourseDetails() {
                 <CourseModule
                   key={module.id}
                   module={module}
-                  activeLessonId={course.activeLessonId}
+                  activeLesson={activeLesson}
                 />
               ))}
               Placeholder UI
