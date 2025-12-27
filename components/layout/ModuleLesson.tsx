@@ -9,6 +9,28 @@ interface ModuleLessonProps {
   activeLessonId: string;
 }
 
+const Completed = () => {
+  return (
+    <div className="w-5 h-5 border-2 border-brand-500 bg-brand-500 flex items-center justify-center text-white">
+      <Check className="w-3 h-3" />
+    </div>
+  );
+};
+
+const Active = () => {
+  return (
+    <div className="w-5 h-5 border-2 border-brand-500 rounded-full flex items-center justify-center">
+      <div className="w-2.5 h-2.5 bg-brand-500 rounded-full animate-pulse"></div>
+    </div>
+  );
+};
+
+const Inactive = () => {
+  return (
+    <div className="w-5 h-5 border-2 border-neutral-200  flex items-center justify-center text-white"></div>
+  );
+};
+
 function formatDurationhhmm(seconds: number) {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
@@ -27,9 +49,7 @@ export default function ModuleLesson({
   return (
     <div className="p-4 flex gap-4 hover:bg-neutral-50 transition-colors group">
       <div className="pt-1">
-        <div className="w-5 h-5 border-2 border-brand-500 bg-brand-500 flex items-center justify-center text-white">
-          <Check className="w-3 h-3" />
-        </div>
+        {isCompleted ? <Completed /> : isActive ? <Active /> : <Inactive />}
       </div>
       {/* <!-- Thumbnail --> */}
       <div className="w-32 h-20 bg-neutral-900 relative shrink-0 border border-neutral-200 group-hover:border-neutral-400 transition-colors">
