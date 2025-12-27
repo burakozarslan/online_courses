@@ -2,18 +2,20 @@
 
 import ModuleLesson from "./ModuleLesson";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
-import type { Module, Lesson } from "@/courses";
-import { useState } from "react";
+import type { Module, Lesson, Course } from "@/courses";
+import { Dispatch, SetStateAction, useState } from "react";
 import { COMPLETION_THRESHOLD } from "@/config";
 
 interface CourseModuleProps {
   module: Module;
   activeLesson: Lesson;
+  setCourse: Dispatch<SetStateAction<Course>>;
 }
 
 export default function CourseModule({
   module,
   activeLesson,
+  setCourse,
 }: CourseModuleProps) {
   // TODO: Default this to isActive state
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -76,6 +78,7 @@ export default function CourseModule({
               key={lesson.id}
               lesson={lesson}
               activeLessonId={activeLesson.id}
+              setCourse={setCourse}
             />
           ))}
         </div>

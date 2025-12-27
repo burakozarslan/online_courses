@@ -1,15 +1,17 @@
 "use client";
 
-import type { Lesson } from "@/courses";
 import { Check, Play, RotateCw } from "lucide-react";
 import { COMPLETION_THRESHOLD } from "@/config";
+import type { Course, Lesson } from "@/courses";
+import { Dispatch, SetStateAction } from "react";
 
 interface ModuleLessonProps {
   lesson: Lesson;
   activeLessonId: string;
+  setCourse: Dispatch<SetStateAction<Course>>;
 }
 
-const Completed = () => {
+const CompletedIcon = () => {
   return (
     <div className="w-5 h-5 border-2 border-brand-500 bg-brand-500 flex items-center justify-center text-white">
       <Check className="w-3 h-3" />
@@ -17,7 +19,7 @@ const Completed = () => {
   );
 };
 
-const Active = () => {
+const ActiveIcon = () => {
   return (
     <div className="w-5 h-5 border-2 border-brand-500 rounded-full flex items-center justify-center">
       <div className="w-2.5 h-2.5 bg-brand-500 rounded-full animate-pulse"></div>
@@ -25,7 +27,7 @@ const Active = () => {
   );
 };
 
-const Inactive = () => {
+const InactiveIcon = () => {
   return (
     <div className="w-5 h-5 border-2 border-neutral-200  flex items-center justify-center text-white"></div>
   );
@@ -37,9 +39,14 @@ function formatDurationhhmm(seconds: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
+function handleScrollToVideoPlayer() {
+  window.scrollTo({ top: 280, left: 0, behavior: "smooth" });
+}
+
 export default function ModuleLesson({
   lesson,
   activeLessonId,
+  setCourse,
 }: ModuleLessonProps) {
   const isCompleted =
     (lesson.timePlayed / lesson.duration) * 100 > COMPLETION_THRESHOLD;
@@ -48,10 +55,24 @@ export default function ModuleLesson({
   const progress = (lesson.timePlayed / lesson.duration) * 100;
   const progressBarWidth = Math.floor((progress / 100) * 128);
 
+  function handleStartLesson() {
+    setCourse((course: Course) => ({
+      ...course,
+      activeLessonId: lesson.id,
+    }));
+    handleScrollToVideoPlayer();
+  }
+
   return (
     <div className="p-4 flex gap-4 hover:bg-neutral-50 transition-colors group">
       <div className="pt-1">
-        {isCompleted ? <Completed /> : isActive ? <Active /> : <Inactive />}
+        {isCompleted ? (
+          <CompletedIcon />
+        ) : isActive ? (
+          <ActiveIcon />
+        ) : (
+          <InactiveIcon />
+        )}
       </div>
       {/* <!-- Thumbnail --> */}
       <div className="w-32 h-20 bg-neutral-900 relative shrink-0 border border-neutral-200 group-hover:border-neutral-400 transition-colors">
@@ -90,9 +111,7 @@ export default function ModuleLesson({
         {isActive ? (
           <button
             className="cursor-pointer bg-brand-600 text-white text-caption px-4 py-2 hover:bg-brand-500 transition-colors font-medium shadow-sm"
-            onClick={() =>
-              window.scrollTo({ top: 280, left: 0, behavior: "smooth" })
-            }
+            onClick={() => handleScrollToVideoPlayer()}
           >
             Continue
           </button>
@@ -102,7 +121,10 @@ export default function ModuleLesson({
             Replay
           </button>
         ) : (
-          <button className="flex items-center cursor-pointer text-caption text-neutral-400 hover:text-neutral-900 px-3 py-1 border border-neutral-200">
+          <button
+            className="flex items-center cursor-pointer text-caption text-neutral-400 hover:text-neutral-900 px-3 py-1 border border-neutral-200"
+            onClick={() => handleStartLesson()}
+          >
             <Play className="size-3 mr-2" />
             Start
           </button>

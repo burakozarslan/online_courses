@@ -202,6 +202,7 @@ export default function CourseDetails() {
                   key={module.id}
                   module={module}
                   activeLesson={activeLesson}
+                  setCourse={setCourse}
                 />
               ))}
               Placeholder UI
