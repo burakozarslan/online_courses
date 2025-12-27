@@ -95,10 +95,10 @@ export default function CourseDetails() {
 
               {/* <!-- Main Action & Progress --> */}
               <div className="flex flex-col sm:flex-row items-center gap-6">
-                <button className="w-full sm:w-auto bg-brand-600 text-white px-8 py-3 text-body font-medium hover:bg-brand-500 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-brand-900/20">
+                {/* <button className="w-full sm:w-auto bg-brand-600 text-white px-8 py-3 text-body font-medium hover:bg-brand-500 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-brand-900/20">
                   <PlayCircle className="w-5 h-5" />
                   Resume: Module 4, Lesson 2
-                </button>
+                </button> */}
 
                 <div className="w-full sm:max-w-xs flex-1">
                   <div className="flex justify-between text-caption text-neutral-400 mb-2">
@@ -175,12 +175,12 @@ export default function CourseDetails() {
 
           <div className="flex flex-col lg:flex-row gap-8">
             {/* <!-- Main Curriculum Column --> */}
-            <div className="flex-1">
+            <div className="flex-1 mt-8">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-heading-2 text-neutral-900">Curriculum</h2>
-                <button className="text-caption text-brand-600 hover:text-brand-700 font-medium">
+                <h2 className="text-heading-2 text-neutral-900">Modules</h2>
+                {/* <button className="text-caption text-brand-600 hover:text-brand-700 font-medium">
                   COLLAPSE ALL
-                </button>
+                </button> */}
               </div>
 
               {/* <!-- Module 1: Completed --> */}
