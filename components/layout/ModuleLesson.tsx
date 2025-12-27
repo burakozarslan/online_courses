@@ -45,6 +45,8 @@ export default function ModuleLesson({
     (lesson.timePlayed / lesson.duration) * 100 > COMPLETION_THRESHOLD;
   const isActive = lesson.id === activeLessonId;
   const isPlayed = lesson.timePlayed !== 0;
+  const progress = (lesson.timePlayed / lesson.duration) * 100;
+  const progressBarWidth = Math.floor((progress / 100) * 128);
 
   return (
     <div className="p-4 flex gap-4 hover:bg-neutral-50 transition-colors group">
@@ -55,6 +57,11 @@ export default function ModuleLesson({
       <div className="w-32 h-20 bg-neutral-900 relative shrink-0 border border-neutral-200 group-hover:border-neutral-400 transition-colors">
         <div className="absolute inset-0 flex items-center justify-center">
           <Play className="w-6 h-6 text-white opacity-50" />
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-neutral-600">
+            <div
+              className={`h-full bg-brand-500 w-[${progressBarWidth}]`}
+            ></div>
+          </div>
         </div>
         <span className="absolute bottom-1 right-1 bg-neutral-900 text-white text-[10px] px-1">
           {formatDurationhhmm(lesson.duration)}
