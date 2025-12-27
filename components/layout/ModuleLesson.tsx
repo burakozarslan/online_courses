@@ -7,6 +7,12 @@ interface ModuleLessonProps {
   lesson: Lesson;
 }
 
+function formatDurationhhmm(seconds: number) {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
 export default function ModuleLesson({ lesson }: ModuleLessonProps) {
   return (
     <div className="p-4 flex gap-4 hover:bg-neutral-50 transition-colors group">
@@ -21,7 +27,7 @@ export default function ModuleLesson({ lesson }: ModuleLessonProps) {
           <Play className="w-6 h-6 text-white opacity-50" />
         </div>
         <span className="absolute bottom-1 right-1 bg-neutral-900 text-white text-[10px] px-1">
-          10:24
+          {formatDurationhhmm(lesson.duration)}
         </span>
       </div>
       <div className="flex-1">
