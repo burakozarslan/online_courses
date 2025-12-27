@@ -13,6 +13,7 @@ export default function CourseModule({ module }: CourseModuleProps) {
   const numberOfCompletedLessons = module.lessons.filter(
     (l) => (l.timePlayed / l.duration) * 100 > 95
   ).length;
+  const isModuleCompleted = numberOfLessons === numberOfCompletedLessons;
 
   return (
     <div
@@ -22,7 +23,13 @@ export default function CourseModule({ module }: CourseModuleProps) {
       <div className="px-6 py-4 bg-neutral-50 border-b border-neutral-200 flex items-center justify-between cursor-pointer hover:bg-neutral-100 transition-colors">
         <div className="flex items-center gap-4">
           <div className="w-6 h-6 bg-brand-100 text-brand-600 flex items-center justify-center rounded-full">
-            <Check className="w-3 h-3" />
+            {isModuleCompleted ? (
+              <Check className="w-3 h-3" />
+            ) : (
+              <div className="w-6 h-6 bg-brand-600 text-white flex items-center justify-center text-caption font-bold">
+                {module.no}
+              </div>
+            )}
           </div>
           <div>
             <span className="text-caption text-neutral-500 block">
