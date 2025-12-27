@@ -59,9 +59,20 @@ export default function ModuleLesson({
         </p>
       </div>
       <div className="flex items-center">
-        <button className="text-caption text-neutral-400 hover:text-neutral-900 px-3 py-1 border border-neutral-200">
-          Replay
-        </button>
+        {isActive ? (
+          <button
+            className="cursor-pointer bg-brand-600 text-white text-caption px-4 py-2 hover:bg-brand-500 transition-colors font-medium shadow-sm"
+            onClick={() =>
+              window.scrollTo({ top: 280, left: 0, behavior: "smooth" })
+            }
+          >
+            Continue
+          </button>
+        ) : (
+          <button className="cursor-pointer text-caption text-neutral-400 hover:text-neutral-900 px-3 py-1 border border-neutral-200">
+            Replay
+          </button>
+        )}
       </div>
     </div>
   );
