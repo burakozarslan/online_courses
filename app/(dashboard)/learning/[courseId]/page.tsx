@@ -357,7 +357,7 @@ export default function CourseDetails() {
                   {/* <!-- Upcoming Lesson --> */}
                   <div className="p-4 flex gap-4 hover:bg-neutral-50 transition-colors opacity-75 hover:opacity-100">
                     <div className="pt-1">
-                      <div className="w-5 h-5 border-2 border-neutral-300 rounded-full"></div>
+                      <div className="w-5 h-5 border-2 border-neutral-300 rounded-md"></div>
                     </div>
                     <div className="w-32 h-20 bg-neutral-100 relative shrink-0 border border-neutral-200 flex items-center justify-center">
                       <Lock className="w-5 h-5 text-neutral-400" />

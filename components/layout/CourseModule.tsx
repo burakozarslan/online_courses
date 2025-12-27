@@ -4,6 +4,7 @@ import ModuleLesson from "./ModuleLesson";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import type { Module, Lesson } from "@/courses";
 import { useState } from "react";
+import { COMPLETION_THRESHOLD } from "@/config";
 
 interface CourseModuleProps {
   module: Module;
@@ -19,7 +20,7 @@ export default function CourseModule({
 
   const numberOfLessons = module.lessons.length;
   const numberOfCompletedLessons = module.lessons.filter(
-    (l) => (l.timePlayed / l.duration) * 100 > 95
+    (l) => (l.timePlayed / l.duration) * 100 > COMPLETION_THRESHOLD
   ).length;
   const isModuleCompleted = numberOfLessons === numberOfCompletedLessons;
   const isActiveModule = !!module.lessons.find(
@@ -71,7 +72,11 @@ export default function CourseModule({
       {isOpen && (
         <div className="divide-y divide-neutral-100">
           {module.lessons.map((lesson) => (
-            <ModuleLesson key={lesson.id} lesson={lesson} />
+            <ModuleLesson
+              key={lesson.id}
+              lesson={lesson}
+              activeLessonId={activeLesson.id}
+            />
           ))}
         </div>
       )}
