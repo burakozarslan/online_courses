@@ -28,6 +28,7 @@ export default function CourseDetails() {
 
   const activeLesson = findActiveLesson(course.activeLessonId) as Lesson;
 
+  // TODO: Optimize this
   function findActiveLesson(lessonId: string) {
     let activeLesson;
     course.modules.forEach((module) => {
@@ -185,7 +186,7 @@ export default function CourseDetails() {
       {/* <!-- Curriculum Content --> */}
       <div className="flex-1 bg-dash-grid">
         <div className="max-w-7xl mx-auto px-6 py-12">
-          <VideoPlayer />
+          <VideoPlayer activeLesson={activeLesson} />
 
           <div className="flex flex-col lg:flex-row gap-8">
             {/* <!-- Main Curriculum Column --> */}
