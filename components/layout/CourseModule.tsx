@@ -7,9 +7,13 @@ import { useState } from "react";
 
 interface CourseModuleProps {
   module: Module;
+  activeLessonId: string;
 }
 
-export default function CourseModule({ module }: CourseModuleProps) {
+export default function CourseModule({
+  module,
+  activeLessonId,
+}: CourseModuleProps) {
   // TODO: Default this to isActive state
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -18,11 +22,16 @@ export default function CourseModule({ module }: CourseModuleProps) {
     (l) => (l.timePlayed / l.duration) * 100 > 95
   ).length;
   const isModuleCompleted = numberOfLessons === numberOfCompletedLessons;
+  const isActiveModule = !!module.lessons.find(
+    (lesson) => lesson.id === activeLessonId
+  );
 
   return (
     <div
       key={module.id}
-      className="mb-6 bg-neutral-0 border border-neutral-200 shadow-sm"
+      className={`mb-6 bg-neutral-0 border shadow-sm ${
+        isActiveModule ? "border-brand-500 border-2" : "border-neutral-200"
+      }`}
       onClick={() => setIsOpen((cur) => !cur)}
     >
       <div className="px-6 py-4 bg-neutral-50 border-b border-neutral-200 flex items-center justify-between cursor-pointer hover:bg-neutral-100 transition-colors">
