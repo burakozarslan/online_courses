@@ -33,6 +33,7 @@
 
 export interface Lesson {
   id: string;
+  moduleId: string;
   title: string;
   description: string;
   src: string;
@@ -42,6 +43,7 @@ export interface Lesson {
 
 export interface Module {
   id: string;
+  courseId: string;
   no: number;
   title: string;
   lessons: Lesson[];
@@ -67,11 +69,13 @@ export const courses: Course[] = [
     modules: [
       {
         id: "firstmodule1",
+        courseId: "course1id",
         no: 1,
         title: "Introduction",
         lessons: [
           {
             id: "whatismern1",
+            moduleId: "firstmodule1",
             title: "What is the MERN Stack?",
             description:
               "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
@@ -81,6 +85,7 @@ export const courses: Course[] = [
           },
           {
             id: "expresssetup1",
+            moduleId: "firstmodule1",
             title: "Express App Setup",
             description:
               "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
@@ -92,11 +97,13 @@ export const courses: Course[] = [
       },
       {
         id: "modulenumber22",
+        courseId: "course1id",
         no: 2,
         title: "MongoDB",
         lessons: [
           {
             id: "expressrouter1",
+            moduleId: "modulenumber22",
             title: "Express Router & API Routes",
             description:
               "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
@@ -106,6 +113,7 @@ export const courses: Course[] = [
           },
           {
             id: "mongodbatlas1",
+            moduleId: "modulenumber22",
             title: "MongoDB Atlas & Mongoose",
             description:
               "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.",
