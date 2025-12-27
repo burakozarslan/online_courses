@@ -2,9 +2,11 @@
 
 import type { Lesson } from "@/courses";
 import { Check, Play } from "lucide-react";
+import { COMPLETION_THRESHOLD } from "@/config";
 
 interface ModuleLessonProps {
   lesson: Lesson;
+  activeLessonId: string;
 }
 
 function formatDurationhhmm(seconds: number) {
@@ -13,7 +15,14 @@ function formatDurationhhmm(seconds: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-export default function ModuleLesson({ lesson }: ModuleLessonProps) {
+export default function ModuleLesson({
+  lesson,
+  activeLessonId,
+}: ModuleLessonProps) {
+  const isCompleted =
+    (lesson.timePlayed / lesson.duration) * 100 > COMPLETION_THRESHOLD;
+  const isActive = lesson.id === activeLessonId;
+
   return (
     <div className="p-4 flex gap-4 hover:bg-neutral-50 transition-colors group">
       <div className="pt-1">
@@ -31,9 +40,20 @@ export default function ModuleLesson({ lesson }: ModuleLessonProps) {
         </span>
       </div>
       <div className="flex-1">
-        <h4 className="text-body font-medium text-neutral-900 mb-1 group-hover:text-brand-600 transition-colors">
-          {lesson.title}
-        </h4>
+        <div className="flex items-center gap-2 mb-1">
+          <h4
+            className={`text-body font-medium  mb-1 group-hover:text-brand-600 transition-colors ${
+              isActive ? "text-brand-700" : "text-neutral-900"
+            }`}
+          >
+            {lesson.title}
+          </h4>
+          {isActive && (
+            <span className="text-[10px] bg-brand-100 text-brand-700 px-1.5 py-0.5 border border-brand-200">
+              NOW PLAYING
+            </span>
+          )}
+        </div>
         <p className="text-caption text-neutral-500 line-clamp-1">
           {lesson.description}
         </p>
