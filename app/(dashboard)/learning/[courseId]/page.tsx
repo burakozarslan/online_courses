@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import VideoPlayer from "@/components/ui/VideoPlayer";
+import CourseModule from "@/components/layout/CourseModule";
 import { useState } from "react";
 import { courses } from "@/courses";
 import type { Course, Lesson, Module } from "@/courses";
@@ -182,7 +183,10 @@ export default function CourseDetails() {
                   COLLAPSE ALL
                 </button> */}
               </div>
-
+              {course.modules.map((module) => (
+                <CourseModule key={module.id} module={module} />
+              ))}
+              Placeholder UI
               {/* <!-- Module 1: Completed --> */}
               <div className="mb-6 bg-neutral-0 border border-neutral-200 shadow-sm">
                 <div className="px-6 py-4 bg-neutral-50 border-b border-neutral-200 flex items-center justify-between cursor-pointer hover:bg-neutral-100 transition-colors">
@@ -271,7 +275,6 @@ export default function CourseDetails() {
                   </div>
                 </div>
               </div>
-
               {/* <!-- Module 2: In Progress (Active) --> */}
               <div className="mb-6 bg-neutral-0 border-2 border-brand-500 shadow-md">
                 <div className="px-6 py-4 bg-brand-50 border-b border-brand-200 flex items-center justify-between cursor-pointer">
@@ -355,7 +358,6 @@ export default function CourseDetails() {
                   </div>
                 </div>
               </div>
-
               {/* <!-- Module 3: Locked --> */}
               <div className="mb-6 bg-neutral-0 border border-neutral-200 opacity-60">
                 <div className="px-6 py-4 border-b border-neutral-200 flex items-center justify-between">
