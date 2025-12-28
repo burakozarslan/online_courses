@@ -15,23 +15,50 @@ import {
   MediaMuteButton,
   MediaFullscreenButton,
 } from "media-chrome/react";
-import { SyntheticEvent, useRef, useState } from "react";
-import type { Lesson } from "@/courses";
+import {
+  Dispatch,
+  SetStateAction,
+  SyntheticEvent,
+  useRef,
+  useState,
+} from "react";
+import type { Course, Lesson } from "@/courses";
 
 interface VideoPlayerProps {
   activeLesson: Lesson;
+  setCourse: Dispatch<SetStateAction<Course>>;
 }
 
-export default function VideoPlayer({ activeLesson }: VideoPlayerProps) {
+export default function VideoPlayer({
+  activeLesson,
+  setCourse,
+}: VideoPlayerProps) {
   const onProgress = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
-    const currentTime = e.currentTarget.currentTime;
-    const duration = e.currentTarget.duration;
-    const timeLeft = duration - e.currentTarget.currentTime;
-    const progress = (currentTime / duration) * 100;
-
-    console.log("Current time: ", currentTime);
-    console.log("Time left: ", timeLeft);
-    console.log("Progress: ", progress);
+    let currentTime: number;
+    if (e.currentTarget.currentTime) {
+      currentTime = e.currentTarget.currentTime;
+      setCourse((course: Course) => ({
+        ...course,
+        activeLessonId: activeLesson.id,
+        modules: course.modules.map((module) => {
+          if (module.id === activeLesson.moduleId) {
+            return {
+              ...module,
+              lessons: module.lessons.map((lesson) => {
+                if (lesson.id === activeLesson.id)
+                  return {
+                    ...lesson,
+                    timePlayed: currentTime,
+                  };
+                console.log(lesson);
+                return lesson;
+              }),
+            };
+          }
+          return module;
+        }),
+      }));
+    }
   };
 
   const onLoadStart = (e: SyntheticEvent<HTMLVideoElement, Event>) => {

@@ -186,7 +186,7 @@ export default function CourseDetails() {
       {/* <!-- Curriculum Content --> */}
       <div className="flex-1 bg-dash-grid">
         <div className="max-w-7xl mx-auto px-6 py-12">
-          <VideoPlayer activeLesson={activeLesson} />
+          <VideoPlayer activeLesson={activeLesson} setCourse={setCourse} />
 
           <div className="flex flex-col lg:flex-row gap-8">
             {/* <!-- Main Curriculum Column --> */}
