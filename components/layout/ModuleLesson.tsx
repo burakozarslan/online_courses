@@ -102,7 +102,10 @@ export default function ModuleLesson({
           <Play className="w-6 h-6 text-white opacity-50" />
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-neutral-600">
             <div
-              className={`h-full bg-brand-500 w-[${progressBarWidth}]`}
+              className={`h-full bg-brand-500`}
+              style={{
+                width: progressBarWidth,
+              }}
             ></div>
           </div>
         </div>
