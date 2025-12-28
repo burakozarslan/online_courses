@@ -15,13 +15,7 @@ import {
   MediaMuteButton,
   MediaFullscreenButton,
 } from "media-chrome/react";
-import {
-  Dispatch,
-  SetStateAction,
-  SyntheticEvent,
-  useRef,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, SyntheticEvent } from "react";
 import type { Course, Lesson } from "@/courses";
 
 interface VideoPlayerProps {
@@ -33,7 +27,7 @@ export default function VideoPlayer({
   activeLesson,
   setCourse,
 }: VideoPlayerProps) {
-  const onProgress = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
+  const onSeekAndProgress = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
     let currentTime: number;
     if (e.currentTarget.currentTime) {
       currentTime = e.currentTarget.currentTime;
@@ -76,8 +70,9 @@ export default function VideoPlayer({
         slot="media"
         src={activeLesson.src}
         controls={false}
-        onProgress={(e) => onProgress(e)}
         onStart={(e) => onLoadStart(e)}
+        onProgress={(e) => onSeekAndProgress(e)}
+        onSeeked={(e) => onSeekAndProgress(e)}
         style={{
           width: "100%",
           height: "100%",
