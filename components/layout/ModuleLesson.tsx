@@ -62,7 +62,7 @@ export default function ModuleLesson({
     handleScrollToVideoPlayer();
   }
 
-  function handleReplayLesson() {
+  function handleReplayLesson(id: string) {
     setCourse((course: Course) => ({
       ...course,
       activeLessonId: lesson.id,
@@ -71,7 +71,7 @@ export default function ModuleLesson({
           return {
             ...module,
             lessons: module.lessons.map((lesson) => {
-              if (lesson.id === lesson.id)
+              if (lesson.id === id)
                 return {
                   ...lesson,
                   timePlayed: 0,
@@ -143,7 +143,7 @@ export default function ModuleLesson({
         ) : isCompleted ? (
           <button
             className="flex items-center cursor-pointer text-caption text-neutral-400 hover:text-neutral-900 px-3 py-1 border border-neutral-200"
-            onClick={() => handleReplayLesson()}
+            onClick={() => handleReplayLesson(lesson.id)}
           >
             <RotateCw className="size-3 mr-2" />
             Replay
