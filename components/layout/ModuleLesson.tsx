@@ -22,7 +22,7 @@ const CompletedIcon = () => {
 const ActiveIcon = () => {
   return (
     <div className="w-5 h-5 border-2 border-brand-500 rounded-full flex items-center justify-center">
-      <div className="w-2.5 h-2.5 bg-brand-500 rounded-full animate-pulse"></div>
+      <div className="w-2.5 h-2.5 bg-brand-500 rounded-full"></div>
     </div>
   );
 };
