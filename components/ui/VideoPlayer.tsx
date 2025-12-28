@@ -44,7 +44,6 @@ export default function VideoPlayer({
                     ...lesson,
                     timePlayed: currentTime,
                   };
-                console.log(lesson);
                 return lesson;
               }),
             };
