@@ -1,0 +1,196 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------
+// ENUMS
+// ---------------------------------
+
+enum MembershipPlan {
+  FREE
+  PRO
+}
+
+// ---------------------------------
+// USER & AUTHENTICATION
+// ---------------------------------
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String? // Hashed password
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // -- Relationships --
+  instructorProfile Instructor? // Link if this user is an instructor
+  student           Student?
+}
+
+// ---------------------------------
+// INSTRUCTOR
+// ---------------------------------
+
+model Instructor {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title String // Software Engineer etc
+  role  String @default("ADMIN")
+
+  courses Course[] // Courses created by this instructor
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------
+// STUDENT
+// ---------------------------------
+
+model Student {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title      String // Software Engineer etc
+  membership MembershipPlan @default(FREE)
+
+  enrolledCourses Course[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // -- Stripe Subscription Data --
+  // We store this directly on the user for 1:1 subscription logic (Pro vs Free)
+  stripeCustomerId       String?          @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?          @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?          @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime?        @map(name: "stripe_current_period_end")
+  enrollments            Enrollment[]
+  lessonProgresses       LessonProgress[]
+}
+
+// ---------------------------------
+// COURSE CONTENT
+// ---------------------------------
+
+model Course {
+  id           String     @id @default(uuid())
+  instructorId String
+  instructor   Instructor @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String @db.Text
+  imageUrl    String @db.Text
+  slug        String @unique
+
+  isPublished Boolean @default(false)
+
+  modules     Module[]
+  enrollments Enrollment[] // Relation to see who is enrolled
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  student   Student? @relation(fields: [studentId], references: [id])
+  studentId String?
+
+  @@index([instructorId])
+}
+
+model Module {
+  id          String  @id @default(uuid())
+  title       String
+  description String? @db.Text
+  no          Int
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  lessons Lesson[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId])
+}
+
+model Lesson {
+  id          String  @id @default(uuid())
+  title       String
+  description String? @db.Text
+  videoUrl    String? @db.Text
+
+  isFree   Boolean @default(false)
+  duration Int // Video duration in seconds
+
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  // Track who has watched this
+  userProgress LessonProgress[]
+
+  // Track which enrollments have this as their "active" bookmark
+  activeInEnrollments Enrollment[] @relation("ActiveLessonBookmark")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([moduleId])
+}
+
+// ---------------------------------
+// PROGRESS & ENROLLMENT (FIXED)
+// ---------------------------------
+
+model Enrollment {
+  id        String @id @default(uuid())
+  studentId String
+  courseId  String
+
+  // -- The "Active Lesson" Logic --
+  // We store the bookmark HERE. This is specific to THIS student for THIS course.
+  currentLessonId String?
+  currentLesson   Lesson? @relation("ActiveLessonBookmark", fields: [currentLessonId], references: [id])
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course  Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, courseId]) // Prevent duplicate enrollments
+  @@index([studentId])
+  @@index([courseId])
+}
+
+model LessonProgress {
+  id        String @id @default(uuid())
+  studentId String
+  lessonId  String
+
+  // isCompleted Boolean @default(false) // I may consider adding this later
+  timePlayed Int @default(0) // Stored per-student, not on the Lesson itself
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  lesson  Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, lessonId]) // One progress record per lesson per student
+  @@index([lessonId])
+}
