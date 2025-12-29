@@ -15,7 +15,7 @@ import {
   MediaMuteButton,
   MediaFullscreenButton,
 } from "media-chrome/react";
-import { Dispatch, SetStateAction, SyntheticEvent } from "react";
+import { Dispatch, SetStateAction, SyntheticEvent, useRef } from "react";
 import type { Course, Lesson } from "@/courses";
 
 interface VideoPlayerProps {
@@ -23,6 +23,7 @@ interface VideoPlayerProps {
   setCourse: Dispatch<SetStateAction<Course>>;
 }
 
+// TODO: Improve performance so that it updates state every 5? seconds
 export default function VideoPlayer({
   activeLesson,
   setCourse,
