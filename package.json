@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "docker:dev": "docker-compose up --build",
+    "docker:build": "docker build -f Dockerfile.prod -t online-courses-prod .",
+    "docker:start": "docker run -p 3000:3000 online-courses-prod"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
