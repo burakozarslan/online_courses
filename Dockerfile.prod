@@ -50,6 +50,22 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Copy Prisma schema and migrations
+COPY --chown=nextjs:nodejs prisma ./prisma
+
+# Copy entrypoint script
+COPY --chown=nextjs:nodejs entrypoint.sh ./
+RUN chmod +x entrypoint.sh
+
+# Install Prisma CLI for migrations
+# We need to switch to root to install global packages or write to protected areas,
+# but we can also install it locally in this layer since we are building the image.
+# However, we switched to 'nextjs' user above? No, USER nextjs is further down.
+# Wait, I need to check where USER nextjs is.
+
+USER root
+RUN npm install -g prisma
+
 USER nextjs
 
 EXPOSE 3000
@@ -57,4 +73,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["node", "server.js"]
