@@ -12,3 +12,125 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// ---------------------------------
+// ENUMS
+// ---------------------------------
+
+enum UserRole {
+  ADMIN
+  PRO
+  FREE
+}
+
+// ---------------------------------
+// USER & AUTHENTICATION
+// ---------------------------------
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String? // Hashed password
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  role UserRole @default(FREE)
+
+  // -- Stripe Subscription Data --
+  // We store this directly on the user for 1:1 subscription logic (Pro vs Free)
+  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?   @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+
+  // -- Relationships --
+  instructorProfile Instructor? // Link if this user is an instructor
+}
+
+// ---------------------------------
+// INSTRUCTOR
+// ---------------------------------
+
+model Instructor {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title String // Software Engineer etc
+
+  courses Course[] // Courses created by this instructor
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------
+// COURSE CONTENT
+// ---------------------------------
+
+model Course {
+  id           String     @id @default(uuid())
+  instructorId String
+  instructor   Instructor @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String @db.Text
+  imageUrl    String @db.Text
+  slug        String @unique // For SEO friendly URLs e.g. /courses/react-mastery
+
+  isPublished Boolean @default(false)
+
+  // -- Active Lesson State --
+  // Tracks the current active lesson for this course context
+  activeLessonId String? @unique
+  activeLesson   Lesson? @relation("CourseActiveLesson", fields: [activeLessonId], references: [id])
+
+  modules Module[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([instructorId])
+}
+
+model Module {
+  id          String  @id @default(uuid())
+  title       String
+  description String? @db.Text
+  no          Int // Module 1, Module 2 etc.
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  lessons Lesson[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId])
+}
+
+model Lesson {
+  id          String  @id @default(uuid())
+  title       String
+  description String? @db.Text
+  videoUrl    String? @db.Text // Mux, Vimeo, or YouTube URL
+
+  // Useful for "Free Preview" videos that non-Pro members can watch
+  isFree Boolean @default(false)
+
+  duration   Int // Video duration in seconds
+  timePlayed Int @default(0)
+
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  // Inverse relation for the Course active lesson
+  activeForCourse Course? @relation("CourseActiveLesson")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([moduleId])
+}
