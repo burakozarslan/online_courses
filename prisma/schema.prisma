@@ -35,7 +35,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   // -- Relationships --
-  instructorProfile Instructor? // Link if this user is an instructor
+  instructorProfile Instructor?
   student           Student?
 }
 
@@ -69,19 +69,17 @@ model Student {
   title      String // Software Engineer etc
   membership MembershipPlan @default(FREE)
 
-  enrolledCourses Course[]
+  // -- Stripe Subscription Data --
+  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?   @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+
+  enrollments      Enrollment[]
+  lessonProgresses LessonProgress[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  // -- Stripe Subscription Data --
-  // We store this directly on the user for 1:1 subscription logic (Pro vs Free)
-  stripeCustomerId       String?          @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId   String?          @unique @map(name: "stripe_subscription_id")
-  stripePriceId          String?          @map(name: "stripe_price_id")
-  stripeCurrentPeriodEnd DateTime?        @map(name: "stripe_current_period_end")
-  enrollments            Enrollment[]
-  lessonProgresses       LessonProgress[]
 }
 
 // ---------------------------------
@@ -101,12 +99,10 @@ model Course {
   isPublished Boolean @default(false)
 
   modules     Module[]
-  enrollments Enrollment[] // Relation to see who is enrolled
+  enrollments Enrollment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  student   Student? @relation(fields: [studentId], references: [id])
-  studentId String?
 
   @@index([instructorId])
 }
@@ -135,7 +131,7 @@ model Lesson {
   videoUrl    String? @db.Text
 
   isFree   Boolean @default(false)
-  duration Int // Video duration in seconds
+  duration Int
 
   moduleId String
   module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
@@ -153,7 +149,7 @@ model Lesson {
 }
 
 // ---------------------------------
-// PROGRESS & ENROLLMENT (FIXED)
+// PROGRESS & ENROLLMENT
 // ---------------------------------
 
 model Enrollment {
@@ -161,8 +157,7 @@ model Enrollment {
   studentId String
   courseId  String
 
-  // -- The "Active Lesson" Logic --
-  // We store the bookmark HERE. This is specific to THIS student for THIS course.
+  // Bookmark for where the student left off
   currentLessonId String?
   currentLesson   Lesson? @relation("ActiveLessonBookmark", fields: [currentLessonId], references: [id])
 
@@ -172,7 +167,7 @@ model Enrollment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([studentId, courseId]) // Prevent duplicate enrollments
+  @@unique([studentId, courseId])
   @@index([studentId])
   @@index([courseId])
 }
@@ -182,8 +177,8 @@ model LessonProgress {
   studentId String
   lessonId  String
 
-  // isCompleted Boolean @default(false) // I may consider adding this later
-  timePlayed Int @default(0) // Stored per-student, not on the Lesson itself
+  // isCompleted Boolean @default(false) I may consider using this later
+  timePlayed Int @default(0)
 
   student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   lesson  Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
@@ -191,6 +186,6 @@ model LessonProgress {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([studentId, lessonId]) // One progress record per lesson per student
+  @@unique([studentId, lessonId])
   @@index([lessonId])
 }
