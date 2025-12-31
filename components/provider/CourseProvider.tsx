@@ -9,16 +9,19 @@ import {
   Dispatch,
   SetStateAction,
 } from "react";
-import { Course, Lesson } from "@/app/generated/prisma/client";
 import { getEnrollment } from "@/actions";
 import { useParams } from "next/navigation";
 
+type EnrollmentData = NonNullable<Awaited<ReturnType<typeof getEnrollment>>>;
+type CourseType = EnrollmentData["course"];
+type ActiveLessonType = EnrollmentData["currentLesson"];
+
 interface CourseContextType {
-  activeLesson: Lesson | null;
-  course: Course | null;
+  activeLesson: ActiveLessonType | null;
+  course: CourseType | null;
   error: string | null;
   loading: boolean;
-  setActiveLesson: Dispatch<SetStateAction<Lesson | null>>;
+  setActiveLesson: Dispatch<SetStateAction<ActiveLessonType>>;
 }
 
 const CourseContext = createContext<CourseContextType | null>(null);
@@ -31,8 +34,10 @@ export const useCourse = () => {
 };
 
 export const CourseProvider = ({ children }: { children: ReactNode }) => {
-  const [course, setCourse] = useState<Course | null>(null);
-  const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
+  const [course, setCourse] = useState<CourseType | null>(null);
+  const [activeLesson, setActiveLesson] = useState<ActiveLessonType | null>(
+    null
+  );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const params = useParams();
@@ -48,9 +53,9 @@ export const CourseProvider = ({ children }: { children: ReactNode }) => {
           const enrollment = (await res.json()) as Awaited<
             ReturnType<typeof getEnrollment>
           >;
-          setCourse(enrollment?.course as Course);
-          setActiveLesson(enrollment?.currentLesson as Lesson);
-        } catch (error) {
+          setCourse(enrollment?.course as CourseType);
+          setActiveLesson(enrollment?.currentLesson as ActiveLessonType);
+        } catch (error: unknown) {
           setError(error.message);
         } finally {
           setLoading(false);
