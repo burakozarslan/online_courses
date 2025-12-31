@@ -10,10 +10,11 @@ export async function getAllCourses() {
 
 export const getEnrollment = async (slug: Course["slug"]) => {
   const session = await getServerSession(authOptions);
-  const studentId = session?.user.id;
   const enrollment = await db.enrollment.findFirst({
     where: {
-      studentId,
+      student: {
+        userId: session?.user.id,
+      },
       course: {
         slug,
       },
@@ -31,5 +32,6 @@ export const getEnrollment = async (slug: Course["slug"]) => {
       currentLesson: true,
     },
   });
+  console.log(enrollment);
   return enrollment;
 };
