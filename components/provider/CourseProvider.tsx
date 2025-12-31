@@ -21,17 +21,12 @@ interface CourseContextType {
   setActiveLesson: Dispatch<SetStateAction<Lesson | null>>;
 }
 
-const CourseContext = createContext<CourseContextType>({
-  activeLesson: null,
-  course: null,
-  error: null,
-  loading: true,
-  setActiveLesson: () => {},
-});
+const CourseContext = createContext<CourseContextType | null>(null);
 
 export const useCourse = () => {
   const context = useContext(CourseContext);
-  if (!context) throw new Error("useCourse() must be used in CourseProvider.");
+  if (!context)
+    throw new Error("useCourse() must be used within a CourseProvider.");
   return context;
 };
 
@@ -48,7 +43,11 @@ export const CourseProvider = ({ children }: { children: ReactNode }) => {
       if (courseSlug) {
         try {
           setLoading(true);
-          const enrollment = await getEnrollment(courseSlug);
+          const res = await fetch(`/api/enrollment?courseSlug=${courseSlug}`);
+          if (!res.ok) throw new Error(res.statusText);
+          const enrollment = (await res.json()) as Awaited<
+            ReturnType<typeof getEnrollment>
+          >;
           setCourse(enrollment?.course as Course);
           setActiveLesson(enrollment?.currentLesson as Lesson);
         } catch (error) {
