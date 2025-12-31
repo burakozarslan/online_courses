@@ -1,9 +1,7 @@
 import { db } from "./lib/prisma";
-import { Course, Student } from "./app/generated/prisma/client";
-import { withAuth } from "./lib/auth-wrapper";
+import { Course } from "./app/generated/prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./lib/auth";
-import { NextResponse } from "next/server";
 
 export async function getAllCourses() {
   const courses = await db.course.findMany();
