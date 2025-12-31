@@ -51,7 +51,7 @@ export const CourseProvider = ({ children }: { children: ReactNode }) => {
           setCourse(enrollment?.course as Course);
           setActiveLesson(enrollment?.currentLesson as Lesson);
         } catch (error) {
-          setError("Failed to fetch");
+          setError(error.message);
         } finally {
           setLoading(false);
         }
