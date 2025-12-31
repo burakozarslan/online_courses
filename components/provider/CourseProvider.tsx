@@ -25,7 +25,11 @@ const CourseContext = createContext<CourseContextType>({
   loading: true,
 });
 
-export const useCourse = () => useContext(CourseContext);
+export const useCourse = () => {
+  const context = useContext(CourseContext);
+  if (!context) throw new Error("useCourse() must be used in CourseProvider.");
+  return context;
+};
 
 export const CourseProvider = ({ children }: { children: ReactNode }) => {
   const [course, setCourse] = useState<Course | null>(null);
