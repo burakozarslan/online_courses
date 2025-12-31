@@ -42,11 +42,11 @@ model User {
 
   // -- Relationships --
   instructorProfile Instructor?
-  student           Student?
+  studentProfile    Student?
 }
 
 // ---------------------------------
-// INSTRUCTOR
+// INSTRUCTOR (ADMIN)
 // ---------------------------------
 
 model Instructor {
@@ -55,7 +55,6 @@ model Instructor {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   title String // Software Engineer etc
-  role  String @default("ADMIN")
 
   courses Course[] // Courses created by this instructor
 
@@ -72,7 +71,6 @@ model Student {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  title      String // Software Engineer etc
   membership MembershipPlan @default(FREE)
 
   // -- Stripe Subscription Data --
@@ -111,6 +109,7 @@ model Course {
   imageUrl    String     @db.Text
   slug        String     @unique
   difficulty  Difficulty @default(BEGINNER)
+  isFree      Boolean    @default(false)
 
   isPublished Boolean @default(false)
 
@@ -147,7 +146,6 @@ model Lesson {
   description String? @db.Text
   videoUrl    String? @db.Text
 
-  isFree   Boolean @default(false)
   duration Int
 
   moduleId String
