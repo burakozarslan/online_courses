@@ -20,6 +20,8 @@ export async function GET(request: NextRequest) {
 
   try {
     const enrollment = await getEnrollment(courseSlug);
+    if (!enrollment)
+      return NextResponse.json({ error: "Not found." }, { status: 404 });
     return NextResponse.json(enrollment);
   } catch (error) {
     console.error("Error fetching enrollment:", error);
