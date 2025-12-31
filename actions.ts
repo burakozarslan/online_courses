@@ -29,9 +29,18 @@ export const getEnrollment = async (slug: Course["slug"]) => {
           },
         },
       },
-      currentLesson: true,
+      currentLesson: {
+        include: {
+          userProgress: {
+            where: {
+              student: {
+                userId: session?.user.id,
+              },
+            },
+          },
+        },
+      },
     },
   });
-  console.log(enrollment);
   return enrollment;
 };
