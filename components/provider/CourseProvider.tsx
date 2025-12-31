@@ -6,6 +6,8 @@ import {
   createContext,
   ReactNode,
   useEffect,
+  Dispatch,
+  SetStateAction,
 } from "react";
 import { Course, Lesson } from "@/app/generated/prisma/client";
 import { getEnrollment } from "@/actions";
@@ -16,6 +18,7 @@ interface CourseContextType {
   course: Course | null;
   error: string | null;
   loading: boolean;
+  setActiveLesson: Dispatch<SetStateAction<Lesson | null>>;
 }
 
 const CourseContext = createContext<CourseContextType>({
@@ -23,6 +26,7 @@ const CourseContext = createContext<CourseContextType>({
   course: null,
   error: null,
   loading: true,
+  setActiveLesson: () => {},
 });
 
 export const useCourse = () => {
@@ -65,6 +69,7 @@ export const CourseProvider = ({ children }: { children: ReactNode }) => {
         activeLesson,
         error,
         loading,
+        setActiveLesson,
       }}
     >
       {children}
