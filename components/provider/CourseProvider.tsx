@@ -13,15 +13,16 @@ import { getEnrollment } from "@/actions";
 import { useParams } from "next/navigation";
 
 type EnrollmentData = NonNullable<Awaited<ReturnType<typeof getEnrollment>>>;
-type CourseType = EnrollmentData["course"];
-type ActiveLessonType = EnrollmentData["currentLesson"];
+export type CourseType = EnrollmentData["course"];
+export type ModuleType = CourseType["modules"][number];
+export type LessonType = EnrollmentData["currentLesson"];
 
 interface CourseContextType {
-  activeLesson: ActiveLessonType | null;
+  activeLesson: LessonType | null;
   course: CourseType | null;
   error: string | null;
   loading: boolean;
-  setActiveLesson: Dispatch<SetStateAction<ActiveLessonType>>;
+  setActiveLesson: Dispatch<SetStateAction<LessonType>>;
 }
 
 const CourseContext = createContext<CourseContextType | null>(null);
@@ -35,9 +36,7 @@ export const useCourse = () => {
 
 export const CourseProvider = ({ children }: { children: ReactNode }) => {
   const [course, setCourse] = useState<CourseType | null>(null);
-  const [activeLesson, setActiveLesson] = useState<ActiveLessonType | null>(
-    null
-  );
+  const [activeLesson, setActiveLesson] = useState<LessonType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const params = useParams();
@@ -54,9 +53,11 @@ export const CourseProvider = ({ children }: { children: ReactNode }) => {
             ReturnType<typeof getEnrollment>
           >;
           setCourse(enrollment?.course as CourseType);
-          setActiveLesson(enrollment?.currentLesson as ActiveLessonType);
-        } catch (error: unknown) {
-          setError(error.message);
+          setActiveLesson(enrollment?.currentLesson as LessonType);
+        } catch (error) {
+          setError(
+            error instanceof Error ? error.message : "Something went wrong."
+          );
         } finally {
           setLoading(false);
         }
