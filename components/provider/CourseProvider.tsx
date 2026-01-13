@@ -15,14 +15,14 @@ import { useParams } from "next/navigation";
 type EnrollmentData = NonNullable<Awaited<ReturnType<typeof getEnrollment>>>;
 export type CourseType = EnrollmentData["course"];
 export type ModuleType = CourseType["modules"][number];
-export type LessonType = EnrollmentData["currentLesson"];
+export type LessonType = ModuleType["lessons"][number];
 
 interface CourseContextType {
   activeLesson: LessonType | null;
   course: CourseType | null;
   error: string | null;
   loading: boolean;
-  setActiveLesson: Dispatch<SetStateAction<LessonType>>;
+  setActiveLesson: Dispatch<SetStateAction<LessonType | null>>;
 }
 
 const CourseContext = createContext<CourseContextType | null>(null);

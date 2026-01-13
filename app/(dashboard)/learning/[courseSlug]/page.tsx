@@ -14,24 +14,25 @@ import CourseModule from "@/components/layout/CourseModule";
 import { useState } from "react";
 import { courses } from "@/courses";
 import type { Course, Lesson, Module } from "@/courses";
-import { CourseProvider } from "@/components/provider/CourseProvider";
+import { useCourse } from "@/components/provider/CourseProvider";
 
 export default function CourseDetails() {
+  const { course } = useCourse();
   // TODO: Consider context provider
-  const [course, setCourse] = useState<Course>(courses[0]);
+  // const [course, setCourse] = useState<Course>(courses[0]);
 
-  const activeLesson = findActiveLesson(course.activeLessonId) as Lesson;
+  // const activeLesson = findActiveLesson(course.activeLessonId) as Lesson;
 
   // TODO: Optimize this
-  function findActiveLesson(lessonId: string) {
-    let activeLesson;
-    course.modules.forEach((module) => {
-      module.lessons.forEach((lesson) => {
-        if (lesson.id === lessonId) activeLesson = lesson;
-      });
-    });
-    return activeLesson as Lesson | undefined;
-  }
+  // function findActiveLesson(lessonId: string) {
+  //   let activeLesson;
+  //   course.modules.forEach((module) => {
+  //     module.lessons.forEach((lesson) => {
+  //       if (lesson.id === lessonId) activeLesson = lesson;
+  //     });
+  //   });
+  //   return activeLesson as Lesson | undefined;
+  // }
 
   function formatCourseDifficulty(difficulty: number) {
     if (difficulty === 1) return "Beginner";
@@ -66,6 +67,8 @@ export default function CourseDetails() {
     return formatToHoursMinutes(totalDurationInSeconds);
   }
 
+  if (!course) return <div>Loading...</div>;
+
   return (
     <main className="">
       {/* <!-- Breadcrumb / Header --> */}
@@ -97,9 +100,9 @@ export default function CourseDetails() {
                 <span className="w-1.5 h-1.5 bg-brand-500"></span>
                 IN PROGRESS
               </div>
-              <h1 className="text-heading-1 mb-4">{course.title}</h1>
+              <h1 className="text-heading-1 mb-4">{course?.title}</h1>
               <p className="text-body text-neutral-400 mb-8 max-w-2xl leading-relaxed">
-                {course.description}
+                {course?.description}
               </p>
 
               {/* <!-- Main Action & Progress --> */}
@@ -147,7 +150,8 @@ export default function CourseDetails() {
                   <div>
                     <p className="text-caption text-neutral-500 mb-1">LEVEL</p>
                     <p className="text-body">
-                      {formatCourseDifficulty(course.difficulty)}
+                      {/* {formatCourseDifficulty(course.difficulty)} */}
+                      {course?.difficulty}
                     </p>
                   </div>
                   <div>
@@ -155,14 +159,15 @@ export default function CourseDetails() {
                       DURATION
                     </p>
                     <p className="text-body">
-                      {calculateFormattedCourseDuration(course.modules)}
+                      {/* {calculateFormattedCourseDuration(course.modules)} */}
+                      do this
                     </p>
                   </div>
                   <div>
                     <p className="text-caption text-neutral-500 mb-1">
                       MODULES
                     </p>
-                    <p className="text-body">{course.modules.length}</p>
+                    <p className="text-body">{course?.modules.length}</p>
                   </div>
                   <div>
                     <p className="text-caption text-neutral-500 mb-1">
@@ -178,89 +183,82 @@ export default function CourseDetails() {
       </div>
 
       {/* <!-- Curriculum Content --> */}
-      <CourseProvider>
-        <div className="flex-1 bg-dash-grid">
-          <div className="max-w-7xl mx-auto px-6 py-12">
-            <VideoPlayer activeLesson={activeLesson} setCourse={setCourse} />
+      <div className="flex-1 bg-dash-grid">
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <VideoPlayer />
 
-            <div className="flex flex-col lg:flex-row gap-8">
-              {/* <!-- Main Curriculum Column --> */}
-              <div className="flex-1 mt-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-heading-2 text-neutral-900">Modules</h2>
-                  {/* <button className="text-caption text-brand-600 hover:text-brand-700 font-medium">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* <!-- Main Curriculum Column --> */}
+            <div className="flex-1 mt-8">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-heading-2 text-neutral-900">Modules</h2>
+                {/* <button className="text-caption text-brand-600 hover:text-brand-700 font-medium">
                   COLLAPSE ALL
                 </button> */}
-                </div>
-                {course.modules.map((module) => (
-                  <CourseModule
-                    key={module.id}
-                    module={module}
-                    activeLesson={activeLesson}
-                    setCourse={setCourse}
-                  />
-                ))}
               </div>
-              {/* <!-- Right Sidebar (Sticky) --> */}
-              <div className="w-full lg:w-80 shrink-0">
-                <div className="sticky top-24 space-y-6">
-                  {/* <!-- Resource Box --> */}
-                  <div className="bg-neutral-0 border border-neutral-200 p-6">
-                    <h3 className="text-heading-3 text-neutral-900 mb-4 flex items-center gap-2">
-                      <Folder className="w-4 h-4 text-brand-600" />
-                      Resources
-                    </h3>
-                    <ul className="space-y-3">
-                      <li>
-                        <a
-                          href="#"
-                          className="flex items-center gap-2 text-caption text-neutral-600 hover:text-brand-600 group"
-                        >
-                          <Github className="w-4 h-4 text-neutral-400 group-hover:text-brand-600" />
-                          Source Code (Module 2)
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="#"
-                          className="flex items-center gap-2 text-caption text-neutral-600 hover:text-brand-600 group"
-                        >
-                          <FileText className="w-4 h-4 text-neutral-400 group-hover:text-brand-600" />
-                          Shopify API Cheatsheet
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="#"
-                          className="flex items-center gap-2 text-caption text-neutral-600 hover:text-brand-600 group"
-                        >
-                          <Figma className="w-4 h-4 text-neutral-400 group-hover:text-brand-600" />
-                          UI Kit Design Files
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+              {course.modules.map((module) => (
+                <CourseModule key={module.id} module={module} />
+              ))}
+            </div>
+            {/* <!-- Right Sidebar (Sticky) --> */}
+            <div className="w-full lg:w-80 shrink-0">
+              <div className="sticky top-24 space-y-6">
+                {/* <!-- Resource Box --> */}
+                <div className="bg-neutral-0 border border-neutral-200 p-6">
+                  <h3 className="text-heading-3 text-neutral-900 mb-4 flex items-center gap-2">
+                    <Folder className="w-4 h-4 text-brand-600" />
+                    Resources
+                  </h3>
+                  <ul className="space-y-3">
+                    <li>
+                      <a
+                        href="#"
+                        className="flex items-center gap-2 text-caption text-neutral-600 hover:text-brand-600 group"
+                      >
+                        <Github className="w-4 h-4 text-neutral-400 group-hover:text-brand-600" />
+                        Source Code (Module 2)
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="flex items-center gap-2 text-caption text-neutral-600 hover:text-brand-600 group"
+                      >
+                        <FileText className="w-4 h-4 text-neutral-400 group-hover:text-brand-600" />
+                        Shopify API Cheatsheet
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="flex items-center gap-2 text-caption text-neutral-600 hover:text-brand-600 group"
+                      >
+                        <Figma className="w-4 h-4 text-neutral-400 group-hover:text-brand-600" />
+                        UI Kit Design Files
+                      </a>
+                    </li>
+                  </ul>
+                </div>
 
-                  {/* <!-- Instructor Note --> */}
-                  <div className="bg-brand-50 border border-brand-100 p-6 relative overflow-hidden">
-                    <div className="absolute -right-4 -top-4 text-brand-100 opacity-50">
-                      <MessageSquare className="w-24 h-24" />
-                    </div>
-                    <h3 className="text-heading-3 text-brand-800 mb-2 relative z-10">
-                      Pro Tip
-                    </h3>
-                    <p className="text-caption text-brand-700 relative z-10 leading-relaxed">
-                      `When dealing with Shopify webhooks, always verify the
-                      HMAC signature before processing the payload to prevent
-                      replay attacks.`
-                    </p>
+                {/* <!-- Instructor Note --> */}
+                <div className="bg-brand-50 border border-brand-100 p-6 relative overflow-hidden">
+                  <div className="absolute -right-4 -top-4 text-brand-100 opacity-50">
+                    <MessageSquare className="w-24 h-24" />
                   </div>
+                  <h3 className="text-heading-3 text-brand-800 mb-2 relative z-10">
+                    Pro Tip
+                  </h3>
+                  <p className="text-caption text-brand-700 relative z-10 leading-relaxed">
+                    `When dealing with Shopify webhooks, always verify the HMAC
+                    signature before processing the payload to prevent replay
+                    attacks.`
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </CourseProvider>
+      </div>
     </main>
   );
 }
