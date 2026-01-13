@@ -12,31 +12,18 @@ import Link from "next/link";
 import VideoPlayer from "@/components/ui/VideoPlayer";
 import CourseModule from "@/components/layout/CourseModule";
 import { useState } from "react";
-import { courses } from "@/courses";
-import type { Course, Lesson, Module } from "@/courses";
 import { useCourse } from "@/components/provider/CourseProvider";
+import type {
+  LessonType,
+  ModuleType,
+} from "@/components/provider/CourseProvider";
 
 export default function CourseDetails() {
   const { course } = useCourse();
-  // TODO: Consider context provider
-  // const [course, setCourse] = useState<Course>(courses[0]);
 
-  // const activeLesson = findActiveLesson(course.activeLessonId) as Lesson;
-
-  // TODO: Optimize this
-  // function findActiveLesson(lessonId: string) {
-  //   let activeLesson;
-  //   course.modules.forEach((module) => {
-  //     module.lessons.forEach((lesson) => {
-  //       if (lesson.id === lessonId) activeLesson = lesson;
-  //     });
-  //   });
-  //   return activeLesson as Lesson | undefined;
-  // }
-
-  function formatCourseDifficulty(difficulty: number) {
-    if (difficulty === 1) return "Beginner";
-    else if (difficulty === 2) return "Intermediate";
+  function formatCourseDifficulty(difficulty: string) {
+    if (difficulty === "BEGINNER") return "Beginner";
+    else if (difficulty === "INTERMEDIATE") return "Intermediate";
     else return "Advanced";
   }
 
@@ -50,7 +37,7 @@ export default function CourseDetails() {
     return `${minutes}m`;
   }
 
-  function calculateModuleDurationInSeconds(lessons: Lesson[]) {
+  function calculateModuleDurationInSeconds(lessons: LessonType[]) {
     const totalDurationInSeconds = lessons.reduce(
       (prev, current) => prev + current.duration,
       0
@@ -58,7 +45,7 @@ export default function CourseDetails() {
     return totalDurationInSeconds;
   }
 
-  function calculateFormattedCourseDuration(modules: Module[]) {
+  function calculateFormattedCourseDuration(modules: ModuleType[]) {
     const totalDurationInSeconds = modules.reduce(
       (prev, current) =>
         prev + calculateModuleDurationInSeconds(current.lessons),
@@ -67,7 +54,29 @@ export default function CourseDetails() {
     return formatToHoursMinutes(totalDurationInSeconds);
   }
 
+  function calculateOverallProgress(modules: ModuleType[]) {
+    const totalDuration = modules.reduce(
+      (acc, module) => acc + calculateModuleDurationInSeconds(module.lessons),
+      0
+    );
+
+    const totalProgress = modules.reduce((acc, module) => {
+      return (
+        acc +
+        module.lessons.reduce((lAcc, lesson) => {
+          const progress = lesson.userProgress?.[0]?.timePlayed || 0;
+          return lAcc + Math.min(progress, lesson.duration);
+        }, 0)
+      );
+    }, 0);
+
+    if (totalDuration === 0) return 0;
+    return Math.round((totalProgress / totalDuration) * 100);
+  }
+
   if (!course) return <div>Loading...</div>;
+
+  const overallProgress = calculateOverallProgress(course?.modules);
 
   return (
     <main className="">
@@ -116,10 +125,12 @@ export default function CourseDetails() {
                   <div className="flex justify-between text-caption text-neutral-400 mb-2">
                     {/* TODO: Calculate overall progress */}
                     <span>OVERALL PROGRESS</span>
-                    <span className="text-brand-400">42%</span>
+                    <span className="text-brand-400">{overallProgress}%</span>
                   </div>
                   <div className="w-full bg-neutral-800 h-2">
-                    <div className="bg-brand-500 h-2 w-[42%] relative">
+                    <div
+                      className={`bg-brand-500 h-2 w-[${overallProgress}%] relative`}
+                    >
                       <div className="absolute right-0 top-0 bottom-0 w-1 bg-white opacity-50"></div>
                     </div>
                   </div>
@@ -150,8 +161,7 @@ export default function CourseDetails() {
                   <div>
                     <p className="text-caption text-neutral-500 mb-1">LEVEL</p>
                     <p className="text-body">
-                      {/* {formatCourseDifficulty(course.difficulty)} */}
-                      {course?.difficulty}
+                      {formatCourseDifficulty(course.difficulty)}
                     </p>
                   </div>
                   <div>
@@ -159,8 +169,7 @@ export default function CourseDetails() {
                       DURATION
                     </p>
                     <p className="text-body">
-                      {/* {calculateFormattedCourseDuration(course.modules)} */}
-                      do this
+                      {calculateFormattedCourseDuration(course.modules)}
                     </p>
                   </div>
                   <div>
