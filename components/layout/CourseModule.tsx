@@ -2,31 +2,30 @@
 
 import ModuleLesson from "./ModuleLesson";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
-import type { Module, Lesson, Course } from "@/courses";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { COMPLETION_THRESHOLD } from "@/config";
+import type { ModuleType, LessonType } from "../provider/CourseProvider";
+import { useCourse } from "../provider/CourseProvider";
 
 interface CourseModuleProps {
-  module: Module;
-  activeLesson: Lesson;
-  setCourse: Dispatch<SetStateAction<Course>>;
+  module: ModuleType;
 }
 
-export default function CourseModule({
-  module,
-  activeLesson,
-  setCourse,
-}: CourseModuleProps) {
+// TODO: create
+export default function CourseModule({ module }: CourseModuleProps) {
   // TODO: Default this to isActive state
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { activeLesson } = useCourse();
 
   const numberOfLessons = module.lessons.length;
   const numberOfCompletedLessons = module.lessons.filter(
-    (l) => (l.timePlayed / l.duration) * 100 > COMPLETION_THRESHOLD
+    (l) =>
+      (l.userProgress[0]?.timePlayed ?? 0 / l.duration) * 100 >
+      COMPLETION_THRESHOLD
   ).length;
   const isModuleCompleted = numberOfLessons === numberOfCompletedLessons;
   const isActiveModule = !!module.lessons.find(
-    (lesson) => lesson.id === activeLesson.id
+    (lesson) => lesson.id === activeLesson?.id
   );
 
   return (
@@ -74,12 +73,7 @@ export default function CourseModule({
       {isOpen && (
         <div className="divide-y divide-neutral-100">
           {module.lessons.map((lesson) => (
-            <ModuleLesson
-              key={lesson.id}
-              lesson={lesson}
-              activeLessonId={activeLesson.id}
-              setCourse={setCourse}
-            />
+            <ModuleLesson key={lesson.id} lesson={lesson} />
           ))}
         </div>
       )}

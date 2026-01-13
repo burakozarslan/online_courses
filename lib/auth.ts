@@ -1,5 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { db } from "./prisma";
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -11,20 +12,21 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // 1. HARDCODED DUMMY USER FOR TESTING
-        const user = {
-          id: "1",
-          name: "John Doe",
-          email: "user@example.com",
-          password: "password123",
-          role: "user",
-          isPro: true,
-        };
-
         // 2. Validate input
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
+
+        const user = await db.user.findUnique({
+          where: {
+            email: credentials.email,
+          },
+          include: {
+            studentProfile: true,
+            instructorProfile: true,
+          },
+        });
+        if (!user) return null;
 
         // 3. Verify credentials (dummy check)
         if (
@@ -32,7 +34,11 @@ export const authOptions: NextAuthOptions = {
           credentials.password === user.password
         ) {
           // Any object returned will be saved in `user` property of the JWT
-          return user;
+          return {
+            ...user,
+            role: user.studentProfile ? "STUDENT" : "ADMIN",
+            isPro: user.studentProfile?.membership === "PRO",
+          };
         }
 
         // Return null if user data could not be retrieved
