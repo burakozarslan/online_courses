@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const enrollment = await getEnrollment(courseSlug);
+    const enrollment = await getEnrollment(courseSlug, session.user.id);
     if (!enrollment)
       return NextResponse.json({ error: "Not found." }, { status: 404 });
     return NextResponse.json(enrollment);
