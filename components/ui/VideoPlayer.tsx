@@ -15,17 +15,20 @@ import {
   MediaMuteButton,
   MediaFullscreenButton,
 } from "media-chrome/react";
-import { SyntheticEvent } from "react";
+import { SyntheticEvent, useRef } from "react";
 import { useCourse } from "../provider/CourseProvider";
+import { updateLessonProgress } from "@/app/actions/progress";
 
-// TODO: Improve performance so that it updates state every 5? seconds
 export default function VideoPlayer() {
-  const { activeLesson, setActiveLesson } = useCourse();
+  const { activeLesson, setActiveLesson, setCourse } = useCourse();
+  const lastUpdateRef = useRef<number>(0);
 
   const onSeekAndProgress = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
     let currentTime: number;
     if (e.currentTarget.currentTime) {
       currentTime = e.currentTarget.currentTime;
+
+      // Update local state immediately for UI responsiveness
       setActiveLesson((prev) => {
         if (!prev) return prev;
         return {
@@ -35,31 +38,63 @@ export default function VideoPlayer() {
           ),
         };
       });
-      // setCourse((course: Course) => ({
-      //   ...course,
-      //   activeLessonId: activeLesson.id,
-      //   modules: course.modules.map((module) => {
-      //     if (module.id === activeLesson.moduleId) {
-      //       return {
-      //         ...module,
-      //         lessons: module.lessons.map((lesson) => {
-      //           if (lesson.id === activeLesson.id)
-      //             return {
-      //               ...lesson,
-      //               timePlayed: currentTime,
-      //             };
-      //           return lesson;
-      //         }),
-      //       };
-      //     }
-      //     return module;
-      //   }),
-      // }));
+
+      // Update global course state for sidebar progress bars
+      setCourse((prevCourse) => {
+        if (!prevCourse || !activeLesson) return prevCourse;
+
+        return {
+          ...prevCourse,
+          modules: prevCourse.modules.map((module) => {
+            if (module.id === activeLesson.moduleId) {
+              return {
+                ...module,
+                lessons: module.lessons.map((lesson) => {
+                  if (lesson.id === activeLesson.id) {
+                    const existingProgress = lesson.userProgress[0];
+                    return {
+                      ...lesson,
+                      userProgress: [
+                        existingProgress
+                          ? {
+                              ...existingProgress,
+                              timePlayed: Math.floor(currentTime),
+                            }
+                          : {
+                              id: "temp-id", // Placeholder, simpler than creating a full object
+                              studentId: "temp-student",
+                              lessonId: lesson.id,
+                              timePlayed: Math.floor(currentTime),
+                              createdAt: new Date(),
+                              updatedAt: new Date(),
+                            },
+                      ],
+                    };
+                  }
+                  return lesson;
+                }),
+              };
+            }
+            return module;
+          }),
+        };
+      });
+
+      // Throttle database updates to every 5 seconds
+      if (Math.abs(currentTime - lastUpdateRef.current) > 5) {
+        lastUpdateRef.current = currentTime;
+        if (activeLesson?.id) {
+          updateLessonProgress(activeLesson.id, Math.floor(currentTime));
+        }
+      }
     }
   };
 
   const onLoadStart = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
-    e.currentTarget.currentTime = activeLesson?.userProgress[0].timePlayed ?? 0;
+    // Resume from where the user left off
+    e.currentTarget.currentTime =
+      activeLesson?.userProgress[0]?.timePlayed ?? 0;
+    lastUpdateRef.current = e.currentTarget.currentTime;
   };
 
   return (
