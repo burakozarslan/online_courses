@@ -47,11 +47,14 @@ export default function ModuleLesson({ lesson }: ModuleLessonProps) {
   const { activeLesson, setActiveLesson } = useCourse();
 
   const isActive = lesson?.id === activeLesson?.id;
-  const progress =
-    (lesson?.userProgress[0]?.timePlayed ?? 0 / lesson?.duration) * 100;
-  const isPlayed = progress !== 0;
+
+  const timePlayed = lesson?.userProgress[0]?.timePlayed ?? 0;
+  const duration = lesson?.duration || 1; // Avoid division by zero
+  const progress = (timePlayed / duration) * 100;
+
+  const isPlayed = timePlayed > 0;
   const isCompleted = progress > COMPLETION_THRESHOLD;
-  const progressBarWidth = Math.floor((progress / 100) * 128);
+  const progressBarWidth = Math.min(Math.floor((progress / 100) * 128), 128);
 
   function handleStartLesson() {
     setActiveLesson(lesson);

@@ -23,6 +23,7 @@ interface CourseContextType {
   error: string | null;
   loading: boolean;
   setActiveLesson: Dispatch<SetStateAction<LessonType | null>>;
+  setCourse: Dispatch<SetStateAction<CourseType | null>>;
 }
 
 const CourseContext = createContext<CourseContextType | null>(null);
@@ -75,6 +76,7 @@ export const CourseProvider = ({ children }: { children: ReactNode }) => {
         error,
         loading,
         setActiveLesson,
+        setCourse,
       }}
     >
       {children}
