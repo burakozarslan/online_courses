@@ -129,7 +129,8 @@ export default function CourseDetails() {
                   </div>
                   <div className="w-full bg-neutral-800 h-2">
                     <div
-                      className={`bg-brand-500 h-2 w-[${overallProgress}%] relative`}
+                      className="bg-brand-500 h-2 relative"
+                      style={{ width: `${overallProgress}%` }}
                     >
                       <div className="absolute right-0 top-0 bottom-0 w-1 bg-white opacity-50"></div>
                     </div>
