@@ -1,6 +1,7 @@
 import { Search, Filter } from "lucide-react";
 import { db } from "@/lib/prisma";
 import Link from "next/link";
+import { getAllCourses } from "@/actions";
 
 const ITEMS_PER_PAGE = 2;
 
@@ -58,29 +59,7 @@ export default async function CoursesPage({ searchParams }: PageProps) {
   const totalPages = Math.ceil(totalCourses / ITEMS_PER_PAGE);
 
   // Fetch courses with pagination
-  const courses = await db.course.findMany({
-    where: {
-      isPublished: true,
-    },
-    include: {
-      categories: true,
-      modules: {
-        include: {
-          lessons: true,
-        },
-      },
-      _count: {
-        select: {
-          modules: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: ITEMS_PER_PAGE,
-    skip: (currentPage - 1) * ITEMS_PER_PAGE,
-  });
+  const courses = await getAllCourses(currentPage, ITEMS_PER_PAGE);
 
   // TODO: Fix this
   // Calculate total duration for each course

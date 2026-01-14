@@ -4,8 +4,30 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "./lib/auth";
 import { unstable_cache } from "next/cache";
 
-export async function getAllCourses() {
-  const courses = await db.course.findMany();
+export async function getAllCourses(page: number, itemsPerPage: number) {
+  const courses = await db.course.findMany({
+    where: {
+      isPublished: true,
+    },
+    include: {
+      categories: true,
+      modules: {
+        include: {
+          lessons: true,
+        },
+      },
+      _count: {
+        select: {
+          modules: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: itemsPerPage,
+    skip: (page - 1) * itemsPerPage,
+  });
   return courses;
 }
 
