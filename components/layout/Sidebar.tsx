@@ -49,7 +49,7 @@ export default function Sidebar() {
           className="flex items-center gap-3 px-3 py-2 text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-l-2 border-transparent transition-colors"
         >
           <BookOpen className="size-4" />
-          <span className="text-body font-medium">My Learning</span>
+          <span className="text-body font-medium">Enrolled</span>
         </Link>
         <Link
           href="/achievements"
