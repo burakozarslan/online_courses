@@ -61,16 +61,18 @@ export default async function CoursesPage({ searchParams }: PageProps) {
   // Fetch courses with pagination
   const courses = await getAllCourses(currentPage, ITEMS_PER_PAGE);
 
-  // TODO: Fix this
-  // Calculate total duration for each course
+  // Calculate total duration for each course (convert from seconds to minutes)
   const coursesWithDuration = courses.map((course) => {
-    const totalDuration = course.modules.reduce((acc, module) => {
+    const totalDurationInSeconds = course.modules.reduce((acc, module) => {
       const moduleDuration = module.lessons.reduce(
         (sum, lesson) => sum + lesson.duration,
         0
       );
       return acc + moduleDuration;
     }, 0);
+
+    // Convert seconds to minutes
+    const totalDuration = Math.round(totalDurationInSeconds / 60);
 
     return {
       ...course,
