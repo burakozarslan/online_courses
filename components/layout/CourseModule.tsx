@@ -20,7 +20,7 @@ export default function CourseModule({ module }: CourseModuleProps) {
   const numberOfLessons = module.lessons.length;
   const numberOfCompletedLessons = module.lessons.filter(
     (l) =>
-      (l.userProgress[0]?.timePlayed ?? 0 / l.duration) * 100 >
+      ((l.userProgress[0]?.timePlayed ?? 0) / (l.duration || 1)) * 100 >=
       COMPLETION_THRESHOLD
   ).length;
   const isModuleCompleted = numberOfLessons === numberOfCompletedLessons;
