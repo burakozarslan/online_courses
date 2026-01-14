@@ -52,3 +52,8 @@ export async function updateLessonProgress(lessonId: string, seconds: number) {
     });
   }
 }
+
+export async function resetLessonProgress(lessonId: string) {
+  // Simply reset the progress to 0 by reusing the existing update function
+  await updateLessonProgress(lessonId, 0);
+}

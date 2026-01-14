@@ -6,6 +6,7 @@ import type { Course, Lesson } from "@/courses";
 import { Dispatch, SetStateAction } from "react";
 import type { LessonType } from "../provider/CourseProvider";
 import { useCourse } from "../provider/CourseProvider";
+import { resetLessonProgress } from "@/app/actions/progress";
 
 interface ModuleLessonProps {
   lesson: LessonType;
@@ -44,7 +45,7 @@ function handleScrollToVideoPlayer() {
 }
 
 export default function ModuleLesson({ lesson }: ModuleLessonProps) {
-  const { activeLesson, setActiveLesson } = useCourse();
+  const { activeLesson, setActiveLesson, updateLessonProgressInState } = useCourse();
 
   const isActive = lesson?.id === activeLesson?.id;
 
@@ -62,27 +63,18 @@ export default function ModuleLesson({ lesson }: ModuleLessonProps) {
     handleScrollToVideoPlayer();
   }
 
-  function handleReplayLesson(id: string) {
-    // setCourse((course: Course) => ({
-    //   ...course,
-    //   activeLessonId: lesson.id,
-    //   modules: course.modules.map((module) => {
-    //     if (module.id === lesson.moduleId) {
-    //       return {
-    //         ...module,
-    //         lessons: module.lessons.map((lesson) => {
-    //           if (lesson.id === id)
-    //             return {
-    //               ...lesson,
-    //               timePlayed: 0,
-    //             };
-    //           return lesson;
-    //         }),
-    //       };
-    //     }
-    //     return module;
-    //   }),
-    // }));
+  async function handleReplayLesson(id: string) {
+    // Reset progress in the database
+    await resetLessonProgress(id);
+    
+    // Update the local state
+    updateLessonProgressInState(id, 0);
+    
+    // Set this lesson as active
+    setActiveLesson(lesson);
+    
+    // Scroll to video player
+    handleScrollToVideoPlayer();
   }
 
   return (

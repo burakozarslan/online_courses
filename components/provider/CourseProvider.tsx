@@ -24,6 +24,7 @@ interface CourseContextType {
   loading: boolean;
   setActiveLesson: Dispatch<SetStateAction<LessonType | null>>;
   setCourse: Dispatch<SetStateAction<CourseType | null>>;
+  updateLessonProgressInState: (lessonId: string, timePlayed: number) => void;
 }
 
 const CourseContext = createContext<CourseContextType | null>(null);
@@ -68,6 +69,45 @@ export const CourseProvider = ({ children }: { children: ReactNode }) => {
     fetchEnrollment();
   }, [courseSlug]);
 
+  const updateLessonProgressInState = (lessonId: string, timePlayed: number) => {
+    if (!course) return;
+
+    // Update the course state with new progress
+    setCourse({
+      ...course,
+      modules: course.modules.map((module) => ({
+        ...module,
+        lessons: module.lessons.map((lesson) => {
+          if (lesson.id === lessonId) {
+            return {
+              ...lesson,
+              userProgress: [
+                {
+                  ...(lesson.userProgress[0] || {}),
+                  timePlayed,
+                },
+              ] as any,
+            };
+          }
+          return lesson;
+        }),
+      })),
+    });
+
+    // Update active lesson if it matches
+    if (activeLesson?.id === lessonId) {
+      setActiveLesson({
+        ...activeLesson,
+        userProgress: [
+          {
+            ...(activeLesson.userProgress[0] || {}),
+            timePlayed,
+          },
+        ] as any,
+      });
+    }
+  };
+
   return (
     <CourseContext.Provider
       value={{
@@ -77,6 +117,7 @@ export const CourseProvider = ({ children }: { children: ReactNode }) => {
         loading,
         setActiveLesson,
         setCourse,
+        updateLessonProgressInState,
       }}
     >
       {children}
