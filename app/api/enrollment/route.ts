@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getEnrollment } from "@/actions";
+import { getEnrollment } from "@/actions/getEnrollment";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 

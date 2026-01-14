@@ -1,7 +1,7 @@
 import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { db } from "@/lib/prisma";
 import Link from "next/link";
-import { getAllCourses } from "@/actions";
+import { getAllCourses } from "@/actions/getAllCourses";
 
 const ITEMS_PER_PAGE = 2;
 
@@ -163,7 +163,7 @@ export default async function CoursesPage({ searchParams }: PageProps) {
               {coursesWithDuration.map((course) => (
                 <Link
                   key={course.id}
-                  href={`/learning/${course.slug}`}
+                  href={`/courses/${course.slug}`}
                   className="group bg-neutral-0 border border-neutral-200 hover:border-brand-500 transition-all hover:shadow-md h-full flex flex-col"
                 >
                   <div className="h-40 bg-neutral-100 border-b border-neutral-200 flex items-center justify-center relative group-hover:bg-neutral-50 transition-colors">

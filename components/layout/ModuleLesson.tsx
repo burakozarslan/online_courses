@@ -6,7 +6,7 @@ import type { Course, Lesson } from "@/courses";
 import { Dispatch, SetStateAction } from "react";
 import type { LessonType } from "../provider/CourseProvider";
 import { useCourse } from "../provider/CourseProvider";
-import { resetLessonProgress } from "@/app/actions/progress";
+import { resetLessonProgress } from "@/actions/progress";
 
 interface ModuleLessonProps {
   lesson: LessonType;

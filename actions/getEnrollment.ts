@@ -1,35 +1,8 @@
-import { db } from "./lib/prisma";
-import { Course } from "./app/generated/prisma/client";
+import { db } from "@/lib/prisma";
+import { Course } from "@/app/generated/prisma/client";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./lib/auth";
+import { authOptions } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
-
-export async function getAllCourses(page: number, itemsPerPage: number) {
-  const courses = await db.course.findMany({
-    where: {
-      isPublished: true,
-    },
-    include: {
-      categories: true,
-      modules: {
-        include: {
-          lessons: true,
-        },
-      },
-      _count: {
-        select: {
-          modules: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: itemsPerPage,
-    skip: (page - 1) * itemsPerPage,
-  });
-  return courses;
-}
 
 // Cached function to fetch the static course structure (Modules -> Lessons)
 // This data is the same for all users, so we can cache it aggressively.
@@ -128,4 +101,3 @@ export const getEnrollment = async (
     currentLesson: currentLessonWithProgress,
   };
 };
-

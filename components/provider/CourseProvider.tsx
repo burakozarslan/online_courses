@@ -9,7 +9,7 @@ import {
   Dispatch,
   SetStateAction,
 } from "react";
-import { getEnrollment } from "@/actions";
+import { getEnrollment } from "@/actions/getEnrollment";
 import { useParams } from "next/navigation";
 
 type EnrollmentData = NonNullable<Awaited<ReturnType<typeof getEnrollment>>>;
