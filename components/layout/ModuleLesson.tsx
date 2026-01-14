@@ -66,13 +66,22 @@ export default function ModuleLesson({ lesson }: ModuleLessonProps) {
   async function handleReplayLesson(id: string) {
     // Reset progress in the database
     await resetLessonProgress(id);
-    
+
     // Update the local state
     updateLessonProgressInState(id, 0);
-    
-    // Set this lesson as active
-    setActiveLesson(lesson);
-    
+
+    // Set this lesson as active with reset progress
+    // We construct the new state manually to ensure we don't use the stale 'lesson' prop
+    setActiveLesson({
+      ...lesson,
+      userProgress: [
+        {
+          ...(lesson.userProgress[0] || {}),
+          timePlayed: 0,
+        },
+      ] as any,
+    });
+
     // Scroll to video player
     handleScrollToVideoPlayer();
   }
