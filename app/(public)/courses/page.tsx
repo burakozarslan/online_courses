@@ -86,14 +86,14 @@ export default async function CoursesPage({ searchParams }: PageProps) {
   return (
     <main className="grow">
       {/* <!-- Header & Search --> */}
-      <section className="bg-neutral-50 border-b border-neutral-border py-12">
+      <section className="bg-neutral-50 border-b border-neutral-border py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <div className="flex items-center gap-2 text-brand-600 text-caption mb-2">
               <i data-lucide="library" className="w-4 h-4"></i>
               <span>ROOT / CATALOG</span>
             </div>
-            <h1 className="text-heading-1 text-neutral-900 mb-6">
+            <h1 className="text-heading-1 text-neutral-900 mb-4">
               Course Index
             </h1>
 
@@ -114,7 +114,7 @@ export default async function CoursesPage({ searchParams }: PageProps) {
             </div>
 
             {/* <!-- Tags --> */}
-            <div className="flex flex-wrap gap-2 mt-6">
+            <div className="flex flex-wrap gap-2 mt-4">
               <button className="bg-brand-600 text-neutral-0 px-3 py-1 text-caption font-medium">
                 ALL_TRACKS
               </button>
@@ -136,7 +136,7 @@ export default async function CoursesPage({ searchParams }: PageProps) {
       </section>
 
       {/* <!-- Course Grid --> */}
-      <section className="py-12 bg-grid">
+      <section className="py-8 bg-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-6">
             <p className="text-caption text-neutral-500">
