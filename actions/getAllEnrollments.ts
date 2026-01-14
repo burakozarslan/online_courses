@@ -51,29 +51,46 @@ export const getAllEnrollments = async () => {
             },
           },
         },
+        include: {
+          lesson: true,
+        },
       });
 
-      // Calculate total lessons and completed lessons
-      const totalLessons = enrollment.course.modules.reduce(
-        (acc, module) => acc + module.lessons.length,
-        0
+      // Create a map of lessonId -> progress data for quick lookup
+      const progressMap = new Map(
+        lessonProgress.map((p) => [p.lessonId, p])
       );
 
-      const completedLessons = lessonProgress.length;
+      // Calculate total duration (in seconds) and total progress (in seconds)
+      let totalDurationInSeconds = 0;
+      let totalProgressInSeconds = 0;
+      let totalLessons = 0;
+      let completedLessons = 0;
+
+      enrollment.course.modules.forEach((module) => {
+        module.lessons.forEach((lesson) => {
+          totalLessons++;
+          totalDurationInSeconds += lesson.duration;
+
+          const progress = progressMap.get(lesson.id);
+          if (progress) {
+            // Add the actual time played (capped at lesson duration)
+            const timePlayed = Math.min(progress.timePlayed, lesson.duration);
+            totalProgressInSeconds += timePlayed;
+
+            // Consider a lesson "completed" if watched >= 90% of its duration
+            if (progress.timePlayed >= lesson.duration * 0.9) {
+              completedLessons++;
+            }
+          }
+        });
+      });
+
+      // Calculate overall progress percentage based on time watched
       const progressPercentage =
-        totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-
-      // Calculate total duration
-      const totalDurationInSeconds = enrollment.course.modules.reduce(
-        (acc, module) => {
-          const moduleDuration = module.lessons.reduce(
-            (sum, lesson) => sum + lesson.duration,
-            0
-          );
-          return acc + moduleDuration;
-        },
-        0
-      );
+        totalDurationInSeconds > 0
+          ? Math.round((totalProgressInSeconds / totalDurationInSeconds) * 100)
+          : 0;
 
       const totalDuration = Math.round(totalDurationInSeconds / 60); // Convert to minutes
 
