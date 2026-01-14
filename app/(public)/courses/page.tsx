@@ -1,4 +1,4 @@
-import { Search, Filter } from "lucide-react";
+import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { db } from "@/lib/prisma";
 import Link from "next/link";
 import { getAllCourses } from "@/actions";
@@ -219,7 +219,7 @@ export default async function CoursesPage({ searchParams }: PageProps) {
                   }`}
                   aria-disabled={currentPage === 1}
                 >
-                  <i data-lucide="chevron-left" className="w-4 h-4"></i>
+                  <ChevronLeft className="w-4 h-4" />
                 </Link>
 
                 {/* Page Numbers */}
@@ -249,7 +249,7 @@ export default async function CoursesPage({ searchParams }: PageProps) {
                   }`}
                   aria-disabled={currentPage === totalPages}
                 >
-                  <i data-lucide="chevron-right" className="w-4 h-4"></i>
+                  <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
