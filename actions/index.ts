@@ -5,3 +5,4 @@ export { getCourseBySlug } from "./getCourseBySlug";
 export { checkEnrollment } from "./checkEnrollment";
 export { createEnrollment } from "./createEnrollment";
 export { updateLessonProgress, resetLessonProgress } from "./progress";
+export { getAllEnrollments } from "./getAllEnrollments";
