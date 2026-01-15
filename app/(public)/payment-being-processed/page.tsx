@@ -2,20 +2,40 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function PaymentBeingProcessedPage() {
-  const { data: session, update } = useSession();
+  const { data: session, status: sessionStatus, update } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [status, setStatus] = useState<"processing" | "success" | "timeout">(
     "processing"
   );
   const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
+    // Wait for session to finish loading before making any redirect decisions
+    if (sessionStatus === "loading") {
+      return;
+    }
+    
+    // Prevent manual page access - must come from checkout with success param
+    const hasSuccessParam = searchParams.get("success") === "true";
+    
+    if (!hasSuccessParam) {
+      router.push("/pricing");
+      return;
+    }
+
     // Redirect to login if not authenticated
     if (!session) {
       router.push("/login");
+      return;
+    }
+
+    // If user is already PRO, no need to poll - go straight to dashboard
+    if (session.user.isPro) {
+      router.push("/overview");
       return;
     }
 
@@ -84,7 +104,7 @@ export default function PaymentBeingProcessedPage() {
       clearTimeout(timeoutTimer);
       clearInterval(elapsedTimer);
     };
-  }, [session, router, update]);
+  }, [session, sessionStatus, router, update, searchParams]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
