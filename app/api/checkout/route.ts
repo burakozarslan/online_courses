@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/overview?success=true`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-being-processed?success=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing`,
       metadata: {
         userId: session.user.id,
