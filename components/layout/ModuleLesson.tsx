@@ -4,11 +4,12 @@ import { Check, Play, RotateCw } from "lucide-react";
 import { COMPLETION_THRESHOLD } from "@/config";
 import type { Course, Lesson } from "@/courses";
 import { Dispatch, SetStateAction } from "react";
+import type { LessonType } from "../provider/CourseProvider";
+import { useCourse } from "../provider/CourseProvider";
+import { resetLessonProgress } from "@/actions/progress";
 
 interface ModuleLessonProps {
-  lesson: Lesson;
-  activeLessonId: string;
-  setCourse: Dispatch<SetStateAction<Course>>;
+  lesson: LessonType;
 }
 
 const CompletedIcon = () => {
@@ -43,46 +44,46 @@ function handleScrollToVideoPlayer() {
   window.scrollTo({ top: 280, left: 0, behavior: "smooth" });
 }
 
-export default function ModuleLesson({
-  lesson,
-  activeLessonId,
-  setCourse,
-}: ModuleLessonProps) {
-  const isActive = lesson.id === activeLessonId;
-  const isPlayed = lesson.timePlayed !== 0;
-  const progress = (lesson.timePlayed / lesson.duration) * 100;
-  const isCompleted = progress > COMPLETION_THRESHOLD;
-  const progressBarWidth = Math.floor((progress / 100) * 128);
+export default function ModuleLesson({ lesson }: ModuleLessonProps) {
+  const { activeLesson, setActiveLesson, updateLessonProgressInState } = useCourse();
+
+  const isActive = lesson?.id === activeLesson?.id;
+
+  const timePlayed = lesson?.userProgress[0]?.timePlayed ?? 0;
+  const duration = lesson?.duration || 1; // Avoid division by zero
+  const progress = (timePlayed / duration) * 100;
+
+  const isPlayed = timePlayed > 0;
+  const isCompleted = progress >= COMPLETION_THRESHOLD;
+  const progressBarWidth = Math.min(Math.floor((progress / 100) * 128), 128);
 
   function handleStartLesson() {
-    setCourse((course: Course) => ({
-      ...course,
-      activeLessonId: lesson.id,
-    }));
+    setActiveLesson(lesson);
+    console.log(lesson);
     handleScrollToVideoPlayer();
   }
 
-  function handleReplayLesson(id: string) {
-    setCourse((course: Course) => ({
-      ...course,
-      activeLessonId: lesson.id,
-      modules: course.modules.map((module) => {
-        if (module.id === lesson.moduleId) {
-          return {
-            ...module,
-            lessons: module.lessons.map((lesson) => {
-              if (lesson.id === id)
-                return {
-                  ...lesson,
-                  timePlayed: 0,
-                };
-              return lesson;
-            }),
-          };
-        }
-        return module;
-      }),
-    }));
+  async function handleReplayLesson(id: string) {
+    // Reset progress in the database
+    await resetLessonProgress(id);
+
+    // Update the local state
+    updateLessonProgressInState(id, 0);
+
+    // Set this lesson as active with reset progress
+    // We construct the new state manually to ensure we don't use the stale 'lesson' prop
+    setActiveLesson({
+      ...lesson,
+      userProgress: [
+        {
+          ...(lesson.userProgress[0] || {}),
+          timePlayed: 0,
+        },
+      ] as any,
+    });
+
+    // Scroll to video player
+    handleScrollToVideoPlayer();
   }
 
   return (

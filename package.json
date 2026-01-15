@@ -22,9 +22,11 @@
     "pg": "^8.16.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-player": "^3.4.0"
+    "react-player": "^3.4.0",
+    "stripe": "^20.1.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/pg": "^8.16.0",

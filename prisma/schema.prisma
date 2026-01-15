@@ -5,8 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider      = "prisma-client"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  output        = "../app/generated/prisma"
 }
 
 datasource db {
@@ -20,6 +21,12 @@ datasource db {
 enum MembershipPlan {
   FREE
   PRO
+}
+
+enum Difficulty {
+  BEGINNER // Effectively 1
+  INTERMEDIATE // Effectively 2
+  ADVANCED // Effectively 3
 }
 
 // ---------------------------------
@@ -36,11 +43,11 @@ model User {
 
   // -- Relationships --
   instructorProfile Instructor?
-  student           Student?
+  studentProfile    Student?
 }
 
 // ---------------------------------
-// INSTRUCTOR
+// INSTRUCTOR (ADMIN)
 // ---------------------------------
 
 model Instructor {
@@ -49,7 +56,6 @@ model Instructor {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   title String // Software Engineer etc
-  role  String @default("ADMIN")
 
   courses Course[] // Courses created by this instructor
 
@@ -66,7 +72,6 @@ model Student {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  title      String // Software Engineer etc
   membership MembershipPlan @default(FREE)
 
   // -- Stripe Subscription Data --
@@ -86,20 +91,32 @@ model Student {
 // COURSE CONTENT
 // ---------------------------------
 
+model Category {
+  id      String   @id @default(uuid())
+  name    String   @unique
+  courses Course[] // Implicit Many-to-Many
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Course {
   id           String     @id @default(uuid())
   instructorId String
   instructor   Instructor @relation(fields: [instructorId], references: [id], onDelete: Cascade)
 
   title       String
-  description String @db.Text
-  imageUrl    String @db.Text
-  slug        String @unique
+  description String     @db.Text
+  imageUrl    String     @db.Text
+  slug        String     @unique
+  difficulty  Difficulty @default(BEGINNER)
+  isFree      Boolean    @default(false)
 
   isPublished Boolean @default(false)
 
   modules     Module[]
   enrollments Enrollment[]
+  categories  Category[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -130,7 +147,6 @@ model Lesson {
   description String? @db.Text
   videoUrl    String? @db.Text
 
-  isFree   Boolean @default(false)
   duration Int
 
   moduleId String

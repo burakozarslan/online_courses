@@ -1,6 +1,9 @@
 -- CreateEnum
 CREATE TYPE "MembershipPlan" AS ENUM ('FREE', 'PRO');
 
+-- CreateEnum
+CREATE TYPE "Difficulty" AS ENUM ('BEGINNER', 'INTERMEDIATE', 'ADVANCED');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -18,7 +21,6 @@ CREATE TABLE "Instructor" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "role" TEXT NOT NULL DEFAULT 'ADMIN',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -29,16 +31,25 @@ CREATE TABLE "Instructor" (
 CREATE TABLE "Student" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "title" TEXT NOT NULL,
     "membership" "MembershipPlan" NOT NULL DEFAULT 'FREE',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
     "stripe_customer_id" TEXT,
     "stripe_subscription_id" TEXT,
     "stripe_price_id" TEXT,
     "stripe_current_period_end" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Student_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Category" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -49,10 +60,11 @@ CREATE TABLE "Course" (
     "description" TEXT NOT NULL,
     "imageUrl" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
+    "difficulty" "Difficulty" NOT NULL DEFAULT 'BEGINNER',
+    "isFree" BOOLEAN NOT NULL DEFAULT false,
     "isPublished" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "studentId" TEXT,
 
     CONSTRAINT "Course_pkey" PRIMARY KEY ("id")
 );
@@ -76,7 +88,6 @@ CREATE TABLE "Lesson" (
     "title" TEXT NOT NULL,
     "description" TEXT,
     "videoUrl" TEXT,
-    "isFree" BOOLEAN NOT NULL DEFAULT false,
     "duration" INTEGER NOT NULL,
     "moduleId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -109,6 +120,14 @@ CREATE TABLE "LessonProgress" (
     CONSTRAINT "LessonProgress_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "_CategoryToCourse" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL,
+
+    CONSTRAINT "_CategoryToCourse_AB_pkey" PRIMARY KEY ("A","B")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -123,6 +142,9 @@ CREATE UNIQUE INDEX "Student_stripe_customer_id_key" ON "Student"("stripe_custom
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Student_stripe_subscription_id_key" ON "Student"("stripe_subscription_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Course_slug_key" ON "Course"("slug");
@@ -151,6 +173,9 @@ CREATE INDEX "LessonProgress_lessonId_idx" ON "LessonProgress"("lessonId");
 -- CreateIndex
 CREATE UNIQUE INDEX "LessonProgress_studentId_lessonId_key" ON "LessonProgress"("studentId", "lessonId");
 
+-- CreateIndex
+CREATE INDEX "_CategoryToCourse_B_index" ON "_CategoryToCourse"("B");
+
 -- AddForeignKey
 ALTER TABLE "Instructor" ADD CONSTRAINT "Instructor_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -159,9 +184,6 @@ ALTER TABLE "Student" ADD CONSTRAINT "Student_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "Course" ADD CONSTRAINT "Course_instructorId_fkey" FOREIGN KEY ("instructorId") REFERENCES "Instructor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Course" ADD CONSTRAINT "Course_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Module" ADD CONSTRAINT "Module_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -183,3 +205,9 @@ ALTER TABLE "LessonProgress" ADD CONSTRAINT "LessonProgress_studentId_fkey" FORE
 
 -- AddForeignKey
 ALTER TABLE "LessonProgress" ADD CONSTRAINT "LessonProgress_lessonId_fkey" FOREIGN KEY ("lessonId") REFERENCES "Lesson"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_CategoryToCourse" ADD CONSTRAINT "_CategoryToCourse_A_fkey" FOREIGN KEY ("A") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_CategoryToCourse" ADD CONSTRAINT "_CategoryToCourse_B_fkey" FOREIGN KEY ("B") REFERENCES "Course"("id") ON DELETE CASCADE ON UPDATE CASCADE;
