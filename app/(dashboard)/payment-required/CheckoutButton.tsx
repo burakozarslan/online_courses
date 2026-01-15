@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CreditCard } from "lucide-react";
-import { proMembershipId } from "@/config";
+import { proMembershipPriceId } from "@/config";
 
 interface CheckoutButtonProps {
   courseSlug?: string;
@@ -24,7 +24,7 @@ export function CheckoutButton({ courseSlug }: CheckoutButtonProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          priceId: proMembershipId,
+          priceId: proMembershipPriceId,
         }),
       });
 

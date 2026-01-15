@@ -68,7 +68,8 @@ export async function POST(req: NextRequest) {
             stripeCustomerId: customerId,
             stripeSubscriptionId: subscriptionId,
             stripePriceId: subscription.items.data[0]?.price.id,
-            stripeCurrentPeriodEnd: new Date(subscription.current_period_end * 1000),
+            // TODO: Fix this - current_period_end is not available in the subscription object
+            stripeCurrentPeriodEnd: new Date(subscription.items.data[0]?.current_period_end * 1000),
             membership: "PRO",
           },
         });
@@ -78,7 +79,7 @@ export async function POST(req: NextRequest) {
       }
 
       case "customer.subscription.updated": {
-        const subscription = event.data.object as Stripe.Subscription;
+        const subscription = event.data.object;
 
         // Find student by subscription ID
         const student = await db.student.findUnique({
@@ -95,7 +96,7 @@ export async function POST(req: NextRequest) {
           where: { id: student.id },
           data: {
             stripePriceId: subscription.items.data[0]?.price.id,
-            stripeCurrentPeriodEnd: new Date(subscription.current_period_end * 1000),
+            stripeCurrentPeriodEnd: new Date(subscription.items.data[0]?.current_period_end * 1000),
             membership: subscription.status === "active" ? "PRO" : "FREE",
           },
         });
