@@ -1,8 +1,11 @@
 import Link from "next/link";
-import { PlayCircle, Menu, Flame } from "lucide-react";
+import { PlayCircle, Menu } from "lucide-react";
 import { getAllEnrollments } from "@/actions/getAllEnrollments";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export default async function DashboardPage() {
+  const session = await getServerSession(authOptions);
   const enrollments = await getAllEnrollments();
   const lastVisited = enrollments[0]; // Most recently updated enrollment
 
@@ -61,11 +64,15 @@ export default async function DashboardPage() {
               </p>
             </div>
             <div className="text-right hidden md:block">
-              <p className="text-caption text-neutral-400">CURRENT STREAK</p>
-              <div className="flex items-center justify-end gap-2 text-brand-600">
-                <Flame className="w-5 h-5 fill-current" />
-                <span className="text-heading-2">12 Days</span>
-              </div>
+              {session?.user?.isPro ? (
+                <div className="bg-brand-50 text-brand-700 text-caption px-4 py-2 border border-brand-200 font-bold tracking-wider">
+                  PRO PLAN
+                </div>
+              ) : (
+                <div className="bg-neutral-100 text-neutral-600 text-caption px-4 py-2 border border-neutral-300 font-bold tracking-wider">
+                  FREE PLAN
+                </div>
+              )}
             </div>
           </div>
 
