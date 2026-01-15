@@ -54,13 +54,31 @@ export const authOptions: NextAuthOptions = {
     error: "/error", // Error code passed in query string as ?error=
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       // Pass user properties to token on initial login
       if (user) {
         token.id = user.id;
         token.role = user.role;
         token.isPro = user.isPro;
       }
+      
+      // Handle session updates (when update() is called)
+      if (trigger === "update") {
+        // Re-fetch user data from database to get latest membership status
+        const freshUser = await db.user.findUnique({
+          where: { id: token.id as string },
+          include: { 
+            studentProfile: true,
+            instructorProfile: true 
+          }
+        });
+        
+        if (freshUser) {
+          token.role = freshUser.studentProfile ? "STUDENT" : "ADMIN";
+          token.isPro = freshUser.studentProfile?.membership === "PRO";
+        }
+      }
+      
       return token;
     },
     async session({ session, token }) {
