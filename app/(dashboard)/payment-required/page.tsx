@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Lock, CreditCard, CheckCircle2 } from "lucide-react";
 import { getCourseBySlug } from "@/actions/getCourseBySlug";
+import { CheckoutButton } from "./CheckoutButton";
 
 type PageProps = {
   searchParams: Promise<{ course?: string }>;
@@ -81,13 +82,7 @@ export default async function PaymentRequiredPage({ searchParams }: PageProps) {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href={`/pricing${courseSlug ? `?returnTo=/courses/${courseSlug}` : ""}`}
-              className="bg-brand-600 text-neutral-0 px-8 py-3 text-body font-medium hover:bg-brand-500 transition-colors flex items-center justify-center gap-2 shadow-md"
-            >
-              <CreditCard className="w-4 h-4" />
-              Upgrade to Pro
-            </Link>
+            <CheckoutButton courseSlug={courseSlug} />
             <Link
               href={courseSlug ? `/courses/${courseSlug}` : "/overview"}
               className="bg-neutral-0 text-neutral-700 border border-neutral-300 px-8 py-3 text-body font-medium hover:bg-neutral-50 transition-colors"
