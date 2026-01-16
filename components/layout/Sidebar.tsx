@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
   Settings,
@@ -10,6 +13,7 @@ import {
 import DashboardLogoutButton from "@/components/auth/DashboardLogoutButton";
 
 export default function Sidebar() {
+  const pathname = usePathname();
   return (
     <aside className="w-64 bg-neutral-900 text-neutral-400 flex flex-col fixed h-full border-r border-neutral-800 z-20 hidden md:flex">
       {/* <!-- Logo --> */}
@@ -39,28 +43,44 @@ export default function Sidebar() {
       <nav className="flex-1 py-6 px-3 space-y-1">
         <Link
           href="/overview"
-          className="flex items-center gap-3 px-3 py-2 bg-neutral-800 text-neutral-0 border-l-2 border-brand-500"
+          className={`flex items-center gap-3 px-3 py-2 border-l-2 transition-colors ${
+            pathname === "/overview"
+              ? "bg-neutral-800 text-neutral-0 border-brand-500"
+              : "text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-transparent"
+          }`}
         >
           <LayoutDashboard className="size-4" />
           <span className="text-body font-medium">Overview</span>
         </Link>
         <Link
           href="/learning"
-          className="flex items-center gap-3 px-3 py-2 text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-l-2 border-transparent transition-colors"
+          className={`flex items-center gap-3 px-3 py-2 border-l-2 transition-colors ${
+            pathname?.startsWith("/learning")
+              ? "bg-neutral-800 text-neutral-0 border-brand-500"
+              : "text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-transparent"
+          }`}
         >
           <BookOpen className="size-4" />
           <span className="text-body font-medium">Enrolled</span>
         </Link>
         <Link
           href="/achievements"
-          className="flex items-center gap-3 px-3 py-2 text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-l-2 border-transparent transition-colors"
+          className={`flex items-center gap-3 px-3 py-2 border-l-2 transition-colors ${
+            pathname === "/achievements"
+              ? "bg-neutral-800 text-neutral-0 border-brand-500"
+              : "text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-transparent"
+          }`}
         >
           <Award className="size-4" />
           <span className="text-body font-medium">Certificates</span>
         </Link>
         <Link
           href="/billing"
-          className="flex items-center gap-3 px-3 py-2 text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-l-2 border-transparent transition-colors"
+          className={`flex items-center gap-3 px-3 py-2 border-l-2 transition-colors ${
+            pathname === "/billing"
+              ? "bg-neutral-800 text-neutral-0 border-brand-500"
+              : "text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-transparent"
+          }`}
         >
           <CreditCard className="size-4" />
           <span className="text-body font-medium">Billing</span>
