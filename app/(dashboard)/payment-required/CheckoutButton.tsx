@@ -25,6 +25,7 @@ export function CheckoutButton({ courseSlug }: CheckoutButtonProps) {
         },
         body: JSON.stringify({
           priceId: proMembershipPriceId,
+          courseSlug: courseSlug,
         }),
       });
 
