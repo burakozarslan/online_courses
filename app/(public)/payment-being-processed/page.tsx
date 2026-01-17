@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -13,6 +13,7 @@ export default function PaymentBeingProcessedPage() {
     "processing"
   );
   const [elapsedTime, setElapsedTime] = useState(0);
+  const hasStartedPolling = useRef(false);
 
   useEffect(() => {
     // Wait for session to finish loading before making any redirect decisions
@@ -34,11 +35,19 @@ export default function PaymentBeingProcessedPage() {
       return;
     }
 
-    // If user is already PRO, no need to poll - go straight to dashboard
-    if (session.user.isPro) {
+    // If user is already PRO and we haven't started polling yet, redirect to overview
+    // (This prevents the case where user manually navigates here while already Pro)
+    if (session.user.isPro && !hasStartedPolling.current) {
       router.push("/overview");
       return;
     }
+
+    // If we've already started polling, don't start again (prevents race condition)
+    if (hasStartedPolling.current) {
+      return;
+    }
+
+    hasStartedPolling.current = true;
 
     let pollInterval: NodeJS.Timeout;
     let timeoutTimer: NodeJS.Timeout;
@@ -75,16 +84,16 @@ export default function PaymentBeingProcessedPage() {
               
               if (enrollmentResponse.ok) {
                 // Both subscription AND enrollment are ready!
+                clearInterval(pollInterval);
+                clearTimeout(timeoutTimer);
+                clearInterval(elapsedTimer);
+                
                 setStatus("success");
                 await update();
                 
                 setTimeout(() => {
                   router.push(`/learning/${courseSlug}`);
                 }, 1500);
-                
-                clearInterval(pollInterval);
-                clearTimeout(timeoutTimer);
-                clearInterval(elapsedTimer);
               }
             } catch (error) {
               console.error("Error checking enrollment:", error);
@@ -92,16 +101,16 @@ export default function PaymentBeingProcessedPage() {
             }
           } else {
             // No courseSlug - redirect to overview (general Pro upgrade)
+            clearInterval(pollInterval);
+            clearTimeout(timeoutTimer);
+            clearInterval(elapsedTimer);
+            
             setStatus("success");
             await update();
             
             setTimeout(() => {
               router.push("/overview");
             }, 1500);
-            
-            clearInterval(pollInterval);
-            clearTimeout(timeoutTimer);
-            clearInterval(elapsedTimer);
           }
         }
       } catch (error) {
