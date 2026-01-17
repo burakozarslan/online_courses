@@ -75,6 +75,61 @@ export async function POST(req: NextRequest) {
         });
 
         console.log(`✅ Subscription activated for student ${studentId}`);
+
+        // Auto-enroll in course if courseSlug is provided
+        const courseSlug = session.metadata?.courseSlug;
+
+        if (courseSlug) {
+          try {
+            // Get course by slug
+            const course = await db.course.findUnique({
+              where: { slug: courseSlug },
+            });
+
+            if (course) {
+              // Check if already enrolled (edge case)
+              const existingEnrollment = await db.enrollment.findFirst({
+                where: {
+                  studentId: studentId,
+                  courseId: course.id,
+                },
+              });
+
+              if (!existingEnrollment) {
+                // Get first lesson for currentLessonId
+                const firstModule = await db.module.findFirst({
+                  where: { courseId: course.id },
+                  orderBy: { no: "asc" },
+                  include: {
+                    lessons: {
+                      orderBy: { id: "asc" },
+                      take: 1,
+                    },
+                  },
+                });
+
+                // Create enrollment
+                await db.enrollment.create({
+                  data: {
+                    studentId: studentId,
+                    courseId: course.id,
+                    currentLessonId: firstModule?.lessons[0]?.id || null,
+                  },
+                });
+
+                console.log(`✅ Auto-enrolled student ${studentId} in course ${courseSlug}`);
+              } else {
+                console.log(`ℹ️ Student ${studentId} already enrolled in course ${courseSlug}`);
+              }
+            } else {
+              console.error(`❌ Course not found for slug: ${courseSlug}`);
+            }
+          } catch (error) {
+            // Don't throw - user can manually enroll later if this fails
+            console.error(`❌ Failed to auto-enroll in ${courseSlug}:`, error);
+          }
+        }
+
         break;
       }
 
