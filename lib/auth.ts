@@ -1,6 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "./prisma";
+import { env } from "@/lib/env";
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -99,5 +100,5 @@ export const authOptions: NextAuthOptions = {
       return `${baseUrl}/overview`;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET || "fallback-secret-dont-use-in-prod",
+  secret: env.NEXTAUTH_SECRET,
 };

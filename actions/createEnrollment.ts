@@ -4,9 +4,22 @@ import { db } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { checkEnrollment } from "./checkEnrollment";
+import { z } from "zod";
+
+const createEnrollmentSchema = z.object({
+  courseSlug: z.string().min(1),
+});
 
 // Server action to create enrollment
 export async function createEnrollment(courseSlug: string) {
+  const validation = createEnrollmentSchema.safeParse({ courseSlug });
+  if (!validation.success) {
+    return {
+      success: false,
+      error: "Invalid course slug",
+    };
+  }
+
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {

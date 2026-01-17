@@ -9,14 +9,16 @@ import { PrismaPg } from "@prisma/adapter-pg";
 // OR if you don't have aliases, use a relative path:
 // import { PrismaClient } from '../app/generated/prisma'
 
+import { env } from "@/lib/env";
+
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
 export const db =
   globalForPrisma.prisma ||
   new PrismaClient({
     adapter: new PrismaPg({
-      connectionString: process.env.DATABASE_URL,
+      connectionString: env.DATABASE_URL,
     }),
   });
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;
+if (env.NODE_ENV !== "production") globalForPrisma.prisma = db;
