@@ -21,9 +21,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Request validation - Get priceId from body
+    // 2. Request validation - Get priceId and courseSlug from body
     const body = await req.json();
-    const { priceId } = body;
+    const { priceId, courseSlug } = body;
 
     if (!priceId || typeof priceId !== "string") {
       return NextResponse.json(
@@ -69,6 +69,11 @@ export async function POST(req: NextRequest) {
     }
 
     // 5. Create Stripe checkout session
+    // Build success URL with courseSlug if present
+    const successUrl = courseSlug 
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}/payment-being-processed?success=true&course=${courseSlug}`
+      : `${process.env.NEXT_PUBLIC_BASE_URL}/payment-being-processed?success=true`;
+
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer: stripeCustomerId,
@@ -78,11 +83,12 @@ export async function POST(req: NextRequest) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-being-processed?success=true`,
+      success_url: successUrl,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing`,
       metadata: {
         userId: session.user.id,
         studentId: student.id,
+        courseSlug: courseSlug || '',
       },
     });
 
