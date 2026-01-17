@@ -8,6 +8,7 @@ export default function PaymentBeingProcessedPage() {
   const { data: session, status: sessionStatus, update } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const courseSlug = searchParams.get("course");
   const [status, setStatus] = useState<"processing" | "success" | "timeout">(
     "processing"
   );
@@ -60,21 +61,48 @@ export default function PaymentBeingProcessedPage() {
         const data = await response.json();
 
         if (data.hasSubscription) {
-          // Subscription is active! Update the session and redirect
-          setStatus("success");
-
-          // Update the NextAuth session to refresh the token
-          await update();
-
-          // Small delay to show success message
-          setTimeout(() => {
-            router.push("/overview");
-          }, 1500);
-
-          // Clear intervals
-          clearInterval(pollInterval);
-          clearTimeout(timeoutTimer);
-          clearInterval(elapsedTimer);
+          // Subscription is active! Now check enrollment if courseSlug exists
+          if (courseSlug) {
+            try {
+              const enrollmentResponse = await fetch(
+                `/api/enrollment?courseSlug=${courseSlug}`
+              );
+              
+              if (enrollmentResponse.status === 404) {
+                // Enrollment not created yet, keep polling
+                return;
+              }
+              
+              if (enrollmentResponse.ok) {
+                // Both subscription AND enrollment are ready!
+                setStatus("success");
+                await update();
+                
+                setTimeout(() => {
+                  router.push(`/learning/${courseSlug}`);
+                }, 1500);
+                
+                clearInterval(pollInterval);
+                clearTimeout(timeoutTimer);
+                clearInterval(elapsedTimer);
+              }
+            } catch (error) {
+              console.error("Error checking enrollment:", error);
+              // Continue polling even on errors
+            }
+          } else {
+            // No courseSlug - redirect to overview (general Pro upgrade)
+            setStatus("success");
+            await update();
+            
+            setTimeout(() => {
+              router.push("/overview");
+            }, 1500);
+            
+            clearInterval(pollInterval);
+            clearTimeout(timeoutTimer);
+            clearInterval(elapsedTimer);
+          }
         }
       } catch (error) {
         console.error("Error checking subscription:", error);
@@ -104,7 +132,7 @@ export default function PaymentBeingProcessedPage() {
       clearTimeout(timeoutTimer);
       clearInterval(elapsedTimer);
     };
-  }, [session, sessionStatus, router, update, searchParams]);
+  }, [session, sessionStatus, router, update, searchParams, courseSlug]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
