@@ -3,6 +3,12 @@ import { Course } from "@/app/generated/prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
+import { z } from "zod";
+
+const getEnrollmentSchema = z.object({
+  slug: z.string().min(1),
+  userId: z.string().optional(),
+});
 
 // Cached function to fetch the static course structure (Modules -> Lessons)
 // This data is the same for all users, so we can cache it aggressively.
@@ -30,6 +36,9 @@ export const getEnrollment = async (
   slug: Course["slug"],
   userId?: string // Allow passing userId to skip redundant session check
 ) => {
+  const validation = getEnrollmentSchema.safeParse({ slug, userId });
+  if (!validation.success) return null;
+
   let currentUserId = userId;
 
   if (!currentUserId) {

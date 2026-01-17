@@ -3,10 +3,17 @@ import { getServerSession } from "next-auth";
 import Stripe from "stripe";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/prisma";
+import { env } from "@/lib/env";
+import { z } from "zod";
 
 // Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2025-12-15.clover",
+});
+
+const checkoutSchema = z.object({
+  priceId: z.string().min(1),
+  courseSlug: z.string().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -23,14 +30,16 @@ export async function POST(req: NextRequest) {
 
     // 2. Request validation - Get priceId and courseSlug from body
     const body = await req.json();
-    const { priceId, courseSlug } = body;
+    const validation = checkoutSchema.safeParse(body);
 
-    if (!priceId || typeof priceId !== "string") {
-      return NextResponse.json(
+    if (!validation.success) {
+       return NextResponse.json(
         { error: "Invalid request - priceId is required" },
         { status: 400 }
       );
     }
+
+    const { priceId, courseSlug } = validation.data;
 
     // 3. Get student profile
     const student = await db.student.findUnique({
@@ -71,8 +80,8 @@ export async function POST(req: NextRequest) {
     // 5. Create Stripe checkout session
     // Build success URL with courseSlug if present
     const successUrl = courseSlug 
-      ? `${process.env.NEXT_PUBLIC_BASE_URL}/payment-being-processed?success=true&course=${courseSlug}`
-      : `${process.env.NEXT_PUBLIC_BASE_URL}/payment-being-processed?success=true`;
+      ? `${env.NEXT_PUBLIC_BASE_URL}/payment-being-processed?success=true&course=${courseSlug}`
+      : `${env.NEXT_PUBLIC_BASE_URL}/payment-being-processed?success=true`;
 
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -84,7 +93,7 @@ export async function POST(req: NextRequest) {
         },
       ],
       success_url: successUrl,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing`,
+      cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/pricing`,
       metadata: {
         userId: session.user.id,
         studentId: student.id,
