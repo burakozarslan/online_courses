@@ -55,7 +55,6 @@ export default function ModuleLesson({ lesson }: ModuleLessonProps) {
 
   const isPlayed = timePlayed > 0;
   const isCompleted = progress >= COMPLETION_THRESHOLD;
-  const progressBarWidth = Math.min(Math.floor((progress / 100) * 128), 128);
 
   function handleStartLesson() {
     setActiveLesson(lesson);
@@ -105,7 +104,7 @@ export default function ModuleLesson({ lesson }: ModuleLessonProps) {
             <div
               className={`h-full bg-brand-500`}
               style={{
-                width: progressBarWidth,
+                width: `${progress}%`,
               }}
             ></div>
           </div>
