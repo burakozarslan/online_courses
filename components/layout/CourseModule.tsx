@@ -11,11 +11,13 @@ interface CourseModuleProps {
   module: ModuleType;
 }
 
-// TODO: create
 export default function CourseModule({ module }: CourseModuleProps) {
-  // TODO: Default this to isActive state
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { activeLesson } = useCourse();
+  const isActiveModule = !!module.lessons.find(
+    (lesson) => lesson.id === activeLesson?.id
+  );
+  
+  const [isOpen, setIsOpen] = useState<boolean>(isActiveModule);
 
   const numberOfLessons = module.lessons.length;
   const numberOfCompletedLessons = module.lessons.filter(
@@ -24,9 +26,6 @@ export default function CourseModule({ module }: CourseModuleProps) {
       COMPLETION_THRESHOLD
   ).length;
   const isModuleCompleted = numberOfLessons === numberOfCompletedLessons;
-  const isActiveModule = !!module.lessons.find(
-    (lesson) => lesson.id === activeLesson?.id
-  );
 
   return (
     <div
