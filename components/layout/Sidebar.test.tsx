@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { SessionProvider } from "next-auth/react";
 import Sidebar from "./Sidebar";
 
 // Mock next/navigation
@@ -32,26 +33,53 @@ vi.mock("../auth/DashboardLogoutButton", () => ({
 
 import { usePathname } from "next/navigation";
 
+// Helper function to render Sidebar with SessionProvider
+const renderSidebar = (isPro: boolean = true) => {
+  const mockSession = {
+    user: {
+      id: "1",
+      name: "John Doe",
+      email: "john@example.com",
+      role: "STUDENT",
+      isPro,
+    },
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+  };
+
+  return render(
+    <SessionProvider session={mockSession}>
+      <Sidebar />
+    </SessionProvider>
+  );
+};
+
 describe("Sidebar", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it("renders sidebar with logo", () => {
-    render(<Sidebar />);
+    renderSidebar();
 
     expect(screen.getByText("DASHBOARD")).toBeInTheDocument();
   });
 
   it("renders user info section", () => {
-    render(<Sidebar />);
+    renderSidebar();
 
     expect(screen.getByText("John Doe")).toBeInTheDocument();
     expect(screen.getByText("PRO MEMBER")).toBeInTheDocument();
   });
 
+  it("renders user info section for free member", () => {
+    renderSidebar(false);
+
+    expect(screen.getByText("John Doe")).toBeInTheDocument();
+    expect(screen.getByText("FREE MEMBER")).toBeInTheDocument();
+  });
+
   it("renders navigation links", () => {
-    render(<Sidebar />);
+    renderSidebar();
 
     expect(screen.getByText("Overview")).toBeInTheDocument();
     expect(screen.getByText("Enrolled")).toBeInTheDocument();
@@ -60,7 +88,7 @@ describe("Sidebar", () => {
   });
 
   it("renders settings and logout links", () => {
-    render(<Sidebar />);
+    renderSidebar();
 
     expect(screen.getByText("Settings")).toBeInTheDocument();
     expect(screen.getByTestId("logout-button")).toBeInTheDocument();
@@ -68,7 +96,7 @@ describe("Sidebar", () => {
 
   it("highlights active route for /overview", () => {
     vi.mocked(usePathname).mockReturnValue("/overview");
-    const { container } = render(<Sidebar />);
+    const { container } = renderSidebar();
 
     const overviewLink = screen.getByText("Overview").closest("a");
     expect(overviewLink).toHaveClass("bg-neutral-800", "text-neutral-0", "border-brand-500");
@@ -76,7 +104,7 @@ describe("Sidebar", () => {
 
   it("highlights active route for /learning paths", () => {
     vi.mocked(usePathname).mockReturnValue("/learning/course-1");
-    const { container } = render(<Sidebar />);
+    const { container } = renderSidebar();
 
     const enrolledLink = screen.getByText("Enrolled").closest("a");
     expect(enrolledLink).toHaveClass("bg-neutral-800", "text-neutral-0", "border-brand-500");
@@ -84,7 +112,7 @@ describe("Sidebar", () => {
 
   it("highlights active route for /achievements", () => {
     vi.mocked(usePathname).mockReturnValue("/achievements");
-    const { container } = render(<Sidebar />);
+    const { container } = renderSidebar();
 
     const certificatesLink = screen.getByText("Certificates").closest("a");
     expect(certificatesLink).toHaveClass("bg-neutral-800", "text-neutral-0", "border-brand-500");
@@ -92,7 +120,7 @@ describe("Sidebar", () => {
 
   it("highlights active route for /billing", () => {
     vi.mocked(usePathname).mockReturnValue("/billing");
-    const { container } = render(<Sidebar />);
+    const { container } = renderSidebar();
 
     const billingLink = screen.getByText("Billing").closest("a");
     expect(billingLink).toHaveClass("bg-neutral-800", "text-neutral-0", "border-brand-500");
@@ -100,7 +128,7 @@ describe("Sidebar", () => {
 
   it("applies inactive styling to non-active routes", () => {
     vi.mocked(usePathname).mockReturnValue("/overview");
-    render(<Sidebar />);
+    renderSidebar();
 
     const enrolledLink = screen.getByText("Enrolled").closest("a");
     expect(enrolledLink).not.toHaveClass("bg-neutral-800", "border-brand-500");
@@ -108,7 +136,7 @@ describe("Sidebar", () => {
   });
 
   it("renders with correct navigation links hrefs", () => {
-    render(<Sidebar />);
+    renderSidebar();
 
     expect(screen.getByText("Overview").closest("a")).toHaveAttribute("href", "/overview");
     expect(screen.getByText("Enrolled").closest("a")).toHaveAttribute("href", "/learning");
@@ -117,7 +145,7 @@ describe("Sidebar", () => {
   });
 
   it("renders with correct styling classes", () => {
-    const { container } = render(<Sidebar />);
+    const { container } = renderSidebar();
 
     const sidebar = container.querySelector("aside");
     expect(sidebar).toHaveClass("bg-neutral-900", "text-neutral-400");
