@@ -4,7 +4,9 @@ import { useEffect, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function PaymentBeingProcessedPage() {
+import { Suspense } from "react";
+
+function PaymentBeingProcessedContent() {
   const { data: session, status: sessionStatus, update } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -256,5 +258,13 @@ export default function PaymentBeingProcessedPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function PaymentBeingProcessedPage() {
+  return (
+    <Suspense fallback={<div>Loading payment status...</div>}>
+      <PaymentBeingProcessedContent />
+    </Suspense>
   );
 }
