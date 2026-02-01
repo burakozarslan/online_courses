@@ -3,7 +3,7 @@ import { db } from "@/lib/prisma";
 import Link from "next/link";
 import { getAllCourses } from "@/actions/getAllCourses";
 
-const ITEMS_PER_PAGE = 2;
+const ITEMS_PER_PAGE = 6;
 
 type PageProps = {
   searchParams: Promise<{ page?: string }>;
