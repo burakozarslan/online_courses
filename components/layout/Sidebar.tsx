@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import {
   Settings,
@@ -14,6 +15,12 @@ import DashboardLogoutButton from "@/components/auth/DashboardLogoutButton";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const session = useSession();
+
+  if (session.status === "loading") {
+    return null;
+  }
+
   return (
     <aside className="w-64 bg-neutral-900 text-neutral-400 flex flex-col fixed h-full border-r border-neutral-800 z-20 hidden md:flex">
       {/* <!-- Logo --> */}
@@ -33,8 +40,8 @@ export default function Sidebar() {
             JD
           </div>
           <div>
-            <div className="text-body text-neutral-200">John Doe</div>
-            <div className="text-caption text-brand-500">PRO MEMBER</div>
+            <div className="text-body text-neutral-200">{session.data?.user?.name}</div>
+            <div className="text-caption text-brand-500">{session.data?.user.isPro ? "PRO MEMBER" : "FREE MEMBER"}</div>
           </div>
         </div>
       </div>
@@ -90,8 +97,12 @@ export default function Sidebar() {
       {/* <!-- Bottom Links --> */}
       <div className="p-4 border-t border-neutral-800">
         <Link
-          href="#"
-          className="flex items-center gap-3 px-3 py-2 text-neutral-500 hover:text-neutral-300 transition-colors"
+          href="/settings"
+          className={`flex items-center gap-3 px-3 py-2 border-l-2 transition-colors ${
+            pathname === "/settings"
+              ? "bg-neutral-800 text-neutral-0 border-brand-500"
+              : "text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-transparent"
+          }`}
         >
           <Settings className="size-4" />
           <span className="text-caption">Settings</span>
