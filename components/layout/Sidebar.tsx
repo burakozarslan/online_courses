@@ -97,8 +97,12 @@ export default function Sidebar() {
       {/* <!-- Bottom Links --> */}
       <div className="p-4 border-t border-neutral-800">
         <Link
-          href="#"
-          className="flex items-center gap-3 px-3 py-2 text-neutral-500 hover:text-neutral-300 transition-colors"
+          href="/settings"
+          className={`flex items-center gap-3 px-3 py-2 border-l-2 transition-colors ${
+            pathname === "/settings"
+              ? "bg-neutral-800 text-neutral-0 border-brand-500"
+              : "text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-transparent"
+          }`}
         >
           <Settings className="size-4" />
           <span className="text-caption">Settings</span>
