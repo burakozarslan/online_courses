@@ -3,62 +3,31 @@ import {
   MembershipPlan,
   Difficulty,
 } from "@/app/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
 import { faker } from "@faker-js/faker";
 import "dotenv/config";
+import bcrypt from "bcrypt";
+import { db } from "@/lib/prisma";
 
-const prisma = new PrismaClient({
-  adapter: new PrismaPg({
-    connectionString: process.env.DATABASE_URL,
-  }),
-});
+const prisma = db;
 
-// Reuse the provided video data for realism, mixed with some others
+// 1. Video Pool (Realistic durations & YouTube links)
 const VIDEO_POOL = [
   { src: "https://youtu.be/98BzS5Oz5E4", duration: 425 },
   { src: "https://youtu.be/8DploTqLstE", duration: 931 },
   { src: "https://youtu.be/Ll6knx7sFis", duration: 818 },
   { src: "https://youtu.be/s0anSjEeua8", duration: 529 },
-  { src: "https://youtu.be/pTFZFxd4hOI", duration: 600 }, // TypeScript
-  { src: "https://youtu.be/P6FORpg0KVo", duration: 1200 }, // Tech Talk
-];
-
-const MERN_COURSE_MODULES = [
-  {
-    title: "Introduction",
-    lessons: [
-      {
-        title: "What is the MERN Stack?",
-        description:
-          "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API.",
-        src: "https://youtu.be/98BzS5Oz5E4",
-        duration: 425,
-      },
-      {
-        title: "Express App Setup",
-        description: "Setting up the backend foundation.",
-        src: "https://youtu.be/8DploTqLstE",
-        duration: 931,
-      },
-    ],
-  },
-  {
-    title: "MongoDB",
-    lessons: [
-      {
-        title: "Express Router & API Routes",
-        description: "Creating API endpoints.",
-        src: "https://youtu.be/Ll6knx7sFis",
-        duration: 818,
-      },
-      {
-        title: "MongoDB Atlas & Mongoose",
-        description: "Connecting to the database.",
-        src: "https://youtu.be/s0anSjEeua8",
-        duration: 529,
-      },
-    ],
-  },
+  { src: "https://youtu.be/pTFZFxd4hOI", duration: 3372 },
+  { src: "https://youtu.be/P6FORpg0KVo", duration: 1200 },
+  { src: "https://www.youtube.com/watch?v=p8Za5MtyVdg", duration: 1620 },
+  { src: "https://www.youtube.com/watch?v=voLJ3CmaM1s", duration: 4500 },
+  { src: "https://www.youtube.com/watch?v=gFqER1FC5Ig", duration: 1080 },
+  { src: "https://www.youtube.com/watch?v=LDB4uaJ87e0", duration: 11040 },
+  { src: "https://www.youtube.com/watch?v=7SKVQyA4TjU", duration: 1320 },
+  { src: "https://www.youtube.com/watch?v=kUMe1FH4CHE", duration: 14820 },
+  { src: "https://www.youtube.com/watch?v=rfscVS0vtbw", duration: 15960 },
+  { src: "https://www.youtube.com/watch?v=PkZNo7MFNFg", duration: 12360 },
+  { src: "https://www.youtube.com/watch?v=vLnPwxZdW4Y", duration: 14460 },
+  { src: "https://www.youtube.com/watch?v=8hly31xKli0", duration: 7320 },
 ];
 
 const CATEGORIES = [
@@ -67,6 +36,157 @@ const CATEGORIES = [
   "Mobile Development",
   "Data Science",
   "Cloud Computing",
+  "Cybersecurity",
+];
+
+// 2. Realistic Course Data
+// 10 Free Courses
+const FREE_COURSES = [
+  {
+    title: "Introduction to Python Programming",
+    category: "Data Science",
+    difficulty: Difficulty.BEGINNER,
+    description: "Learn the fundamentals of Python, the most popular programming language for data science and web development. No prior experience required."
+  },
+  {
+    title: "HTML5 & CSS3 Fundamentals",
+    category: "Web Development",
+    difficulty: Difficulty.BEGINNER,
+    description: "Build your first website with semantic HTML and style it with modern CSS. Understand the core building blocks of the web."
+  },
+  {
+    title: "JavaScript for Beginners",
+    category: "Web Development",
+    difficulty: Difficulty.BEGINNER,
+    description: "Step into the world of interactive web pages. Learn variables, loops, functions, and DOM manipulation in JavaScript."
+  },
+  {
+    title: "Git & GitHub Essentials",
+    category: "DevOps",
+    difficulty: Difficulty.BEGINNER,
+    description: "Master version control. Learn how to track changes, collaborate with teams, and manage your code repositories efficiently."
+  },
+  {
+    title: "Command Line Interface Mastery",
+    category: "DevOps",
+    difficulty: Difficulty.BEGINNER,
+    description: "Stop fearing the terminal. Learn essential shell commands, file manipulation, and scripting to boost your productivity."
+  },
+  {
+    title: "SQL Database Basics",
+    category: "Data Science",
+    difficulty: Difficulty.BEGINNER,
+    description: "Learn to communicate with databases. Understand SELECT, INSERT, UPDATE, DELETE and how to structure relational data."
+  },
+  {
+    title: "VS Code Power User",
+    category: "Web Development",
+    difficulty: Difficulty.BEGINNER,
+    description: "Unlock the full potential of Visual Studio Code. Master shortcuts, extensions, and debugging tools to write code faster."
+  },
+  {
+    title: "Web Accessibility (A11y)",
+    category: "Web Development",
+    difficulty: Difficulty.INTERMEDIATE,
+    description: "Make the web usable for everyone. Learn ARIA roles, semantic HTML, and best practices for building inclusive applications."
+  },
+  {
+    title: "Introduction to Linux",
+    category: "DevOps",
+    difficulty: Difficulty.BEGINNER,
+    description: "Get started with the Linux operating system. specific focus on server environment, permissions, and package management."
+  },
+  {
+    title: "Responsive Web Design",
+    category: "Web Development",
+    difficulty: Difficulty.BEGINNER,
+    description: "Learn to build websites that look great on any device, from mobile phones to large desktop screens, using Flexbox and Grid."
+  },
+];
+
+// 10 Paid Courses
+const PAID_COURSES = [
+  {
+    title: "Advanced React & Next.js Patterns",
+    category: "Web Development",
+    difficulty: Difficulty.ADVANCED,
+    description: "Take your React skills to the next level. Master Server Components, Suspense, Custom Hooks, and advanced state management."
+  },
+  {
+    title: "Node.js Microservices Architecture",
+    category: "Web Development",
+    difficulty: Difficulty.ADVANCED,
+    description: "Architect scalable backend systems. Learn to decompose monoliths, handle inter-service communication, and deploy microservices."
+  },
+  {
+    title: "Kubernetes for Developers",
+    category: "DevOps",
+    difficulty: Difficulty.ADVANCED,
+    description: "Orchestrate your containers like a pro. Deep dive into Pods, Services, Deployments, and Helm charts for production clusters."
+  },
+  {
+    title: "AWS Certified Solutions Architect",
+    category: "Cloud Computing",
+    difficulty: Difficulty.ADVANCED,
+    description: "Comprehensive preparation for the AWS exam. Cover EC2, S3, RDS, VPC, and best practices for cloud architecture."
+  },
+  {
+    title: "Machine Learning with TensorFlow",
+    category: "Data Science",
+    difficulty: Difficulty.ADVANCED,
+    description: "Build and train neural networks. Learn computer vision, natural language processing, and predictive modeling with Python."
+  },
+  {
+    title: "Rust Systems Programming",
+    category: "Web Development",
+    difficulty: Difficulty.INTERMEDIATE,
+    description: "Write memory-safe and high-performance code. Understand ownership, borrowing, lifetimes, and concurrency in Rust."
+  },
+  {
+    title: "Go Language Concurrency Guide",
+    category: "Web Development",
+    difficulty: Difficulty.INTERMEDIATE,
+    description: "Master Goroutines and Channels. Build highly concurrent and efficient backend services using the Go programming language."
+  },
+  {
+    title: "Docker Deep Dive",
+    category: "DevOps",
+    difficulty: Difficulty.INTERMEDIATE,
+    description: "Containerize everything. Learn how to build optimized Docker images, manage multi-container apps with Compose, and networking."
+  },
+  {
+    title: "System Design Interview Guide",
+    category: "Web Development",
+    difficulty: Difficulty.ADVANCED,
+    description: "Ace your tech interviews. Learn to design scalable systems like Twitter, Uber, and Netflix from the ground up."
+  },
+  {
+    title: "Ethical Hacking & Cybersecurity",
+    category: "Cybersecurity",
+    difficulty: Difficulty.INTERMEDIATE,
+    description: "Understand common vulnerabilities. Learn penetration testing, SQL injection, XSS, and how to secure your applications."
+  },
+];
+
+const MODULE_TITLES = [
+  "Getting Started",
+  "Core Concepts",
+  "Advanced Techniques",
+  "Real World Project",
+  "Testing & Deployment"
+];
+
+const LESSON_TITLES = [
+  "Environment Setup",
+  "Understanding the Basics",
+  "Deep Dive into Logic",
+  "State Management",
+  "API Integration",
+  "Error Handling Strategies",
+  "Performance Optimization",
+  "Security Best Practices",
+  "Final Build & Launch",
+  "Course Summary",
 ];
 
 function generateSlug(title: string) {
@@ -84,6 +204,7 @@ async function main() {
   console.log("🌱 Starting seed...");
 
   // 1. Clean Database
+  console.log("🧹 Cleaning database...");
   await prisma.lessonProgress.deleteMany({});
   await prisma.enrollment.deleteMany({});
   await prisma.lesson.deleteMany({});
@@ -93,7 +214,6 @@ async function main() {
   await prisma.instructor.deleteMany({});
   await prisma.user.deleteMany({});
   await prisma.category.deleteMany({});
-
   console.log("🧹 DB Cleaned.");
 
   // 2. Create Categories
@@ -104,12 +224,14 @@ async function main() {
   }
 
   // 3. Create Users
+  const hashedPassword = await bcrypt.hash("password123", 10);
+
   // Instructor
   const instructorUser = await prisma.user.create({
     data: {
       email: "instructor@example.com",
       name: "Alice Instructor",
-      password: "password123", // In a real app, hash this
+      password: hashedPassword,
       instructorProfile: {
         create: {
           title: "Senior Lead Instructor",
@@ -120,187 +242,82 @@ async function main() {
   });
 
   // Free Student
-  const freeUser = await prisma.user.create({
+  await prisma.user.create({
     data: {
       email: "free@example.com",
       name: "Frank Free",
-      password: "password123",
+      password: hashedPassword,
       studentProfile: {
         create: {
           membership: MembershipPlan.FREE,
         },
       },
     },
-    include: { studentProfile: true },
   });
 
-  // Pro Student
-  // const proUser = await prisma.user.create({
-  //   data: {
-  //     email: "pro@example.com",
-  //     name: "Pat Pro",
-  //     password: "password123",
-  //     studentProfile: {
-  //       create: {
-  //         membership: MembershipPlan.PRO,
-  //       },
-  //     },
-  //   },
-  //   include: { studentProfile: true },
-  // });
-
-  if (
-    !instructorUser.instructorProfile ||
-    !freeUser.studentProfile ||
-    // !proUser.studentProfile
-  ) {
-    throw new Error("Failed to create users");
+  if (!instructorUser.instructorProfile) {
+    throw new Error("Failed to create instructor");
   }
 
   console.log("👥 Users created.");
 
   // 4. Create Courses
-  // We need 5 courses: 3 Paid, 2 Free.
-  // We'll define them simply.
-  // Course 1: MERN (Paid) - reusing provided data
-  // Course 2: Paid
-  // Course 3: Paid
-  // Course 4: Free
-  // Course 5: Free
+  const allCourseDefinitions = [
+    ...FREE_COURSES.map(c => ({ ...c, isFree: true })),
+    ...PAID_COURSES.map(c => ({ ...c, isFree: false }))
+  ].sort(() => Math.random() - 0.5);
 
-  const coursesCreated = [];
-
-  for (let i = 0; i < 5; i++) {
-    const isMern = i === 0;
-    const isFree = i >= 3; // 0,1,2 = Paid; 3,4 = Free
-
-    let title, desc, modulesData, categoryName;
-
-    if (isMern) {
-      title = "MERN Stack Tutorial";
-      desc =
-        "Master the art of building headless e-commerce. Learn to connect Next.js App Router with Shopifys Storefront API and handle webhooks securely with Prisma and NextAuth.";
-      modulesData = MERN_COURSE_MODULES;
-      categoryName = "Web Development";
-    } else {
-      title = `${faker.company.buzzAdjective()} ${faker.company.buzzNoun()} Masterclass`;
-      desc = faker.lorem.paragraph();
-      categoryName = CATEGORIES[i % CATEGORIES.length];
-
-      // Generate modules for non-MERN courses
-      modulesData = [];
-      const numModules = faker.number.int({ min: 2, max: 4 });
-      for (let m = 0; m < numModules; m++) {
-        const lessons = [];
-        const numLessons = faker.number.int({ min: 2, max: 4 });
-        for (let l = 0; l < numLessons; l++) {
-          const vid =
-            VIDEO_POOL[
-              faker.number.int({ min: 0, max: VIDEO_POOL.length - 1 })
-            ];
-          lessons.push({
-            title: faker.company.catchPhrase(),
-            description: faker.lorem.sentence(),
-            src: vid.src,
-            duration: vid.duration,
-          });
-        }
-        modulesData.push({
-          title: `Module ${m + 1}: ${faker.science.unit()}`,
-          lessons,
-        });
-      }
-    }
-
-    // Create the Course
+  for (const def of allCourseDefinitions) {
+    // Create Course
+    const categoryId = categoryMap.get(def.category) || categoryMap.get("Web Development"); // fallback
+    
     const course = await prisma.course.create({
       data: {
         instructorId: instructorUser.instructorProfile.id,
-        title: isFree ? `[Free] ${title}` : `[Pro] ${title}`,
-        slug: generateSlug(title),
-        description: desc,
-        imageUrl: faker.image.urlLoremFlickr({ category: "tech" }),
-        difficulty: isMern ? Difficulty.INTERMEDIATE : Difficulty.BEGINNER,
+        title: def.title,
+        slug: generateSlug(def.title),
+        description: def.description,
+        imageUrl: faker.image.urlLoremFlickr({ category: "tech" }), // or specific keywords
+        difficulty: def.difficulty,
         isPublished: true,
-        isFree: isFree,
-        categories: { connect: { id: categoryMap.get(categoryName) } },
+        isFree: def.isFree,
+        categories: { connect: { id: categoryId } },
       },
     });
 
-    // Create Modules & Lessons
-    const createdLessons = [];
-    let modNo = 1;
-    for (const modData of modulesData) {
-      const courseModule = await prisma.module.create({
-        data: {
-          courseId: course.id,
-          title: modData.title,
-          no: modNo++,
-        },
-      });
-
-      for (const les of modData.lessons) {
-        const lesson = await prisma.lesson.create({
-          data: {
-            moduleId: courseModule.id,
-            title: les.title,
-            description: les.description,
-            videoUrl: les.src,
-            duration: les.duration,
-          },
+    // Create Modules
+    const numModules = faker.number.int({ min: 3, max: 5 });
+    for (let i = 0; i < numModules; i++) {
+        const moduleTitle = MODULE_TITLES[i] || `Advanced Topic ${i}`;
+        
+        const mod = await prisma.module.create({
+            data: {
+                courseId: course.id,
+                title: moduleTitle,
+                no: i + 1,
+            }
         });
-        createdLessons.push(lesson);
-      }
-    }
 
-    coursesCreated.push({
-      id: course.id,
-      isFree,
-      lessons: createdLessons,
-    });
+        // Create Lessons
+        const numLessons = faker.number.int({ min: 2, max: 5 });
+        for (let j = 0; j < numLessons; j++) {
+            const vid = VIDEO_POOL[faker.number.int({ min: 0, max: VIDEO_POOL.length - 1 })];
+            const titleIndex = (i * 2 + j) % LESSON_TITLES.length;
+            
+            await prisma.lesson.create({
+                data: {
+                    moduleId: mod.id,
+                    title: LESSON_TITLES[titleIndex],
+                    description: `In this lesson, we will cover ${LESSON_TITLES[titleIndex].toLowerCase()} and its related concepts.`,
+                    videoUrl: vid.src,
+                    duration: vid.duration,
+                }
+            });
+        }
+    }
   }
 
-  console.log(`📚 ${coursesCreated.length} Courses created.`);
-
-  // 5. Enrollments & Progress
-  // Helper to enroll
-  const enroll = async (studentId: string, courseIdx: number) => {
-    const courseData = coursesCreated[courseIdx];
-    // Select 1 random lesson
-    const randomLesson =
-      courseData.lessons[Math.floor(Math.random() * courseData.lessons.length)];
-    // Random time played < duration
-    const timePlayed = Math.floor(Math.random() * (randomLesson.duration - 10));
-
-    // Create Progress
-    await prisma.lessonProgress.create({
-      data: {
-        studentId,
-        lessonId: randomLesson.id,
-        timePlayed,
-      },
-    });
-
-    // Create Enrollment
-    await prisma.enrollment.create({
-      data: {
-        studentId,
-        courseId: courseData.id,
-        currentLessonId: randomLesson.id,
-      },
-    });
-  };
-
-  // Enroll Free Student (Courses 3 and 4 -> indices 3 and 4)
-  await enroll(freeUser.studentProfile.id, 3);
-  await enroll(freeUser.studentProfile.id, 4);
-
-  // // Enroll Pro Student (All 5 courses -> indices 0 to 4)
-  // for (let i = 0; i < 5; i++) {
-  //   await enroll(proUser.studentProfile.id, i);
-  // }
-
-  console.log("🎓 Enrollments and Progress created.");
+  console.log(`📚 ${allCourseDefinitions.length} Courses created.`);
   console.log("✅ Seed complete.");
 }
 

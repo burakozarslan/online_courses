@@ -2,6 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "./prisma";
 import { env } from "@/lib/env";
+import bcrypt from "bcrypt";
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -30,10 +31,13 @@ export const authOptions: NextAuthOptions = {
         if (!user) return null;
 
         // 3. Verify credentials (dummy check)
-        if (
-          credentials.email === user.email &&
-          credentials.password === user.password
-        ) {
+        // 3. Verify credentials
+        const passwordMatch = await bcrypt.compare(
+          credentials.password,
+          user.password || ""
+        );
+
+        if (passwordMatch) {
           // Any object returned will be saved in `user` property of the JWT
           return {
             ...user,
