@@ -16,9 +16,34 @@ import { authOptions } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import EnrollButton from "./EnrollButton";
 
+import type { Metadata } from "next";
+
 type PageProps = {
   params: Promise<{ courseSlug: string }>;
 };
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { courseSlug } = await params;
+  const course = await getCourseBySlug(courseSlug);
+
+  if (!course) {
+    return {
+      title: "Course Not Found",
+    };
+  }
+
+  return {
+    title: `${course.title} | Lumina`,
+    description: course.description,
+    openGraph: {
+      title: course.title,
+      description: course.description,
+      images: [course.imageUrl],
+    },
+  };
+}
 
 function formatCourseDifficulty(difficulty: string) {
   if (difficulty === "BEGINNER") return "Beginner";
