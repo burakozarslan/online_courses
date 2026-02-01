@@ -406,14 +406,6 @@ export default function SettingsClientPage({ subscription }: SettingsClientPageP
           </div>
         </div>
       </div>
-
-      {/* Status Indicator */}
-      <div className="mt-6 bg-neutral-50 border border-neutral-200 px-4 py-2 flex justify-between items-center text-caption text-neutral-400">
-        <span className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 bg-brand-500 rounded-none"></span>
-          SETTINGS_PAGE
-        </span>
-      </div>
     </div>
   );
 }
