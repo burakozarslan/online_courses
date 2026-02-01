@@ -2,12 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { db } from "@/lib/prisma";
 import { env } from "@/lib/env";
-
-// Initialize Stripe
-const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2025-12-15.clover",
-  typescript: true,
-});
+import { stripe } from "@/lib/stripe";
 
 const webhookSecret = env.STRIPE_WEBHOOK_SECRET;
 
@@ -69,8 +64,8 @@ export async function POST(req: NextRequest) {
             stripeCustomerId: customerId,
             stripeSubscriptionId: subscriptionId,
             stripePriceId: subscription.items.data[0]?.price.id,
-            // TODO: Fix this - current_period_end is not available in the subscription object
             stripeCurrentPeriodEnd: new Date(subscription.items.data[0]?.current_period_end * 1000),
+            stripeCancelAtPeriodEnd: false, // Default to false on new sub
             membership: "PRO",
           },
         });
@@ -135,7 +130,7 @@ export async function POST(req: NextRequest) {
       }
 
       case "customer.subscription.updated": {
-        const subscription = event.data.object;
+        const subscription = event.data.object as Stripe.Subscription;
 
         // Find student by subscription ID
         const student = await db.student.findUnique({
@@ -152,7 +147,8 @@ export async function POST(req: NextRequest) {
           where: { id: student.id },
           data: {
             stripePriceId: subscription.items.data[0]?.price.id,
-            stripeCurrentPeriodEnd: new Date(subscription.items.data[0]?.current_period_end * 1000),
+            stripeCurrentPeriodEnd: new Date((subscription.items.data[0] as any)?.current_period_end * 1000),
+            stripeCancelAtPeriodEnd: subscription.cancel_at_period_end,
             membership: subscription.status === "active" ? "PRO" : "FREE",
           },
         });
@@ -182,6 +178,7 @@ export async function POST(req: NextRequest) {
             stripeSubscriptionId: null,
             stripePriceId: null,
             stripeCurrentPeriodEnd: null,
+            stripeCancelAtPeriodEnd: false,
           },
         });
 
