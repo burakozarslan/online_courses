@@ -4,9 +4,16 @@ import { db } from "@/lib/prisma";
 import { env } from "@/lib/env";
 import { stripe } from "@/lib/stripe";
 
-const webhookSecret = env.STRIPE_WEBHOOK_SECRET;
-
 export async function POST(req: NextRequest) {
+  const webhookSecret = env.STRIPE_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    console.error("STRIPE_WEBHOOK_SECRET is not set");
+    return NextResponse.json(
+      { error: "Webhook not configured" },
+      { status: 503 }
+    );
+  }
+
   try {
     // Get the raw body for signature verification
     const body = await req.text();
