@@ -11,6 +11,11 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:seed:prod": "echo 'Set SEED_INSTRUCTOR_EMAIL and SEED_INSTRUCTOR_PASSWORD env vars first' && NODE_ENV=production tsx prisma/seed.ts",
+    "verify:env": "node scripts/verify-env.js",
+    "verify:db": "node scripts/test-db-connection.js",
     "docker:dev": "docker-compose up --build",
     "docker:build": "docker build -f Dockerfile.prod -t online-courses-prod .",
     "docker:start": "docker run -p 3000:3000 online-courses-prod"

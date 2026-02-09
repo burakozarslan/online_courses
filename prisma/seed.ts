@@ -200,6 +200,50 @@ function generateSlug(title: string) {
   );
 }
 
+// Check if running in production mode
+const isProduction = process.env.NODE_ENV === "production";
+
+// Get credentials based on environment
+function getCredentials() {
+  if (isProduction) {
+    const instructorEmail = process.env.SEED_INSTRUCTOR_EMAIL;
+    const instructorPassword = process.env.SEED_INSTRUCTOR_PASSWORD;
+
+    if (!instructorEmail || !instructorPassword) {
+      console.error("❌ Production mode requires SEED_INSTRUCTOR_EMAIL and SEED_INSTRUCTOR_PASSWORD environment variables");
+      console.error("Example:");
+      console.error('  export SEED_INSTRUCTOR_EMAIL="admin@yourdomain.com"');
+      console.error('  export SEED_INSTRUCTOR_PASSWORD="your-secure-password"');
+      process.exit(1);
+    }
+
+    console.log("🔒 Running in PRODUCTION mode with secure credentials");
+    return {
+      instructor: {
+        email: instructorEmail,
+        password: instructorPassword,
+        name: "Admin User",
+      },
+      student: null, // Don't create test student in production
+    };
+  }
+
+  // Development mode - use convenience credentials
+  console.log("🔓 Running in DEVELOPMENT mode with test credentials");
+  return {
+    instructor: {
+      email: "instructor@example.com",
+      password: "password123",
+      name: "Alice Instructor",
+    },
+    student: {
+      email: "free@example.com",
+      password: "password123",
+      name: "Frank Free",
+    },
+  };
+}
+
 async function main() {
   console.log("🌱 Starting seed...");
 
@@ -224,13 +268,14 @@ async function main() {
   }
 
   // 3. Create Users
-  const hashedPassword = await bcrypt.hash("password123", 10);
+  const credentials = getCredentials();
+  const hashedPassword = await bcrypt.hash(credentials.instructor.password, 10);
 
   // Instructor
   const instructorUser = await prisma.user.create({
     data: {
-      email: "instructor@example.com",
-      name: "Alice Instructor",
+      email: credentials.instructor.email,
+      name: credentials.instructor.name,
       password: hashedPassword,
       instructorProfile: {
         create: {
@@ -241,25 +286,31 @@ async function main() {
     include: { instructorProfile: true },
   });
 
-  // Free Student
-  await prisma.user.create({
-    data: {
-      email: "free@example.com",
-      name: "Frank Free",
-      password: hashedPassword,
-      studentProfile: {
-        create: {
-          membership: MembershipPlan.FREE,
+  console.log(`✅ Instructor created: ${credentials.instructor.email}`);
+
+  // Free Student (only in development)
+  if (credentials.student) {
+    const studentHashedPassword = await bcrypt.hash(credentials.student.password, 10);
+    await prisma.user.create({
+      data: {
+        email: credentials.student.email,
+        name: credentials.student.name,
+        password: studentHashedPassword,
+        studentProfile: {
+          create: {
+            membership: MembershipPlan.FREE,
+          },
         },
       },
-    },
-  });
+    });
+    console.log(`✅ Test student created: ${credentials.student.email}`);
+  } else {
+    console.log("⏭️  Skipping test student creation in production");
+  }
 
   if (!instructorUser.instructorProfile) {
     throw new Error("Failed to create instructor");
   }
-
-  console.log("👥 Users created.");
 
   // 4. Create Courses
   const allCourseDefinitions = [

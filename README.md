@@ -146,6 +146,33 @@ npm run docker:start
 -   **Unit Tests**: `npm run test`
 -   **E2E Tests**: `npm run test:e2e`
 
+## 🚀 Deployment
+
+Ready to deploy to production? See the comprehensive deployment guides:
+
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Complete step-by-step guide for deploying to Vercel with Neon Database
+- **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Common commands, API routes, and troubleshooting tips
+
+### Quick Deployment Overview
+
+1. **Database**: Sign up for [Neon](https://neon.tech) (serverless PostgreSQL)
+2. **Hosting**: Deploy to [Vercel](https://vercel.com) (optimized for Next.js)
+3. **Payments**: Configure [Stripe](https://stripe.com) webhooks
+4. **Seed**: Use production-safe seeding with secure credentials
+
+```bash
+# Helper script for production seeding
+./scripts/seed-production.sh
+```
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions on:
+- Creating Neon database account
+- Configuring Vercel environment variables
+- Running production migrations
+- Secure database seeding
+- Stripe webhook setup
+- Production verification checklist
+
 ## 📄 License
 
 This project is licensed under the MIT License.
