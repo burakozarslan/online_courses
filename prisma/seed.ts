@@ -5,7 +5,7 @@ import {
 } from "../app/generated/prisma/client";
 import { faker } from "@faker-js/faker";
 import "dotenv/config";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { db } from "../lib/prisma";
 
 const prisma = db;
