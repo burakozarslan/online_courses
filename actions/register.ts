@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/prisma";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { z } from "zod";
 
 const registerSchema = z.object({
