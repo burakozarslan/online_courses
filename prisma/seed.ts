@@ -2,11 +2,11 @@ import {
   PrismaClient,
   MembershipPlan,
   Difficulty,
-} from "@/app/generated/prisma/client";
+} from "../app/generated/prisma/client";
 import { faker } from "@faker-js/faker";
 import "dotenv/config";
 import bcrypt from "bcrypt";
-import { db } from "@/lib/prisma";
+import { db } from "../lib/prisma";
 
 const prisma = db;
 
