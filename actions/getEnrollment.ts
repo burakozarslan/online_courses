@@ -25,10 +25,15 @@ const getCourseStructure = unstable_cache(
             },
           },
         },
+        instructor: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
   },
-  ["course-structure"], // Cache tag
+  ["course-structure-with-instructor"], // Cache tag
   { revalidate: 3600 } // Revalidate every hour
 );
 

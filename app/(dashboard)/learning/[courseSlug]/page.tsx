@@ -74,6 +74,15 @@ export default function CourseDetails() {
     return Math.round((totalProgress / totalDuration) * 100);
   }
 
+  function getInitials(name: string) {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  }
+
   if (!course) return <div>Loading...</div>;
 
   const overallProgress = calculateOverallProgress(course?.modules);
@@ -123,7 +132,7 @@ export default function CourseDetails() {
 
                 <div className="w-full sm:max-w-xs flex-1">
                   <div className="flex justify-between text-caption text-neutral-400 mb-2">
-                    {/* TODO: Calculate overall progress */}
+
                     <span>OVERALL PROGRESS</span>
                     <span className="text-brand-400">{overallProgress}%</span>
                   </div>
@@ -148,12 +157,14 @@ export default function CourseDetails() {
                   </p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-neutral-800 flex items-center justify-center font-bold text-neutral-400">
-                      AS
+                      {getInitials(course.instructor?.user.name || "Instructor")}
                     </div>
                     <div>
-                      <p className="text-body font-medium">Alex Smith</p>
+                      <p className="text-body font-medium">
+                        {course.instructor?.user.name}
+                      </p>
                       <p className="text-caption text-neutral-500">
-                        Senior Systems Eng.
+                        {course.instructor?.title}
                       </p>
                     </div>
                   </div>
