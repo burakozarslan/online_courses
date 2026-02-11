@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import CourseDetails from "./page";
@@ -53,5 +54,47 @@ describe("CourseDetails Page", () => {
     expect(screen.getByText("Advanced")).toBeInTheDocument();
     expect(screen.getByTestId("video-player")).toBeInTheDocument();
     expect(screen.getByText("Intro")).toBeInTheDocument();
+  });
+
+  it("renders instructor details correctly", () => {
+    const mockCourse = {
+      title: "Test Course",
+      difficulty: "BEGINNER",
+      modules: [],
+      instructor: {
+        title: "Senior Developer",
+        user: {
+          name: "John Doe",
+        },
+      },
+    };
+    mockUseCourse.mockReturnValue({ course: mockCourse });
+
+    render(<CourseDetails />);
+
+    expect(screen.getByText("John Doe")).toBeInTheDocument();
+    expect(screen.getByText("Senior Developer")).toBeInTheDocument();
+    expect(screen.getByText("JD")).toBeInTheDocument();
+  });
+
+  it("handles missing instructor name gracefully", () => {
+    const mockCourse = {
+      title: "Test Course",
+      difficulty: "BEGINNER",
+      modules: [],
+      instructor: {
+        title: "Senior Developer",
+        user: {
+          name: "", // or undefined if type allows, but schema says String?
+        },
+      },
+    };
+    mockUseCourse.mockReturnValue({ course: mockCourse });
+
+    render(<CourseDetails />);
+    
+    // Should fallback to "IN" (first 2 chars of "Instructor") or handle empty? 
+    // My code: getInitials(course.instructor?.user.name || "Instructor")
+    expect(screen.getByText("IN")).toBeInTheDocument();
   });
 });
