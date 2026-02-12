@@ -4,8 +4,12 @@ import { BookOpen, Clock, Award } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import {
+  formatDurationFromMinutes,
+  getCategoryName,
+} from "@/lib/courseUtils";
 
-// Helper function to get difficulty dots
+// Helper function to get difficulty dots (returns JSX, so kept in component)
 function getDifficultyDots(difficulty: "BEGINNER" | "INTERMEDIATE" | "ADVANCED") {
   const levels = {
     BEGINNER: 1,
@@ -26,19 +30,6 @@ function getDifficultyDots(difficulty: "BEGINNER" | "INTERMEDIATE" | "ADVANCED")
       ))}
     </div>
   );
-}
-
-// Helper function to format duration from minutes
-function formatDuration(totalMinutes: number) {
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-  return `${hours}h ${minutes}m`;
-}
-
-// Helper function to map category name to badge text
-function getCategoryBadge(categories: { name: string }[]) {
-  if (categories.length === 0) return "General";
-  return categories[0].name;
 }
 
 export default async function LearningPage() {
@@ -124,7 +115,7 @@ export default async function LearningPage() {
                     <div className="p-5 grow flex flex-col">
                       <div className="flex justify-between items-start mb-3">
                         <span className="text-[10px] uppercase tracking-wider text-brand-600 font-semibold border border-brand-100 bg-brand-50 px-1.5 py-0.5">
-                          {getCategoryBadge(enrollment.course.categories)}
+                          {getCategoryName(enrollment.course.categories)}
                         </span>
                         {getDifficultyDots(enrollment.course.difficulty)}
                       </div>
@@ -158,7 +149,7 @@ export default async function LearningPage() {
                       <div className="flex items-center justify-between pt-4 border-t border-neutral-100 text-caption text-neutral-600 mb-4">
                         <span className="flex items-center gap-1.5">
                           <Clock className="w-3 h-3" />
-                          {formatDuration(enrollment.totalDuration)}
+                          {formatDurationFromMinutes(enrollment.totalDuration)}
                         </span>
                         <span>{enrollment.course._count.modules} Modules</span>
                       </div>
