@@ -38,6 +38,7 @@ export default async function FeaturedCourses() {
               duration={calculateFormattedCourseDuration(course.modules)}
               category={course.categories[0]?.name || "General"}
               difficulty={(course.difficulty || 1) as unknown as 1 | 2 | 3}
+              slug={course.slug}
             />
           ))}
         </div>

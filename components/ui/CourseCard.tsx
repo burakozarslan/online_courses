@@ -1,4 +1,5 @@
 import { Layers } from "lucide-react";
+import Link from "next/link";
 
 interface CourseCardProps {
   isPro?: boolean;
@@ -8,6 +9,7 @@ interface CourseCardProps {
   duration: string;
   category: string;
   difficulty: 1 | 2 | 3;
+  slug?: string;
 }
 
 export default function CourseCard({
@@ -18,8 +20,9 @@ export default function CourseCard({
   duration,
   category,
   difficulty,
+  slug,
 }: CourseCardProps) {
-  return (
+  const cardContent = (
     <div className="group border border-neutral-200 bg-neutral-0 hover:border-brand-500 transition-colors cursor-pointer flex flex-col h-full">
       <div className="h-48 bg-neutral-100 border-b border-neutral-200 relative group-hover:bg-neutral-50 transition-colors flex items-center justify-center">
         <Layers />
@@ -60,4 +63,14 @@ export default function CourseCard({
       </div>
     </div>
   );
+
+  if (slug) {
+    return (
+      <Link href={`/courses/${slug}`} className="block h-full">
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return cardContent;
 }
