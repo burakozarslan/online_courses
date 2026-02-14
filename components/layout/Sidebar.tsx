@@ -10,6 +10,7 @@ import {
   Award,
   LayoutDashboard,
   BookOpen,
+  HomeIcon
 } from "lucide-react";
 import DashboardLogoutButton from "@/components/auth/DashboardLogoutButton";
 
@@ -48,6 +49,17 @@ export default function Sidebar() {
 
       {/* <!-- Navigation --> */}
       <nav className="flex-1 py-6 px-3 space-y-1">
+      <Link
+          href="/"
+          className={`flex items-center gap-3 px-3 py-2 border-l-2 transition-colors ${
+            pathname === "/"
+              ? "bg-neutral-800 text-neutral-0 border-brand-500"
+              : "text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-transparent"
+          }`}
+        >
+          <HomeIcon className="size-4" />
+          <span className="text-body font-medium">Homepage</span>
+        </Link>
         <Link
           href="/overview"
           className={`flex items-center gap-3 px-3 py-2 border-l-2 transition-colors ${
@@ -71,17 +83,6 @@ export default function Sidebar() {
           <span className="text-body font-medium">Enrolled</span>
         </Link>
         <Link
-          href="/achievements"
-          className={`flex items-center gap-3 px-3 py-2 border-l-2 transition-colors ${
-            pathname === "/achievements"
-              ? "bg-neutral-800 text-neutral-0 border-brand-500"
-              : "text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-transparent"
-          }`}
-        >
-          <Award className="size-4" />
-          <span className="text-body font-medium">Certificates</span>
-        </Link>
-        <Link
           href="/billing"
           className={`flex items-center gap-3 px-3 py-2 border-l-2 transition-colors ${
             pathname === "/billing"
@@ -92,6 +93,17 @@ export default function Sidebar() {
           <CreditCard className="size-4" />
           <span className="text-body font-medium">Billing</span>
         </Link>
+                {/* <Link
+          href="/achievements"
+          className={`flex items-center gap-3 px-3 py-2 border-l-2 transition-colors ${
+            pathname === "/achievements"
+              ? "bg-neutral-800 text-neutral-0 border-brand-500"
+              : "text-neutral-400 hover:text-neutral-0 hover:bg-neutral-800 border-transparent"
+          }`}
+        >
+          <Award className="size-4" />
+          <span className="text-body font-medium">Certificates</span>
+        </Link> */}
       </nav>
 
       {/* <!-- Bottom Links --> */}
