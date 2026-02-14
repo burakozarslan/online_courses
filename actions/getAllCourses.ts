@@ -1,9 +1,20 @@
 import { db } from "@/lib/prisma";
 
-export async function getAllCourses(page: number, itemsPerPage: number) {
+export async function getAllCourses(
+  page: number,
+  itemsPerPage: number,
+  category?: string
+) {
   const courses = await db.course.findMany({
     where: {
       isPublished: true,
+      ...(category && {
+        categories: {
+          some: {
+            name: category,
+          },
+        },
+      }),
     },
     include: {
       categories: true,

@@ -4,10 +4,10 @@ import Link from "next/link";
 import { getAllCourses } from "@/actions/getAllCourses";
 import { getAllCategories } from "@/actions/getAllCategories";
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 3;
 
 type PageProps = {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; category?: string }>;
 };
 
 // Helper function to get difficulty dots
@@ -49,18 +49,49 @@ function getCategoryBadge(categories: { name: string }[]) {
 export default async function CoursesPage({ searchParams }: PageProps) {
   const resolvedSearchParams = await searchParams;
   const currentPage = Number(resolvedSearchParams.page) || 1;
+  const selectedCategory = resolvedSearchParams.category;
 
-  // Fetch total count of published courses
+  // Helper function to build course URLs with params
+  const buildCourseUrl = (overrides: {
+    page?: number;
+    category?: string | null;
+  }) => {
+    const params = new URLSearchParams();
+
+    const page = overrides.page ?? currentPage;
+    const category =
+      overrides.category === null
+        ? undefined
+        : overrides.category ?? selectedCategory;
+
+        if (category) params.set("category", category);
+        if (page > 1) params.set("page", page.toString());
+
+    return params.toString() ? `/courses?${params}` : "/courses";
+  };
+
+  // Fetch total count of published courses (with category filter)
   const totalCourses = await db.course.count({
     where: {
       isPublished: true,
+      ...(selectedCategory && {
+        categories: {
+          some: {
+            name: selectedCategory,
+          },
+        },
+      }),
     },
   });
 
   const totalPages = Math.ceil(totalCourses / ITEMS_PER_PAGE);
 
-  // Fetch courses with pagination
-  const courses = await getAllCourses(currentPage, ITEMS_PER_PAGE);
+  // Fetch courses with pagination and category filter
+  const courses = await getAllCourses(
+    currentPage,
+    ITEMS_PER_PAGE,
+    selectedCategory
+  );
 
   // Fetch all categories
   const categories = await getAllCategories();
@@ -119,16 +150,28 @@ export default async function CoursesPage({ searchParams }: PageProps) {
 
             {/* <!-- Tags --> */}
             <div className="flex flex-wrap gap-2 mt-4">
-              <button className="bg-brand-600 text-neutral-0 px-3 py-1 text-caption font-medium">
-                ALL_TRACKS
-              </button>
+              <Link
+                href="/courses"
+                className={`px-3 py-1 text-caption font-medium transition-colors ${
+                  !selectedCategory
+                    ? "bg-brand-600 text-neutral-0"
+                    : "bg-neutral-0 border border-neutral-300 text-neutral-600 hover:border-neutral-900 hover:text-neutral-900"
+                }`}
+              >
+                ALL CATEGORIES
+              </Link>
               {categories.map((category) => (
-                <button
+                <Link
                   key={category.id}
-                  className="bg-neutral-0 border border-neutral-300 text-neutral-600 px-3 py-1 text-caption hover:border-neutral-900 hover:text-neutral-900 transition-colors"
+                  href={buildCourseUrl({ category: category.name, page: 1 })}
+                  className={`px-3 py-1 text-caption transition-colors ${
+                    selectedCategory === category.name
+                      ? "bg-brand-600 text-neutral-0 font-medium"
+                      : "bg-neutral-0 border border-neutral-300 text-neutral-600 hover:border-neutral-900 hover:text-neutral-900"
+                  }`}
                 >
                   {category.name.toUpperCase()}
-                </button>
+                </Link>
               ))}
             </div>
           </div>
@@ -142,14 +185,6 @@ export default async function CoursesPage({ searchParams }: PageProps) {
             <p className="text-caption text-neutral-500">
               SHOWING {startResult}-{endResult} OF {totalCourses} RESULTS
             </p>
-            <div className="flex items-center gap-2 text-caption text-neutral-600">
-              <span>SORT BY:</span>
-              <select className="bg-transparent border-none text-neutral-900 font-medium focus:ring-0 cursor-pointer">
-                <option>NEWEST</option>
-                <option>POPULAR</option>
-                <option>DIFFICULTY</option>
-              </select>
-            </div>
           </div>
 
           {coursesWithDuration.length === 0 ? (
@@ -213,7 +248,7 @@ export default async function CoursesPage({ searchParams }: PageProps) {
               <div className="inline-flex border border-neutral-200 bg-neutral-0">
                 {/* Previous Button */}
                 <Link
-                  href={`/courses?page=${currentPage - 1}`}
+                  href={buildCourseUrl({ page: currentPage - 1 })}
                   className={`w-10 h-10 flex items-center justify-center text-neutral-400 border-r border-neutral-200 hover:bg-neutral-50 hover:text-neutral-900 ${
                     currentPage === 1
                       ? "opacity-50 pointer-events-none"
@@ -229,7 +264,7 @@ export default async function CoursesPage({ searchParams }: PageProps) {
                   (page) => (
                     <Link
                       key={page}
-                      href={`/courses?page=${page}`}
+                      href={buildCourseUrl({ page })}
                       className={`w-10 h-10 flex items-center justify-center text-body font-medium border-l border-neutral-200 ${
                         currentPage === page
                           ? "text-neutral-0 bg-neutral-900"
@@ -243,7 +278,7 @@ export default async function CoursesPage({ searchParams }: PageProps) {
 
                 {/* Next Button */}
                 <Link
-                  href={`/courses?page=${currentPage + 1}`}
+                  href={buildCourseUrl({ page: currentPage + 1 })}
                   className={`w-10 h-10 flex items-center justify-center text-neutral-600 border-l border-neutral-200 hover:bg-neutral-50 hover:text-neutral-900 ${
                     currentPage === totalPages
                       ? "opacity-50 pointer-events-none"
