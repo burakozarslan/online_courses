@@ -15,6 +15,12 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import EnrollButton from "./EnrollButton";
+import {
+  formatCourseDifficulty,
+  formatDurationFromSeconds,
+  calculateModuleDurationInSeconds,
+  calculateFormattedCourseDuration,
+} from "@/lib/courseUtils";
 
 import type { Metadata } from "next";
 
@@ -43,41 +49,6 @@ export async function generateMetadata({
       images: [course.imageUrl],
     },
   };
-}
-
-function formatCourseDifficulty(difficulty: string) {
-  if (difficulty === "BEGINNER") return "Beginner";
-  else if (difficulty === "INTERMEDIATE") return "Intermediate";
-  else return "Advanced";
-}
-
-function formatToHoursMinutes(totalSeconds: number) {
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-
-  if (hours > 0) {
-    return `${hours}h ${minutes}m`;
-  }
-  return `${minutes}m`;
-}
-
-function calculateModuleDurationInSeconds(lessons: { duration: number }[]) {
-  const totalDurationInSeconds = lessons.reduce(
-    (prev, current) => prev + current.duration,
-    0
-  );
-  return totalDurationInSeconds;
-}
-
-function calculateFormattedCourseDuration(
-  modules: { lessons: { duration: number }[] }[]
-) {
-  const totalDurationInSeconds = modules.reduce(
-    (prev, current) =>
-      prev + calculateModuleDurationInSeconds(current.lessons),
-    0
-  );
-  return formatToHoursMinutes(totalDurationInSeconds);
 }
 
 export default async function CourseDetailPage({ params }: PageProps) {
@@ -261,7 +232,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
                             {module.lessons.length} Lessons
                           </p>
                           <p className="text-caption text-neutral-500">
-                            {formatToHoursMinutes(
+                            {formatDurationFromSeconds(
                               calculateModuleDurationInSeconds(module.lessons)
                             )}
                           </p>
@@ -292,7 +263,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
                             )}
                           </div>
                           <span className="text-caption text-neutral-500 shrink-0">
-                            {formatToHoursMinutes(lesson.duration)}
+                            {formatDurationFromSeconds(lesson.duration)}
                           </span>
                         </div>
                       ))}

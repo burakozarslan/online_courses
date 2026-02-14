@@ -1,6 +1,11 @@
 import CourseCard from "../ui/CourseCard";
+import { getAllCourses } from "@/actions/getAllCourses";
+import { calculateFormattedCourseDuration } from "@/lib/courseUtils";
 
-export default function FeaturedCourses() {
+export default async function FeaturedCourses() {
+  // Fetch 3 latest courses
+  const courses = await getAllCourses(1, 3);
+
   return (
     <section className="py-24 bg-neutral-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,39 +28,19 @@ export default function FeaturedCourses() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {/* <!-- Course Card 1 --> */}
-          <CourseCard
-            isPro
-            title="Next.js & Shopify Integration"
-            description="Build a complete e-commerce solution using Next.js App Router,
-                Prisma, and Shopify Webhooks."
-            modules={12}
-            duration="6h 30m"
-            category="Fullstack"
-            difficulty={1}
-          />
-
-          {/* <!-- Course Card 2 --> */}
-          <CourseCard
-            title="Serverless Postgres with Neon"
-            description="Master database branching, connection pooling, and Prisma
-                migrations in a serverless environment."
-            modules={8}
-            duration="4h 15m"
-            category="Backend"
-            difficulty={2}
-          />
-
-          {/* <!-- Course Card 3 --> */}
-          <CourseCard
-            title="Advanced Auth Patterns"
-            description="Implement RBAC, MFA, and secure session management using
-                standard libraries and custom middleware."
-            modules={15}
-            duration="8h 00m"
-            category="Security"
-            difficulty={3}
-          />
+          {courses.map((course) => (
+            <CourseCard
+              key={course.id}
+              isPro={(course as any).isPro}
+              title={course.title}
+              description={course.description || ""}
+              modules={course._count.modules}
+              duration={calculateFormattedCourseDuration(course.modules)}
+              category={course.categories[0]?.name || "General"}
+              difficulty={(course.difficulty || 1) as unknown as 1 | 2 | 3}
+              slug={course.slug}
+            />
+          ))}
         </div>
       </div>
     </section>
