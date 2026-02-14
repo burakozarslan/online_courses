@@ -63,9 +63,11 @@ export default async function DashboardPage() {
           <div className="inline-flex items-center justify-center w-10 h-10 bg-brand-50 text-brand-700 border border-brand-100">
             <GitGraph className="w-5 h-5" />
           </div>
-          <h1 className="text-heading-2 text-neutral-900">Enrolled Courses</h1>
+          <h1 className="text-heading-2 text-neutral-900">Your Progress</h1>
         </div>
-        <p className="text-body text-neutral-500">Continue learning from where you left off. Track your progress and complete your courses.</p>
+        <p className="text-body text-neutral-500">
+          Track your progress and complete your courses.
+        </p>
       </div>
             <div className="text-right hidden md:block">
               {session?.user?.isPro ? (
