@@ -3,20 +3,26 @@ import { render, screen } from "@testing-library/react";
 import LearningPage from "./page";
 
 // Mock server actions and auth
-const mockGetAllEnrollments = vi.fn();
-vi.mock("@/actions/getAllEnrollments", () => ({
-  getAllEnrollments: () => mockGetAllEnrollments(),
+// Mock server actions and auth
+const { mockGetAllEnrollments, mockGetServerSession, mockRedirect } = vi.hoisted(() => {
+  return {
+    mockGetAllEnrollments: vi.fn(),
+    mockGetServerSession: vi.fn(),
+    mockRedirect: vi.fn(),
+  };
+});
+
+vi.mock("../../../actions/getAllEnrollments", () => ({
+  getAllEnrollments: mockGetAllEnrollments,
 }));
 
-const mockGetServerSession = vi.fn();
 vi.mock("next-auth", () => ({
-  getServerSession: () => mockGetServerSession(),
+  getServerSession: mockGetServerSession,
 }));
 
 // Mock navigation
-const mockRedirect = vi.fn();
 vi.mock("next/navigation", () => ({
-  redirect: (url: string) => mockRedirect(url),
+  redirect: mockRedirect,
 }));
 
 describe("LearningPage", () => {

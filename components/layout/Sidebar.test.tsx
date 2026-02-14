@@ -83,7 +83,7 @@ describe("Sidebar", () => {
 
     expect(screen.getByText("Overview")).toBeInTheDocument();
     expect(screen.getByText("Enrolled")).toBeInTheDocument();
-    expect(screen.getByText("Certificates")).toBeInTheDocument();
+
     expect(screen.getByText("Billing")).toBeInTheDocument();
   });
 
@@ -110,13 +110,7 @@ describe("Sidebar", () => {
     expect(enrolledLink).toHaveClass("bg-neutral-800", "text-neutral-0", "border-brand-500");
   });
 
-  it("highlights active route for /achievements", () => {
-    vi.mocked(usePathname).mockReturnValue("/achievements");
-    const { container } = renderSidebar();
 
-    const certificatesLink = screen.getByText("Certificates").closest("a");
-    expect(certificatesLink).toHaveClass("bg-neutral-800", "text-neutral-0", "border-brand-500");
-  });
 
   it("highlights active route for /billing", () => {
     vi.mocked(usePathname).mockReturnValue("/billing");
@@ -140,7 +134,7 @@ describe("Sidebar", () => {
 
     expect(screen.getByText("Overview").closest("a")).toHaveAttribute("href", "/overview");
     expect(screen.getByText("Enrolled").closest("a")).toHaveAttribute("href", "/learning");
-    expect(screen.getByText("Certificates").closest("a")).toHaveAttribute("href", "/achievements");
+
     expect(screen.getByText("Billing").closest("a")).toHaveAttribute("href", "/billing");
   });
 

@@ -3,9 +3,15 @@ import { render, screen } from "@testing-library/react";
 import PaymentRequiredPage from "./page";
 
 // Mock server actions
-const mockGetCourseBySlug = vi.fn();
-vi.mock("@/actions/getCourseBySlug", () => ({
-  getCourseBySlug: (slug: string) => mockGetCourseBySlug(slug),
+// Mock server actions
+const { mockGetCourseBySlug } = vi.hoisted(() => {
+  return {
+    mockGetCourseBySlug: vi.fn(),
+  };
+});
+
+vi.mock("../../../actions/getCourseBySlug", () => ({
+  getCourseBySlug: mockGetCourseBySlug,
 }));
 
 // Mock CheckoutButton

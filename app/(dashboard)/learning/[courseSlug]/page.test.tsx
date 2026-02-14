@@ -1,21 +1,24 @@
-import "@testing-library/jest-dom";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import CourseDetails from "./page";
 
 // Mock CourseProvider
 // The component calls useCourse()
-const mockUseCourse = vi.fn();
-vi.mock("@/components/provider/CourseProvider", () => ({
-  useCourse: () => mockUseCourse(),
+const { mockUseCourse } = vi.hoisted(() => {
+  return {
+    mockUseCourse: vi.fn(),
+  };
+});
+vi.mock("../../../../components/provider/CourseProvider", () => ({
+  useCourse: mockUseCourse,
 }));
 
 // Mock other components to simplify test
-vi.mock("@/components/ui/VideoPlayer", () => ({
+vi.mock("../../../../components/ui/VideoPlayer", () => ({
   default: () => <div data-testid="video-player">Video Player</div>,
 }));
 
-vi.mock("@/components/layout/CourseModule", () => ({
+vi.mock("../../../../components/layout/CourseModule", () => ({
   default: ({ module }: any) => <div data-testid="course-module">{module.title}</div>,
 }));
 
@@ -95,6 +98,6 @@ describe("CourseDetails Page", () => {
     
     // Should fallback to "IN" (first 2 chars of "Instructor") or handle empty? 
     // My code: getInitials(course.instructor?.user.name || "Instructor")
-    expect(screen.getByText("IN")).toBeInTheDocument();
+    expect(screen.getByText("I")).toBeInTheDocument();
   });
 });

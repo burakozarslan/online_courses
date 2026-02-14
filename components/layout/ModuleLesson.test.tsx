@@ -22,12 +22,12 @@ vi.mock("../provider/CourseProvider", () => ({
 }));
 
 // Mock actions
-vi.mock("@/actions/progress", () => ({
+vi.mock("../../actions/progress", () => ({
   resetLessonProgress: vi.fn(),
 }));
 
 // Mock config
-vi.mock("@/config", () => ({
+vi.mock("../../config", () => ({
   COMPLETION_THRESHOLD: 95,
 }));
 
@@ -35,7 +35,7 @@ vi.mock("@/config", () => ({
 global.window.scrollTo = vi.fn();
 
 import { useCourse } from "../provider/CourseProvider";
-import { resetLessonProgress } from "@/actions/progress";
+import { resetLessonProgress } from "../../actions/progress";
 
 describe("ModuleLesson", () => {
   const createMockLesson = (overrides?: Partial<LessonType>): LessonType => ({
