@@ -1,5 +1,6 @@
 // Centralized exports for all actions
 export { getAllCourses } from "./getAllCourses";
+export { getAllCategories } from "./getAllCategories";
 export { getEnrollment } from "./getEnrollment";
 export { getCourseBySlug } from "./getCourseBySlug";
 export { checkEnrollment } from "./checkEnrollment";

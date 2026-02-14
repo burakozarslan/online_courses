@@ -2,6 +2,7 @@ import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { db } from "@/lib/prisma";
 import Link from "next/link";
 import { getAllCourses } from "@/actions/getAllCourses";
+import { getAllCategories } from "@/actions/getAllCategories";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -61,6 +62,9 @@ export default async function CoursesPage({ searchParams }: PageProps) {
   // Fetch courses with pagination
   const courses = await getAllCourses(currentPage, ITEMS_PER_PAGE);
 
+  // Fetch all categories
+  const categories = await getAllCategories();
+
   // Calculate total duration for each course (convert from seconds to minutes)
   const coursesWithDuration = courses.map((course) => {
     const totalDurationInSeconds = course.modules.reduce((acc, module) => {
@@ -118,18 +122,14 @@ export default async function CoursesPage({ searchParams }: PageProps) {
               <button className="bg-brand-600 text-neutral-0 px-3 py-1 text-caption font-medium">
                 ALL_TRACKS
               </button>
-              <button className="bg-neutral-0 border border-neutral-300 text-neutral-600 px-3 py-1 text-caption hover:border-neutral-900 hover:text-neutral-900 transition-colors">
-                FRONTEND
-              </button>
-              <button className="bg-neutral-0 border border-neutral-300 text-neutral-600 px-3 py-1 text-caption hover:border-neutral-900 hover:text-neutral-900 transition-colors">
-                BACKEND
-              </button>
-              <button className="bg-neutral-0 border border-neutral-300 text-neutral-600 px-3 py-1 text-caption hover:border-neutral-900 hover:text-neutral-900 transition-colors">
-                DEVOPS
-              </button>
-              <button className="bg-neutral-0 border border-neutral-300 text-neutral-600 px-3 py-1 text-caption hover:border-neutral-900 hover:text-neutral-900 transition-colors">
-                SYSTEMS
-              </button>
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  className="bg-neutral-0 border border-neutral-300 text-neutral-600 px-3 py-1 text-caption hover:border-neutral-900 hover:text-neutral-900 transition-colors"
+                >
+                  {category.name.toUpperCase()}
+                </button>
+              ))}
             </div>
           </div>
         </div>
