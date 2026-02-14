@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PlayCircle, Menu } from "lucide-react";
+import { PlayCircle, Menu, GitGraph } from "lucide-react";
 import { getAllEnrollments } from "@/actions/getAllEnrollments";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -57,12 +57,16 @@ export default async function DashboardPage() {
         <div className="p-6 lg:p-10 space-y-8 bg-dash-grid">
           {/* <!-- Welcome Section --> */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <h1 className="text-heading-1 text-neutral-900 mb-1">Overview</h1>
-              <p className="text-body text-neutral-500">
-                Track your progress and pick up where you left off.
-              </p>
-            </div>
+                  {/* Header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="inline-flex items-center justify-center w-10 h-10 bg-brand-50 text-brand-700 border border-brand-100">
+            <GitGraph className="w-5 h-5" />
+          </div>
+          <h1 className="text-heading-2 text-neutral-900">Enrolled Courses</h1>
+        </div>
+        <p className="text-body text-neutral-500">Continue learning from where you left off. Track your progress and complete your courses.</p>
+      </div>
             <div className="text-right hidden md:block">
               {session?.user?.isPro ? (
                 <div className="bg-brand-50 text-brand-700 text-caption px-4 py-2 border border-brand-200 font-bold tracking-wider">
