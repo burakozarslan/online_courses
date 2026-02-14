@@ -31,7 +31,7 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
-        setError("Invalid credentials. Try user@example.com / password123");
+        setError("Invalid credentials.");
         setLoading(false);
       } else {
         router.push(result?.url || callbackUrl);
