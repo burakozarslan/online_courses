@@ -3,8 +3,8 @@ import { render, screen } from "@testing-library/react";
 import PricingPage from "./page";
 
 // Mock buttons
-vi.mock("@/components/ui/FreeAccessButton", () => ({ default: () => <button>Free Access Button</button> }));
-vi.mock("@/components/ui/ProUpgradeButton", () => ({ default: () => <button>Pro Upgrade Button</button> }));
+vi.mock("../../../components/ui/FreeAccessButton", () => ({ default: () => <button>Free Access Button</button> }));
+vi.mock("../../../components/ui/ProUpgradeButton", () => ({ default: () => <button>Pro Upgrade Button</button> }));
 
 describe("PricingPage", () => {
   it("renders pricing plans", () => {

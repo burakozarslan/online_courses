@@ -3,14 +3,20 @@ import { render, screen } from "@testing-library/react";
 import DashboardPage from "./page";
 
 // Mock server actions and auth
-const mockGetAllEnrollments = vi.fn();
-vi.mock("@/actions/getAllEnrollments", () => ({
-  getAllEnrollments: () => mockGetAllEnrollments(),
+// Mock server actions and auth
+const { mockGetAllEnrollments, mockGetServerSession } = vi.hoisted(() => {
+  return {
+    mockGetAllEnrollments: vi.fn(),
+    mockGetServerSession: vi.fn(),
+  };
+});
+
+vi.mock("../../../actions/getAllEnrollments", () => ({
+  getAllEnrollments: mockGetAllEnrollments,
 }));
 
-const mockGetServerSession = vi.fn();
 vi.mock("next-auth", () => ({
-  getServerSession: () => mockGetServerSession(),
+  getServerSession: mockGetServerSession,
 }));
 
 // Mock authOptions (needed for getServerSession in real app, mocked here)

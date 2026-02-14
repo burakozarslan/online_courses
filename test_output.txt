@@ -1,0 +1,65 @@
+
+> online_courses@0.1.0 test
+> vitest run
+
+
+[1m[46m RUN [49m[22m [36mv4.0.17 [39m[90m/Users/burak/Desktop/Projects/online_courses[39m
+
+ [31m❯[39m components/layout/ModuleLesson.test.tsx [2m([22m[2m0 test[22m[2m)[22m
+ [32m✓[39m components/layout/CourseModule.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 244[2mms[22m[39m
+ [32m✓[39m components/ui/ProUpgradeButton.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 307[2mms[22m[39m
+ [32m✓[39m components/auth/DashboardLogoutButton.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 353[2mms[22m[39m
+ [32m✓[39m app/(auth)/login/page.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 648[2mms[22m[39m
+ [32m✓[39m app/(dashboard)/settings/SettingsClientPage.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 794[2mms[22m[39m
+ [32m✓[39m app/(auth)/register/page.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 94[2mms[22m[39m
+ [32m✓[39m components/layout/Sidebar.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[32m 77[2mms[22m[39m
+ [32m✓[39m components/layout/Pricing.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+ [32m✓[39m app/(dashboard)/overview/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32m✓[39m app/(public)/courses/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m app/(public)/payment-being-processed/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 1638[2mms[22m[39m
+     [33m[2m✓[22m[39m polls for subscription and shows success [33m 1615[2mms[22m[39m
+ [32m✓[39m components/ui/CourseCard.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+ [32m✓[39m app/(dashboard)/payment-required/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32m✓[39m app/(dashboard)/learning/[courseSlug]/page.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32m✓[39m components/layout/Hero.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 61[2mms[22m[39m
+ [32m✓[39m components/layout/Navbar.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 81[2mms[22m[39m
+ [32m✓[39m components/ui/FreeAccessButton.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m components/layout/Footer.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 106[2mms[22m[39m
+ [32m✓[39m components/layout/StatsBar.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m components/layout/FeaturedCourses.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+ [32m✓[39m app/(public)/courses/[courseSlug]/page.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+ [32m✓[39m app/(dashboard)/learning/page.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m app/(public)/pricing/page.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m components/ui/VideoPlayer.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m app/(dashboard)/settings/page.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m app/(public)/page.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m app/(dashboard)/billing/page.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 14[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Suites 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m components/layout/ModuleLesson.test.tsx[2m [ components/layout/ModuleLesson.test.tsx ][22m
+[31m[1mError[22m: Failed to resolve import "@/actions/progress" from "components/layout/ModuleLesson.test.tsx". Does the file exist?[39m
+  Plugin: [35mvite:import-analysis[39m
+  File: [36m/Users/burak/Desktop/Projects/online_courses/components/layout/ModuleLesson.test.tsx[39m:38:0
+[33m  21 |  const __vi_import_3__ = await import("./ModuleLesson");
+  22 |  const __vi_import_4__ = await import("../provider/CourseProvider");
+  23 |  const __vi_import_5__ = await import("@/actions/progress");
+     |                                       ^
+  24 |  
+  25 |  import { describe, it, expect, vi, beforeEach } from "vitest";[39m
+[90m [2m❯[22m TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/config.js:[2m28999:43[22m[39m
+[90m [2m❯[22m TransformPluginContext.error node_modules/vite/dist/node/chunks/config.js:[2m28996:14[22m[39m
+[90m [2m❯[22m normalizeUrl node_modules/vite/dist/node/chunks/config.js:[2m27119:18[22m[39m
+[90m [2m❯[22m node_modules/vite/dist/node/chunks/config.js:[2m27177:32[22m[39m
+[90m [2m❯[22m TransformPluginContext.transform node_modules/vite/dist/node/chunks/config.js:[2m27145:4[22m[39m
+[90m [2m❯[22m EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/config.js:[2m28797:14[22m[39m
+[90m [2m❯[22m loadAndTransform node_modules/vite/dist/node/chunks/config.js:[2m22670:26[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m27 passed[39m[22m[90m (28)[39m
+[2m      Tests [22m [1m[32m135 passed[39m[22m[90m (135)[39m
+[2m   Start at [22m 16:27:43
+[2m   Duration [22m 4.97s[2m (transform 1.31s, setup 5.41s, import 3.88s, tests 5.04s, environment 15.38s)[22m
+
