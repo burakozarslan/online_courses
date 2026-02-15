@@ -2,14 +2,14 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ModuleLesson from "./ModuleLesson";
-import type { LessonType } from "../provider/CourseProvider";
+import type { LessonType } from "@components/provider/CourseProvider";
 
 // Mock CourseProvider
 const mockSetActiveLesson = vi.fn();
 const mockUpdateLessonProgressInState = vi.fn();
 const mockActiveLesson = null;
 
-vi.mock("../provider/CourseProvider", () => ({
+vi.mock("@components/provider/CourseProvider", () => ({
   useCourse: vi.fn(() => ({
     activeLesson: mockActiveLesson,
     setActiveLesson: mockSetActiveLesson,
@@ -22,20 +22,20 @@ vi.mock("../provider/CourseProvider", () => ({
 }));
 
 // Mock actions
-vi.mock("../../actions/progress", () => ({
+vi.mock("@actions/progress", () => ({
   resetLessonProgress: vi.fn(),
 }));
 
 // Mock config
-vi.mock("../../config", () => ({
+vi.mock("@/config", () => ({
   COMPLETION_THRESHOLD: 95,
 }));
 
 // Mock window.scrollTo
 global.window.scrollTo = vi.fn();
 
-import { useCourse } from "../provider/CourseProvider";
-import { resetLessonProgress } from "../../actions/progress";
+import { useCourse } from "@components/provider/CourseProvider";
+import { resetLessonProgress } from "@actions/progress";
 
 describe("ModuleLesson", () => {
   const createMockLesson = (overrides?: Partial<LessonType>): LessonType => ({

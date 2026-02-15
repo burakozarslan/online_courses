@@ -11,7 +11,7 @@ const { mockGetAllEnrollments, mockGetServerSession } = vi.hoisted(() => {
   };
 });
 
-vi.mock("../../../actions/getAllEnrollments", () => ({
+vi.mock("@actions/getAllEnrollments", () => ({
   getAllEnrollments: mockGetAllEnrollments,
 }));
 
@@ -20,7 +20,7 @@ vi.mock("next-auth", () => ({
 }));
 
 // Mock authOptions (needed for getServerSession in real app, mocked here)
-vi.mock("@/lib/auth", () => ({
+vi.mock("@lib/auth", () => ({
   authOptions: {},
 }));
 
@@ -36,7 +36,7 @@ describe("DashboardPage (Overview)", () => {
     const component = await DashboardPage();
     render(component);
 
-    expect(screen.getByText("Overview")).toBeInTheDocument();
+    expect(screen.getByText("Your Progress")).toBeInTheDocument();
     expect(screen.getByText("FREE PLAN")).toBeInTheDocument();
     expect(screen.getByText("No courses in progress yet.")).toBeInTheDocument();
     

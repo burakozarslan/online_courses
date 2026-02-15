@@ -1,6 +1,6 @@
 "use client";
 
-import { createEnrollment } from "@/actions/createEnrollment";
+import { createEnrollment } from "@actions/createEnrollment";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

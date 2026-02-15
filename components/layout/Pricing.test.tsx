@@ -3,12 +3,12 @@ import { render, screen } from "@testing-library/react";
 import Pricing from "./Pricing";
 
 // Mock FreeAccessButton
-vi.mock("../ui/FreeAccessButton", () => ({
+vi.mock("@components/ui/FreeAccessButton", () => ({
   default: () => <button data-testid="free-access-button">Start Learning for Free</button>,
 }));
 
 // Mock ProUpgradeButton
-vi.mock("../ui/ProUpgradeButton", () => ({
+vi.mock("@components/ui/ProUpgradeButton", () => ({
   default: () => <button data-testid="pro-upgrade-button">Upgrade to Pro</button>,
 }));
 

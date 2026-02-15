@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { db } from "@/lib/prisma";
-import { env } from "@/lib/env";
-import { stripe } from "@/lib/stripe";
+import { db } from "@lib/prisma";
+import { env } from "@lib/env";
+import { stripe } from "@lib/stripe";
 
 export async function POST(req: NextRequest) {
   const webhookSecret = env.STRIPE_WEBHOOK_SECRET;

@@ -9,14 +9,14 @@ import {
   MessageSquare,
 } from "lucide-react";
 import Link from "next/link";
-import VideoPlayer from "@/components/ui/VideoPlayer";
-import CourseModule from "@/components/layout/CourseModule";
+import VideoPlayer from "@components/ui/VideoPlayer";
+import CourseModule from "@components/layout/CourseModule";
 import { useState } from "react";
-import { useCourse } from "@/components/provider/CourseProvider";
+import { useCourse } from "@components/provider/CourseProvider";
 import type {
   LessonType,
   ModuleType,
-} from "@/components/provider/CourseProvider";
+} from "@components/provider/CourseProvider";
 
 export default function CourseDetails() {
   const { course } = useCourse();

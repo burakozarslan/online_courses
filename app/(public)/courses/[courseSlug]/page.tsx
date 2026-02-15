@@ -9,10 +9,10 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
-import { getCourseBySlug } from "@/actions/getCourseBySlug";
-import { checkEnrollment } from "@/actions/checkEnrollment";
+import { getCourseBySlug } from "@actions/getCourseBySlug";
+import { checkEnrollment } from "@actions/checkEnrollment";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@lib/auth";
 import { notFound } from "next/navigation";
 import EnrollButton from "./EnrollButton";
 import {
@@ -20,7 +20,7 @@ import {
   formatDurationFromSeconds,
   calculateModuleDurationInSeconds,
   calculateFormattedCourseDuration,
-} from "@/lib/courseUtils";
+} from "@lib/courseUtils";
 
 import type { Metadata } from "next";
 

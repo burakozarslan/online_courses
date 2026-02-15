@@ -1,4 +1,4 @@
-import CourseCardSkeleton from "@/components/ui/CourseCardSkeleton";
+import CourseCardSkeleton from "@components/ui/CourseCardSkeleton";
 import { Search, Filter } from "lucide-react";
 
 export default function CoursesLoading() {

@@ -1,6 +1,6 @@
 "use client";
 
-import { registerUser } from "@/actions/register";
+import { registerUser } from "@actions/register";
 import { Lock } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";

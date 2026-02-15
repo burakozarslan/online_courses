@@ -10,7 +10,7 @@ const { mockGetSubscriptionDetails } = vi.hoisted(() => {
   };
 });
 
-vi.mock("../../../actions/subscription", () => ({
+vi.mock("@actions/subscription", () => ({
   getSubscriptionDetails: mockGetSubscriptionDetails,
 }));
 

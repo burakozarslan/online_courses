@@ -11,11 +11,11 @@ const { mockGetCourseBySlug, mockCheckEnrollment } = vi.hoisted(() => {
   };
 });
 
-vi.mock("../../../../actions/getCourseBySlug", () => ({
+vi.mock("@actions/getCourseBySlug", () => ({
   getCourseBySlug: mockGetCourseBySlug,
 }));
 
-vi.mock("../../../../actions/checkEnrollment", () => ({
+vi.mock("@actions/checkEnrollment", () => ({
   checkEnrollment: mockCheckEnrollment,
 }));
 

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { CreditCard, CheckCircle2, AlertCircle, Calendar } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { manageMembership, cancelDowngrade } from "@/actions/subscription";
+import { manageMembership, cancelDowngrade } from "@actions/subscription";
 import { useRouter } from "next/navigation";
 
 type MessageType = {

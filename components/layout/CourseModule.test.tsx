@@ -2,13 +2,13 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import CourseModule from "./CourseModule";
-import type { ModuleType } from "../provider/CourseProvider";
+import type { ModuleType } from "@components/provider/CourseProvider";
 
 // Mock CourseProvider
 const mockSetActiveLesson = vi.fn();
 const mockActiveLesson = null;
 
-vi.mock("../provider/CourseProvider", () => ({
+vi.mock("@components/provider/CourseProvider", () => ({
   useCourse: vi.fn(() => ({
     activeLesson: mockActiveLesson,
     setActiveLesson: mockSetActiveLesson,
@@ -32,7 +32,7 @@ vi.mock("@/config", () => ({
   COMPLETION_THRESHOLD: 95,
 }));
 
-import { useCourse } from "../provider/CourseProvider";
+import { useCourse } from "@components/provider/CourseProvider";
 
 describe("CourseModule", () => {
   const createMockModule = (overrides?: Partial<ModuleType>): ModuleType => ({

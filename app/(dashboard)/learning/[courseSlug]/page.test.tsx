@@ -9,16 +9,16 @@ const { mockUseCourse } = vi.hoisted(() => {
     mockUseCourse: vi.fn(),
   };
 });
-vi.mock("../../../../components/provider/CourseProvider", () => ({
+vi.mock("@components/provider/CourseProvider", () => ({
   useCourse: mockUseCourse,
 }));
 
 // Mock other components to simplify test
-vi.mock("../../../../components/ui/VideoPlayer", () => ({
+vi.mock("@components/ui/VideoPlayer", () => ({
   default: () => <div data-testid="video-player">Video Player</div>,
 }));
 
-vi.mock("../../../../components/layout/CourseModule", () => ({
+vi.mock("@components/layout/CourseModule", () => ({
   default: ({ module }: any) => <div data-testid="course-module">{module.title}</div>,
 }));
 

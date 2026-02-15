@@ -1,7 +1,7 @@
-import Sidebar from "@/components/layout/Sidebar";
-import { CourseProvider } from "@/components/provider/CourseProvider";
+import Sidebar from "@components/layout/Sidebar";
+import { CourseProvider } from "@components/provider/CourseProvider";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({

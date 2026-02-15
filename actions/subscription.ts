@@ -1,9 +1,9 @@
 "use server";
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/prisma";
-import { stripe } from "@/lib/stripe";
+import { authOptions } from "@lib/auth";
+import { db } from "@lib/prisma";
+import { stripe } from "@lib/stripe";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 

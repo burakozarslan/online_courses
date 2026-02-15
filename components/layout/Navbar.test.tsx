@@ -9,7 +9,7 @@ vi.mock("next-auth", () => ({
 }));
 
 // Mock authOptions
-vi.mock("@/lib/auth", () => ({
+vi.mock("@lib/auth", () => ({
   authOptions: {},
 }));
 

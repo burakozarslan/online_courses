@@ -10,7 +10,7 @@ import { Pool } from "pg";
 // OR if you don't have aliases, use a relative path:
 // import { PrismaClient } from '../app/generated/prisma'
 
-import { env } from "@/lib/env";
+import { env } from "@lib/env";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 

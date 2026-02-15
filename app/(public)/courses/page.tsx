@@ -1,8 +1,8 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { db } from "@/lib/prisma";
+import { db } from "@lib/prisma";
 import Link from "next/link";
-import { getAllCourses } from "@/actions/getAllCourses";
-import { getAllCategories } from "@/actions/getAllCategories";
+import { getAllCourses } from "@actions/getAllCourses";
+import { getAllCategories } from "@actions/getAllCategories";
 import { CourseSearchBar } from "./_components/CourseSearchBar";
 
 const ITEMS_PER_PAGE = 3;
