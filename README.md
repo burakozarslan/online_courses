@@ -108,6 +108,51 @@ The LMS features a sophisticated persistence layer for student learning:
 
 ---
 
+## 📂 Project Structure
+
+The project follows a modular and intuitive structure designed for scalability and maintainability:
+
+```text
+.
+├── actions/                # Server Actions (Business logic & Database mutations)
+│   ├── checkEnrollment.ts  # Logic to verify student course access
+│   ├── createEnrollment.ts # Enrollment creation logic
+│   ├── getAllCategories.ts # Fetching course categories for filtering
+│   ├── getAllCourses.ts    # Main course retrieval with search/pagination
+│   ├── progress.ts         # Video progress & lesson completion tracking
+│   ├── subscription.ts     # Stripe subscription state management
+│   └── register.ts         # User registration & profile initialization
+├── app/                    # Next.js App Router (Routing & Pages)
+│   ├── (auth)/             # Authentication routes (Login, Register)
+│   ├── (dashboard)/        # Protected student & billing routes
+│   │   ├── billing/        # Subscription & payment management
+│   │   ├── learning/       # Course learning environment
+│   │   ├── overview/       # Student progress summary
+│   │   └── settings/       # Account & profile management
+│   ├── (public)/           # Unprotected routes (Landing, Course Catalog)
+│   │   ├── courses/        # Catalog with search & filtering
+│   │   └── pricing/        # Membership plan comparison
+│   └── api/                # API Route Handlers
+│       ├── auth/           # NextAuth configuration
+│       ├── checkout/       # Stripe Checkout Session creation
+│       └── webhooks/       # Stripe Webhook event handlers
+├── components/             # Reusable UI Components
+│   ├── layout/             # Shared structural components (Sidebar, Navbar)
+│   ├── provider/           # React Context Providers (Course, Session)
+│   └── ui/                 # Core UI building blocks (VideoPlayer, Cards)
+├── lib/                    # Shared Utilities & Configurations
+│   ├── auth.ts             # NextAuth strategies & callbacks
+│   ├── prisma.ts           # Database client singleton
+│   ├── stripe.ts           # Stripe client initialization
+│   └── courseUtils.ts      # Formatting & course-specific helpers
+├── prisma/                 # Database Layer
+│   ├── schema.prisma       # Database model definitions
+│   └── seed.ts             # Production & development seeding logic
+└── e2e_tests/              # Playwright End-to-End test suites
+```
+
+---
+
 ## 🏁 Getting Started
 
 1.  **Clone & Install**:
