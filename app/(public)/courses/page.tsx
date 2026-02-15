@@ -1,13 +1,14 @@
-import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { db } from "@/lib/prisma";
 import Link from "next/link";
 import { getAllCourses } from "@/actions/getAllCourses";
 import { getAllCategories } from "@/actions/getAllCategories";
+import { CourseSearchBar } from "./_components/CourseSearchBar";
 
 const ITEMS_PER_PAGE = 3;
 
 type PageProps = {
-  searchParams: Promise<{ page?: string; category?: string }>;
+  searchParams: Promise<{ page?: string; category?: string; search?: string }>;
 };
 
 // Helper function to get difficulty dots
@@ -50,11 +51,13 @@ export default async function CoursesPage({ searchParams }: PageProps) {
   const resolvedSearchParams = await searchParams;
   const currentPage = Number(resolvedSearchParams.page) || 1;
   const selectedCategory = resolvedSearchParams.category;
+  const searchQuery = resolvedSearchParams.search;
 
   // Helper function to build course URLs with params
   const buildCourseUrl = (overrides: {
     page?: number;
     category?: string | null;
+    search?: string;
   }) => {
     const params = new URLSearchParams();
 
@@ -63,14 +66,16 @@ export default async function CoursesPage({ searchParams }: PageProps) {
       overrides.category === null
         ? undefined
         : overrides.category ?? selectedCategory;
+    const search = overrides.search ?? searchQuery;
 
-        if (category) params.set("category", category);
-        if (page > 1) params.set("page", page.toString());
+    if (category) params.set("category", category);
+    if (search) params.set("search", search);
+    if (page > 1) params.set("page", page.toString());
 
     return params.toString() ? `/courses?${params}` : "/courses";
   };
 
-  // Fetch total count of published courses (with category filter)
+  // Fetch total count of published courses (with category and search filters)
   const totalCourses = await db.course.count({
     where: {
       isPublished: true,
@@ -81,16 +86,30 @@ export default async function CoursesPage({ searchParams }: PageProps) {
           },
         },
       }),
+      ...(searchQuery && {
+        OR: [
+          { title: { contains: searchQuery, mode: 'insensitive' } },
+          { description: { contains: searchQuery, mode: 'insensitive' } },
+          { 
+            modules: { 
+              some: { 
+                title: { contains: searchQuery, mode: 'insensitive' } 
+              } 
+            }
+          },
+        ],
+      }),
     },
   });
 
   const totalPages = Math.ceil(totalCourses / ITEMS_PER_PAGE);
 
-  // Fetch courses with pagination and category filter
+  // Fetch courses with pagination, category filter, and search
   const courses = await getAllCourses(
     currentPage,
     ITEMS_PER_PAGE,
-    selectedCategory
+    selectedCategory,
+    searchQuery
   );
 
   // Fetch all categories
@@ -133,20 +152,22 @@ export default async function CoursesPage({ searchParams }: PageProps) {
             </h1>
 
             {/* <!-- Search Bar --> */}
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="relative grow">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
-                <input
-                  type="text"
-                  placeholder="Search modules (e.g. 'Postgres', 'React')..."
-                  className="w-full pl-12 pr-4 py-3 bg-neutral-0 border border-neutral-300 text-body focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 placeholder-neutral-400 transition-colors"
-                />
+            <CourseSearchBar />
+
+            {/* <!-- Search Indicator --> */}
+            {searchQuery && (
+              <div className="mt-4 flex items-center gap-2">
+                <span className="text-caption text-neutral-600">
+                  Searching for: <strong>{searchQuery}</strong>
+                </span>
+                <Link
+                  href={buildCourseUrl({ search: '', page: 1 })}
+                  className="text-caption text-brand-600 hover:underline"
+                >
+                  Clear search
+                </Link>
               </div>
-              <button className="px-6 py-3 bg-neutral-900 text-neutral-0 text-body font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2">
-                <Filter className="size-4" />
-                Filter
-              </button>
-            </div>
+            )}
 
             {/* <!-- Tags --> */}
             <div className="flex flex-wrap gap-2 mt-4">

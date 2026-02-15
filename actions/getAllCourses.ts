@@ -3,7 +3,8 @@ import { db } from "@/lib/prisma";
 export async function getAllCourses(
   page: number,
   itemsPerPage: number,
-  category?: string
+  category?: string,
+  searchQuery?: string
 ) {
   const courses = await db.course.findMany({
     where: {
@@ -14,6 +15,19 @@ export async function getAllCourses(
             name: category,
           },
         },
+      }),
+      ...(searchQuery && {
+        OR: [
+          { title: { contains: searchQuery, mode: 'insensitive' } },
+          { description: { contains: searchQuery, mode: 'insensitive' } },
+          { 
+            modules: { 
+              some: { 
+                title: { contains: searchQuery, mode: 'insensitive' } 
+              } 
+            }
+          },
+        ],
       }),
     },
     include: {
