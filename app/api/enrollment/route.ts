@@ -4,6 +4,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@lib/auth";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const enrollmentSchema = z.object({
   courseSlug: z.string().min(1),
 });
