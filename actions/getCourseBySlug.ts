@@ -1,4 +1,4 @@
-import { db } from "@/lib/prisma";
+import { db } from "@lib/prisma";
 import { z } from "zod";
 
 const getCourseBySlugSchema = z.object({

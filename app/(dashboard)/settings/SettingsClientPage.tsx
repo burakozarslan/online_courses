@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Settings, Key, CheckCircle2, AlertCircle } from "lucide-react";
-import { updatePassword } from "@/actions/settings";
+import { updatePassword } from "@actions/settings";
 
 type MessageType = {
   type: "success" | "error";

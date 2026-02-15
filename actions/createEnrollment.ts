@@ -1,8 +1,8 @@
 "use server";
 
-import { db } from "@/lib/prisma";
+import { db } from "@lib/prisma";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@lib/auth";
 import { checkEnrollment } from "./checkEnrollment";
 import { z } from "zod";
 

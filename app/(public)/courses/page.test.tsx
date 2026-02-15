@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom/vitest"
 import CoursesPage from "./page";
 
 // Mock server actions and db
@@ -8,20 +9,33 @@ const { mockGetAllCourses } = vi.hoisted(() => {
     mockGetAllCourses: vi.fn(),
   };
 });
-vi.mock("../../../actions/getAllCourses", () => ({
+vi.mock("@actions/getAllCourses", () => ({
   getAllCourses: mockGetAllCourses,
 }));
 
+// Mock next/navigation
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+  }),
+  useSearchParams: () => ({
+    get: vi.fn().mockReturnValue(null),
+  }),
+}));
+
 // Mock db
-vi.mock("../../../lib/prisma", () => ({
+vi.mock("@lib/prisma", () => ({
   db: {
     course: {
       count: vi.fn(),
     },
+    category: {
+      findMany: vi.fn().mockResolvedValue([]),
+    },
   },
 }));
 
-import { db } from "../../../lib/prisma";
+import { db } from "@lib/prisma";
 
 describe("CoursesPage", () => {
   beforeEach(() => {

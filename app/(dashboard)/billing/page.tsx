@@ -1,4 +1,4 @@
-import { getSubscriptionDetails } from "@/actions/subscription";
+import { getSubscriptionDetails } from "@actions/subscription";
 import BillingClientPage from "./BillingClientPage";
 
 export default async function BillingPage() {

@@ -1,13 +1,13 @@
-import { getAllEnrollments } from "@/actions/getAllEnrollments";
+import { getAllEnrollments } from "@actions/getAllEnrollments";
 import Link from "next/link";
 import { BookOpen, Clock, Award } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@lib/auth";
 import {
   formatDurationFromMinutes,
   getCategoryName,
-} from "@/lib/courseUtils";
+} from "@lib/courseUtils";
 
 // Helper function to get difficulty dots (returns JSX, so kept in component)
 function getDifficultyDots(difficulty: "BEGINNER" | "INTERMEDIATE" | "ADVANCED") {

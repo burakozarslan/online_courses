@@ -12,7 +12,7 @@ const { mockGetAllEnrollments, mockGetServerSession, mockRedirect } = vi.hoisted
   };
 });
 
-vi.mock("../../../actions/getAllEnrollments", () => ({
+vi.mock("@actions/getAllEnrollments", () => ({
   getAllEnrollments: mockGetAllEnrollments,
 }));
 

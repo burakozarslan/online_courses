@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getEnrollment } from "@/actions/getEnrollment";
+import { getEnrollment } from "@actions/getEnrollment";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@lib/auth";
 import { z } from "zod";
 
 const enrollmentSchema = z.object({

@@ -12,7 +12,7 @@ import {
   BookOpen,
   HomeIcon
 } from "lucide-react";
-import DashboardLogoutButton from "@/components/auth/DashboardLogoutButton";
+import DashboardLogoutButton from "@components/auth/DashboardLogoutButton";
 
 export default function Sidebar() {
   const pathname = usePathname();

@@ -1,8 +1,8 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { db } from "@/lib/prisma";
+import { db } from "@lib/prisma";
 import Link from "next/link";
-import { getAllCourses } from "@/actions/getAllCourses";
-import { getAllCategories } from "@/actions/getAllCategories";
+import { getAllCourses } from "@actions/getAllCourses";
+import { getAllCategories } from "@actions/getAllCategories";
 import { CourseSearchBar } from "./_components/CourseSearchBar";
 
 const ITEMS_PER_PAGE = 3;
@@ -143,12 +143,12 @@ export default async function CoursesPage({ searchParams }: PageProps) {
       <section className="bg-neutral-50 border-b border-neutral-border py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <div className="flex items-center gap-2 text-brand-600 text-caption mb-2">
+            {/* <div className="flex items-center gap-2 text-brand-600 text-caption mb-2">
               <i data-lucide="library" className="w-4 h-4"></i>
               <span>ROOT / CATALOG</span>
-            </div>
+            </div> */}
             <h1 className="text-heading-1 text-neutral-900 mb-4">
-              Course Index
+              Course Catalog
             </h1>
 
             {/* <!-- Search Bar --> */}

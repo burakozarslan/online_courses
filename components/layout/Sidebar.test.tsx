@@ -27,7 +27,7 @@ vi.mock("next/link", () => ({
 }));
 
 // Mock DashboardLogoutButton
-vi.mock("../auth/DashboardLogoutButton", () => ({
+vi.mock("@components/auth/DashboardLogoutButton", () => ({
   default: () => <button data-testid="logout-button">Log Out</button>,
 }));
 

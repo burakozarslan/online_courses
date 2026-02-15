@@ -17,7 +17,7 @@ const { mockUpdatePassword } = vi.hoisted(() => {
   };
 });
 
-vi.mock("../../../actions/settings", () => ({
+vi.mock("@actions/settings", () => ({
   updatePassword: mockUpdatePassword,
 }));
 

@@ -39,7 +39,7 @@ vi.mock("media-chrome/react", () => ({
 }));
 
 // Mock CourseProvider
-vi.mock("../provider/CourseProvider", () => ({
+vi.mock("@components/provider/CourseProvider", () => ({
   useCourse: () => ({
     activeLesson: {
       id: "lesson-1",
@@ -61,7 +61,7 @@ vi.mock("../provider/CourseProvider", () => ({
   }),
 }));
 
-vi.mock("@/actions/progress", () => ({
+vi.mock("@actions/progress", () => ({
   updateLessonProgress: vi.fn(),
 }));
 

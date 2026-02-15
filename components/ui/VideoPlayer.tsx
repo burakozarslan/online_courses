@@ -16,8 +16,8 @@ import {
   MediaFullscreenButton,
 } from "media-chrome/react";
 import { SyntheticEvent, useRef } from "react";
-import { useCourse } from "../provider/CourseProvider";
-import { updateLessonProgress } from "@/actions/progress";
+import { useCourse } from "@components/provider/CourseProvider";
+import { updateLessonProgress } from "@actions/progress";
 
 export default function VideoPlayer() {
   const { activeLesson, setActiveLesson, setCourse } = useCourse();

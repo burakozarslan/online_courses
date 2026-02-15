@@ -9,12 +9,12 @@ const { mockGetAllCourses } = vi.hoisted(() => {
   };
 });
 
-vi.mock("../../actions/getAllCourses", () => ({
+vi.mock("@actions/getAllCourses", () => ({
   getAllCourses: mockGetAllCourses,
 }));
 
 // Mock CourseCard component
-vi.mock("../ui/CourseCard", () => ({
+vi.mock("@components/ui/CourseCard", () => ({
   default: ({
     title,
     description,

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import Stripe from "stripe";
-import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/prisma";
-import { env } from "@/lib/env";
+import { authOptions } from "@lib/auth";
+import { db } from "@lib/prisma";
+import { env } from "@lib/env";
 import { z } from "zod";
 
 // Initialize Stripe

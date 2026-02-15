@@ -10,7 +10,7 @@ const { mockGetCourseBySlug } = vi.hoisted(() => {
   };
 });
 
-vi.mock("../../../actions/getCourseBySlug", () => ({
+vi.mock("@actions/getCourseBySlug", () => ({
   getCourseBySlug: mockGetCourseBySlug,
 }));
 

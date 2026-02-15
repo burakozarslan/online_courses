@@ -1,8 +1,8 @@
 "use client";
 
 import { Check } from "lucide-react";
-import FreeAccessButton from "@/components/ui/FreeAccessButton";
-import ProUpgradeButton from "@/components/ui/ProUpgradeButton";
+import FreeAccessButton from "@components/ui/FreeAccessButton";
+import ProUpgradeButton from "@components/ui/ProUpgradeButton";
 
 export default function PricingPage() {
 

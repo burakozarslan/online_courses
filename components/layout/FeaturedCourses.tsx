@@ -1,6 +1,6 @@
-import CourseCard from "../ui/CourseCard";
-import { getAllCourses } from "@/actions/getAllCourses";
-import { calculateFormattedCourseDuration } from "@/lib/courseUtils";
+import CourseCard from "@components/ui/CourseCard";
+import { getAllCourses } from "@actions/getAllCourses";
+import { calculateFormattedCourseDuration } from "@lib/courseUtils";
 
 export default async function FeaturedCourses() {
   // Fetch 3 latest courses

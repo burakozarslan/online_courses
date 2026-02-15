@@ -19,7 +19,7 @@ vi.mock("next/navigation", () => ({
 
 // Mock server action
 const mockRegisterUser = vi.fn();
-vi.mock("@/actions/register", () => ({
+vi.mock("@actions/register", () => ({
   registerUser: (prevState: any, formData: FormData) => mockRegisterUser(prevState, formData),
 }));
 

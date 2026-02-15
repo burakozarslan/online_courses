@@ -19,7 +19,12 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@actions/*": ["./actions/*"],
+      "@components/*": ["./components/*"],
+      "@lib/*": ["./lib/*"],
+      "@app/*": ["./app/*"],
+      "@types/*": ["./types/*"]
     }
   },
   "include": [
@@ -30,5 +35,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "prisma", "**/*.test.ts", "**/*.test.tsx", "vitest.setup.ts", "vitest.config.mts", "playwright.config.ts", "e2e_tests"]
+  "exclude": ["node_modules", "prisma", "e2e_tests", "vitest.config.mts", "vitest.setup.ts"]
 }

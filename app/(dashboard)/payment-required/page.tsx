@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Lock, CreditCard, CheckCircle2, Info } from "lucide-react";
-import { getCourseBySlug } from "@/actions/getCourseBySlug";
+import { getCourseBySlug } from "@actions/getCourseBySlug";
 import { CheckoutButton } from "./CheckoutButton";
 
 type PageProps = {

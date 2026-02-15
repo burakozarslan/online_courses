@@ -4,8 +4,8 @@ import ModuleLesson from "./ModuleLesson";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { COMPLETION_THRESHOLD } from "@/config";
-import type { ModuleType, LessonType } from "../provider/CourseProvider";
-import { useCourse } from "../provider/CourseProvider";
+import type { ModuleType, LessonType } from "@components/provider/CourseProvider";
+import { useCourse } from "@components/provider/CourseProvider";
 
 interface CourseModuleProps {
   module: ModuleType;

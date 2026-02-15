@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { PlayCircle, Menu, GitGraph } from "lucide-react";
-import { getAllEnrollments } from "@/actions/getAllEnrollments";
+import { getAllEnrollments } from "@actions/getAllEnrollments";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@lib/auth";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);

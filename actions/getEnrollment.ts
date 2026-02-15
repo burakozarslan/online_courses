@@ -1,7 +1,7 @@
-import { db } from "@/lib/prisma";
+import { db } from "@lib/prisma";
 import { Course } from "@/app/generated/prisma/client";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@lib/auth";
 import { unstable_cache } from "next/cache";
 import { z } from "zod";
 

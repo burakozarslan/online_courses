@@ -4,9 +4,9 @@ import { Check, Play, RotateCw } from "lucide-react";
 import { COMPLETION_THRESHOLD } from "@/config";
 import type { Course, Lesson } from "@/courses";
 import { Dispatch, SetStateAction } from "react";
-import type { LessonType } from "../provider/CourseProvider";
-import { useCourse } from "../provider/CourseProvider";
-import { resetLessonProgress } from "@/actions/progress";
+import type { LessonType } from "@components/provider/CourseProvider";
+import { useCourse } from "@components/provider/CourseProvider";
+import { resetLessonProgress } from "@actions/progress";
 
 interface ModuleLessonProps {
   lesson: LessonType;
