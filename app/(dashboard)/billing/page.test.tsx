@@ -3,9 +3,15 @@ import { render, screen } from "@testing-library/react";
 import BillingPage from "./page";
 
 // Mock server action
-const mockGetSubscriptionDetails = vi.fn();
-vi.mock("@/actions/subscription", () => ({
-  getSubscriptionDetails: () => mockGetSubscriptionDetails(),
+// Mock server action
+const { mockGetSubscriptionDetails } = vi.hoisted(() => {
+  return {
+    mockGetSubscriptionDetails: vi.fn(),
+  };
+});
+
+vi.mock("../../../actions/subscription", () => ({
+  getSubscriptionDetails: mockGetSubscriptionDetails,
 }));
 
 // Mock Client Component

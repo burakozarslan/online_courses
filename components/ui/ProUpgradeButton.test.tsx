@@ -17,7 +17,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 // Mock config
-vi.mock("@/config", () => ({
+vi.mock("../../config", () => ({
   proMembershipPriceId: "price_test_123",
 }));
 

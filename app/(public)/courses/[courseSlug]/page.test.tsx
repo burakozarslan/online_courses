@@ -3,14 +3,20 @@ import { render, screen } from "@testing-library/react";
 import CourseDetailPage from "./page";
 
 // Mock server actions
-const mockGetCourseBySlug = vi.fn();
-vi.mock("@/actions/getCourseBySlug", () => ({
-  getCourseBySlug: (slug: string) => mockGetCourseBySlug(slug),
+// Mock server actions
+const { mockGetCourseBySlug, mockCheckEnrollment } = vi.hoisted(() => {
+  return {
+    mockGetCourseBySlug: vi.fn(),
+    mockCheckEnrollment: vi.fn(),
+  };
+});
+
+vi.mock("../../../../actions/getCourseBySlug", () => ({
+  getCourseBySlug: mockGetCourseBySlug,
 }));
 
-const mockCheckEnrollment = vi.fn();
-vi.mock("@/actions/checkEnrollment", () => ({
-  checkEnrollment: () => mockCheckEnrollment(),
+vi.mock("../../../../actions/checkEnrollment", () => ({
+  checkEnrollment: mockCheckEnrollment,
 }));
 
 const mockGetServerSession = vi.fn();

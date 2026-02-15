@@ -3,13 +3,17 @@ import { render, screen } from "@testing-library/react";
 import CoursesPage from "./page";
 
 // Mock server actions and db
-const mockGetAllCourses = vi.fn();
-vi.mock("@/actions/getAllCourses", () => ({
-  getAllCourses: (page: number, limit: number) => mockGetAllCourses(page, limit),
+const { mockGetAllCourses } = vi.hoisted(() => {
+  return {
+    mockGetAllCourses: vi.fn(),
+  };
+});
+vi.mock("../../../actions/getAllCourses", () => ({
+  getAllCourses: mockGetAllCourses,
 }));
 
 // Mock db
-vi.mock("@/lib/prisma", () => ({
+vi.mock("../../../lib/prisma", () => ({
   db: {
     course: {
       count: vi.fn(),
@@ -17,7 +21,7 @@ vi.mock("@/lib/prisma", () => ({
   },
 }));
 
-import { db } from "@/lib/prisma";
+import { db } from "../../../lib/prisma";
 
 describe("CoursesPage", () => {
   beforeEach(() => {

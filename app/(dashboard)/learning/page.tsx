@@ -42,24 +42,17 @@ export default async function LearningPage() {
   const enrollments = await getAllEnrollments();
 
   return (
-    <main className="grow">
+    <main className="grow p-8">
       {/* Header */}
-      <section className="bg-neutral-50 border-b border-neutral-border py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <div className="flex items-center gap-2 text-brand-600 text-caption mb-2">
-              <BookOpen className="w-4 h-4" />
-              <span>DASHBOARD / ENROLLED</span>
-            </div>
-            <h1 className="text-heading-1 text-neutral-900 mb-4">
-              Enrolled Courses
-            </h1>
-            <p className="text-body text-neutral-600">
-              Continue learning from where you left off. Track your progress and complete your courses.
-            </p>
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="inline-flex items-center justify-center w-10 h-10 bg-brand-50 text-brand-700 border border-brand-100">
+            <BookOpen className="w-5 h-5" />
           </div>
+          <h1 className="text-heading-2 text-neutral-900">Enrolled Courses</h1>
         </div>
-      </section>
+        <p className="text-body text-neutral-500">Continue learning from where you left off. Track your progress and complete your courses.</p>
+      </div>
 
       {/* Enrolled Courses Grid */}
       <section className="py-12 bg-grid">
