@@ -17,9 +17,21 @@ import type {
   LessonType,
   ModuleType,
 } from "@components/provider/CourseProvider";
+import { getInitials } from "@/lib/stringUtils";
 
 export default function CourseDetails() {
   const { course } = useCourse();
+  const [showCopied, setShowCopied] = useState(false);
+
+  const handleShareClick = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
   function formatCourseDifficulty(difficulty: string) {
     if (difficulty === "BEGINNER") return "Beginner";
@@ -74,15 +86,6 @@ export default function CourseDetails() {
     return Math.round((totalProgress / totalDuration) * 100);
   }
 
-  function getInitials(name: string) {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  }
-
   if (!course) return <div>Loading...</div>;
 
   const overallProgress = calculateOverallProgress(course?.modules);
@@ -91,21 +94,20 @@ export default function CourseDetails() {
     <main className="">
       {/* <!-- Breadcrumb / Header --> */}
       <header className="h-16 bg-neutral-0 border-b border-neutral-200 flex items-center justify-between px-6 sticky top-0 z-10">
-        <div className="flex items-center gap-2 text-caption text-neutral-500">
-          <Link href="/dashboard" className="hover:text-neutral-900">
-            DASHBOARD
-          </Link>
-          <span>/</span>
-          <Link href="/my-courses" className="hover:text-neutral-900">
-            COURSES
-          </Link>
-          <span>/</span>
-          <span className="text-neutral-900 font-bold">NEXTJS_FULLSTACK</span>
-        </div>
         <div className="flex items-center gap-4">
-          <button className="text-caption text-neutral-500 hover:text-neutral-900 flex items-center gap-1">
-            <Share2 className="w-3 h-3" /> Share
-          </button>
+          <div className="relative">
+            <button
+              onClick={handleShareClick}
+              className="text-caption text-neutral-500 hover:text-neutral-900 flex items-center gap-1 cursor-pointer"
+            >
+              <Share2 className="size-4" /><span className="text-[14px] ml-1">Share</span>
+            </button>
+            {showCopied && (
+              <div className="absolute top-full left-0 mt-2 px-3 py-1.5 bg-neutral-900 text-neutral-0 text-caption whitespace-nowrap rounded shadow-lg animate-in fade-in slide-in-from-top-1 duration-200">
+                Copied to Clipboard!
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
