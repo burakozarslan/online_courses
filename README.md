@@ -119,37 +119,192 @@ The project follows a modular structure:
 │   ├── createEnrollment.ts # Enrollment creation logic
 │   ├── getAllCategories.ts # Fetching course categories for filtering
 │   ├── getAllCourses.ts    # Main course retrieval with search/pagination
+│   ├── getAllEnrollments.ts # Fetch all enrollments for a student
+│   ├── getCourseBySlug.ts  # Course details retrieval by slug
+│   ├── getEnrollment.ts    # Individual enrollment lookup
 │   ├── progress.ts         # Video progress & lesson completion tracking
+│   ├── register.ts         # User registration & profile initialization
+│   ├── settings.ts         # User settings management
 │   ├── subscription.ts     # Stripe subscription state management
-│   └── register.ts         # User registration & profile initialization
+│   └── index.ts            # Centralized action exports
 ├── app/                    # Next.js App Router (Routing & Pages)
 │   ├── (auth)/             # Authentication routes (Login, Register)
+│   │   ├── login/          # Login page
+│   │   └── register/       # Registration page
 │   ├── (dashboard)/        # Protected student & billing routes
 │   │   ├── billing/        # Subscription & payment management
 │   │   ├── learning/       # Course learning environment
-│   │   ├── overview/       # Student progress summary
+│   │   │   └── [courseSlug]/ # Dynamic course learning page
+│   │   ├── overview/       # Student progress summary dashboard
+│   │   ├── payment-required/ # Access restriction page for Pro courses
 │   │   └── settings/       # Account & profile management
 │   ├── (public)/           # Unprotected routes (Landing, Course Catalog)
-│   │   ├── courses/        # Catalog with search & filtering
+│   │   ├── courses/        # Course catalog with search & filtering
+│   │   │   ├── [courseSlug]/ # Individual course detail page
+│   │   │   └── _components/ # Course-specific components
+│   │   ├── payment-being-processed/ # Payment polling & verification page
 │   │   └── pricing/        # Membership plan comparison
-│   └── api/                # API Route Handlers
-│       ├── auth/           # NextAuth configuration
-│       ├── checkout/       # Stripe Checkout Session creation
-│       └── webhooks/       # Stripe Webhook event handlers
+│   ├── api/                # API Route Handlers
+│   │   ├── auth/           # NextAuth configuration
+│   │   ├── checkout/       # Stripe Checkout Session creation
+│   │   ├── check-subscription/ # Subscription status verification
+│   │   ├── enrollment/     # Enrollment status checks
+│   │   ├── settings/       # Settings update endpoints
+│   │   └── webhooks/       # Stripe Webhook event handlers
+│   │       └── stripe/     # Stripe-specific webhook processing
+│   └── generated/          # Auto-generated Prisma client code
+│       └── prisma/         # Prisma client types and models
 ├── components/             # Reusable UI Components
+│   ├── auth/               # Authentication-related components
 │   ├── layout/             # Shared structural components (Sidebar, Navbar)
 │   ├── provider/           # React Context Providers (Course, Session)
-│   └── ui/                 # Core UI building blocks (VideoPlayer, Cards)
+│   └── ui/                 # Core UI building blocks
+│       ├── VideoPlayer.tsx # Custom video player with progress tracking
+│       ├── CourseCard.tsx  # Course display card component
+│       ├── FreeAccessButton.tsx # Free course enrollment button
+│       ├── ProUpgradeButton.tsx # Pro upgrade CTA button
+│       └── Skeleton.tsx    # Loading skeleton components
 ├── lib/                    # Shared Utilities & Configurations
 │   ├── auth.ts             # NextAuth strategies & callbacks
+│   ├── auth-wrapper.ts     # Server-side auth utility wrappers
+│   ├── courseUtils.ts      # Formatting & course-specific helpers
+│   ├── env.ts              # Environment variable validation
 │   ├── prisma.ts           # Database client singleton
+│   ├── stringUtils.ts      # String manipulation utilities
 │   ├── stripe.ts           # Stripe client initialization
-│   └── courseUtils.ts      # Formatting & course-specific helpers
+│   └── utils.ts            # General utility functions (cn, etc.)
 ├── prisma/                 # Database Layer
 │   ├── schema.prisma       # Database model definitions
-│   └── seed.ts             # Production & development seeding logic
-└── e2e_tests/              # Playwright End-to-End test suites
+│   ├── seed.ts             # Production & development seeding logic
+│   └── migrations/         # Database migration history
+├── e2e_tests/              # Playwright End-to-End test suites
+├── types/                  # TypeScript type definitions
+│   └── next-auth.d.ts      # NextAuth type extensions
+└── public/                 # Static assets (images, videos, etc.)
+    └── screenshots/        # App screenshots for documentation
 ```
+
+---
+
+## 🗄️ Database Schema
+
+The application uses PostgreSQL with Prisma ORM. Below is the entity-relationship diagram showing the database structure:
+
+```mermaid
+erDiagram
+    User ||--o| Instructor : "has optional"
+    User ||--o| Student : "has optional"
+    User {
+        uuid id PK
+        string email UK
+        string name
+        string password
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    Instructor ||--o{ Course : "creates"
+    Instructor {
+        uuid id PK
+        uuid userId FK,UK
+        string title
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    Student ||--o{ Enrollment : "enrolls in"
+    Student ||--o{ LessonProgress : "tracks progress"
+    Student {
+        uuid id PK
+        uuid userId FK,UK
+        enum membership
+        string stripeCustomerId UK
+        string stripeSubscriptionId UK
+        string stripePriceId
+        datetime stripeCurrentPeriodEnd
+        boolean stripeCancelAtPeriodEnd
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    Course ||--o{ Module : "contains"
+    Course ||--o{ Enrollment : "enrolled by students"
+    Course }o--o{ Category : "belongs to"
+    Course {
+        uuid id PK
+        uuid instructorId FK
+        string title
+        string description
+        string imageUrl
+        string slug UK
+        enum difficulty
+        boolean isFree
+        boolean isPublished
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    Module ||--o{ Lesson : "contains"
+    Module {
+        uuid id PK
+        uuid courseId FK
+        string title
+        string description
+        int no
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    Lesson ||--o{ LessonProgress : "tracked by students"
+    Lesson ||--o{ Enrollment : "bookmarked as current"
+    Lesson {
+        uuid id PK
+        uuid moduleId FK
+        string title
+        string description
+        string videoUrl
+        int duration
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    Enrollment }o--o| Lesson : "current lesson"
+    Enrollment {
+        uuid id PK
+        uuid studentId FK
+        uuid courseId FK
+        uuid currentLessonId FK
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    LessonProgress {
+        uuid id PK
+        uuid studentId FK
+        uuid lessonId FK
+        int timePlayed
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    Category {
+        uuid id PK
+        string name UK
+        datetime createdAt
+        datetime updatedAt
+    }
+```
+
+### Key Relationships
+
+-   **User** → One-to-One with `Instructor` OR `Student` (role-based profiles)
+-   **Instructor** → One-to-Many with `Course` (instructors create multiple courses)
+-   **Course** → One-to-Many with `Module` (courses contain multiple modules)
+-   **Module** → One-to-Many with `Lesson` (modules contain multiple lessons)
+-   **Student** → Many-to-Many with `Course` through `Enrollment` (students enroll in courses)
+-   **Student** → Many-to-Many with `Lesson` through `LessonProgress` (tracks video progress)
+-   **Course** → Many-to-Many with `Category` (courses can have multiple categories)
+-   **Enrollment** → Optional reference to `Lesson` (bookmarks current lesson)
 
 ---
 
