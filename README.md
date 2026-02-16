@@ -1,24 +1,24 @@
-# Online Courses Platform (LMS) - Pro Portfolio Showcase
+# Online Courses Platform (LMS)
 
-A state-of-the-art, full-stack Learning Management System (LMS) built for the modern web. This project showcases senior-level proficiency in Next.js 16, complex database modeling, resilient payment processing, and high-quality UI/UX design.
+A full-stack Learning Management System built with Next.js 16, featuring database-driven content management, payment processing, and progress tracking.
 
-## 🌟 Elite Features & Functionality
+## 🌟 Features & Functionality
 
-### 1. Robust Learning Experience
--   **Intelligent Progress Tracking**: Seamlessly tracks lesson completion and video progress. Students can leave a lesson and return exactly where they left off.
--   **Dynamic Course Discovery**: Advanced search functionality with category filtering, difficulty indicators, and pagination.
--   **Interactive Video Player**: Custom-built media player using `media-chrome` and `react-player` with throttled persistence logic.
--   **Responsive Dashboards**: Specialized views for students to track their learning journey and for instructors to manage high-quality educational content.
+### 1. Learning Experience
+-   **Progress Tracking**: Tracks lesson completion and video progress so students can resume where they left off.
+-   **Course Discovery**: Search functionality with category filtering, difficulty indicators, and pagination.
+-   **Video Player**: Media player using `media-chrome` and `react-player` with throttled persistence.
+-   **Dashboards**: Student and instructor views for tracking progress and managing content.
 
-### 2. Enterprise-Grade Payment System
--   **Resilient Stripe Integration**: Uses Stripe Webhooks and a polling-based "Processing" strategy to ensure data consistency even if network interruptions occur during checkout.
--   **Tiered Membership**: Support for Free and Pro tiers with automated access control (RBAC) across the entire platform.
--   **Subscription Lifecycle**: Full management of subscription updates, renewals, and cancellations directly synchronized with the local database.
+### 2. Payment System
+-   **Stripe Integration**: Uses Stripe Webhooks and a polling-based approach to handle potential timing issues during checkout.
+-   **Tiered Membership**: Support for Free and Pro tiers with role-based access control.
+-   **Subscription Management**: Handles subscription updates, renewals, and cancellations synchronized with the database.
 
-### 3. Technical Excellence
--   **Full-Stack Type Safety**: End-to-end types with TypeScript and Zod validation for all Server Actions and API routes.
--   **Modern Architecture**: Leverages Next.js 16 App Router, Server Components, and Server Actions for optimal performance and SEO.
--   **Comprehensive Testing Suite**: Unit and integration tests with Vitest + Playwright for industrial-grade reliability.
+### 3. Technical Implementation
+-   **Type Safety**: TypeScript and Zod validation for Server Actions and API routes.
+-   **Architecture**: Built with Next.js 16 App Router, Server Components, and Server Actions.
+-   **Testing**: Unit and integration tests with Vitest and Playwright.
 
 ---
 
@@ -76,29 +76,29 @@ graph TD
 -   **State Management**: React Context (Course Provider) + Server Actions
 -   **Validation**: `zod`
 
-### Strategies & Best Practices
--   **Path Aliases**: Clean imports using `@/` for better maintainability.
--   **Throttled Updates**: Persistence of video progress is throttled (every 5 seconds) to minimize database load while maintaining high UX.
--   **Polling Strategy**: Implementation of a `PaymentBeingProcessed` page that polls the backend to verify webhook completion before allowing user access.
--   **Dockerization**: Multi-stage Docker builds for both development and production environments.
+### Implementation Details
+-   **Path Aliases**: Uses `@/` imports for cleaner code organization.
+-   **Throttled Updates**: Video progress is saved every 5 seconds to reduce database load.
+-   **Polling Strategy**: A `PaymentBeingProcessed` page polls the backend to verify webhook completion.
+-   **Dockerization**: Multi-stage Docker builds for development and production.
 
 ---
 
 ## 🏗 Deep Dive: Technical Implementation
 
-### 💳 Resilient Payment Flow
-Handling Stripe payments in a modern web app requires more than just a redirect. This project implements a **High-Availability Checkout Strategy**:
+### 💳 Payment Flow
+To handle potential timing issues with webhooks, the checkout flow includes a polling mechanism:
 
 1.  **Checkout Initiation**: User is redirected to Stripe Checkout with metadata (studentId, courseSlug).
 2.  **Webhook Processing**: Stripe sends a `checkout.session.completed` event to our API. Our server updates the Student record and **auto-enrolls** the student in the target course.
 3.  **Client-Side Polling (`payment-being-processed.tsx`)**: 
-    -   While the webhook processes in the background, the user is redirected to a custom processing page.
+    -   While the webhook processes in the background, the user is redirected to a processing page.
     -   This page polls `/api/check-subscription` and `/api/enrollment` every 2 seconds.
-    -   Once the database reflects the changes from the webhook, the UI transitions to a "Success" state and redirects the user to the course.
-    -   **Resiliency**: Includes a 60-second timeout and manual dashboard redirect options if the process takes longer than expected.
+    -   Once the database reflects the changes from the webhook, the UI shows a "Success" state and redirects the user to the course.
+    -   Includes a 60-second timeout and manual dashboard redirect option if needed.
 
 ### 🎥 Progress Tracking & Persistence
-The LMS features a sophisticated persistence layer for student learning:
+The platform includes a persistence layer for tracking student progress:
 
 -   **Client-Side**: The `VideoPlayer` component listens to `onProgress` events. It updates the global `CourseProvider` context immediately to reflect progress in the sidebar and UI.
 -   **Server-Side**: To avoid overwhelming the database with every second of video playback, the `updateLessonProgress` Server Action is **throttled**. It only commits to PostgreSQL when:
@@ -110,7 +110,7 @@ The LMS features a sophisticated persistence layer for student learning:
 
 ## 📂 Project Structure
 
-The project follows a modular and intuitive structure designed for scalability and maintainability:
+The project follows a modular structure:
 
 ```text
 .
@@ -180,7 +180,7 @@ The project follows a modular and intuitive structure designed for scalability a
 
 ## 🐳 Deployment
 
-Optimized for **Vercel** + **Neon PostgreSQL**. See [DEPLOYMENT.md](DEPLOYMENT.md) for the full production checklist.
+Configured for **Vercel** + **Neon PostgreSQL**. See [DEPLOYMENT.md](DEPLOYMENT.md) for deployment details.
 
 ---
-*Created with ❤️ as a professional portfolio showcase.*
+*Built with ❤️*
