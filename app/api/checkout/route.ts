@@ -5,6 +5,7 @@ import { authOptions } from "@lib/auth";
 import { db } from "@lib/prisma";
 import { env } from "@lib/env";
 import { z } from "zod";
+import { getBaseUrl } from "@lib/utils";
 
 // Initialize Stripe
 const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
@@ -79,9 +80,10 @@ export async function POST(req: NextRequest) {
 
     // 5. Create Stripe checkout session
     // Build success URL with courseSlug if present
+    const baseUrl = getBaseUrl(req);
     const successUrl = courseSlug 
-      ? `${env.NEXT_PUBLIC_BASE_URL}/payment-being-processed?success=true&course=${courseSlug}`
-      : `${env.NEXT_PUBLIC_BASE_URL}/payment-being-processed?success=true`;
+      ? `${baseUrl}/payment-being-processed?success=true&course=${courseSlug}`
+      : `${baseUrl}/payment-being-processed?success=true`;
 
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -93,7 +95,7 @@ export async function POST(req: NextRequest) {
         },
       ],
       success_url: successUrl,
-      cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/pricing`,
+      cancel_url: `${baseUrl}/pricing`,
       metadata: {
         userId: session.user.id,
         studentId: student.id,

@@ -1,56 +1,28 @@
-# Online Courses Platform
+# Online Courses Platform (LMS)
 
-A modern, full-stack online learning management system (LMS) built with Next.js 16, TypeScript, Prisma, and Stripe. This platform allows instructors to create and manage courses, multimedia lessons, and quizzes, while students can enroll, track progress, and obtain memberships.
+A full-stack Learning Management System built with Next.js 16, featuring database-driven content management, payment processing, and progress tracking.
 
-## 🚀 Key Features
+## 🌟 Features & Functionality
 
--   **User Roles & Authentication**: Secure authentication via NextAuth.js with support for Students and Instructors.
--   **Course Management**: Instructors can easily create, update, and organize courses with modules and lessons.
--   **Video Integration**: Seamless video lesson playback and tracking.
--   **Progress Tracking**: Real-time tracking of student progress through courses and individual lessons.
--   **Subscription & Payments**: Integrated Stripe checkout for Free and Pro membership plans.
--   **Interactive Dashboard**: Dedicated dashboards for both students (to view progress) and instructors (to manage content).
--   **Responsive Design**: Fully responsive UI built with Tailwind CSS.
+### 1. Learning Experience
+-   **Progress Tracking**: Tracks lesson completion and video progress so students can resume where they left off.
+-   **Course Discovery**: Search functionality with category filtering, difficulty indicators, and pagination.
+-   **Video Player**: Media player using `media-chrome` and `react-player` with throttled persistence.
+-   **Dashboards**: Student and instructor views for tracking progress and managing content.
 
-## 🛠 Tech Stack
+### 2. Payment System
+-   **Stripe Integration**: Uses Stripe Webhooks and a polling-based approach to handle potential timing issues during checkout.
+-   **Tiered Membership**: Support for Free and Pro tiers with role-based access control.
+-   **Subscription Management**: Handles subscription updates, renewals, and cancellations synchronized with the database.
 
-### Frontend
--   **Framework**: [Next.js 16](https://nextjs.org/) (App Directory)
--   **Language**: [TypeScript](https://www.typescriptlang.org/)
--   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
--   **Icons**: [Lucide React](https://lucide.dev/)
--   **Media**: `media-chrome`, `react-player`
+### 3. Technical Implementation
+-   **Type Safety**: TypeScript and Zod validation for Server Actions and API routes.
+-   **Architecture**: Built with Next.js 16 App Router, Server Components, and Server Actions.
+-   **Testing**: Unit and integration tests with Vitest and Playwright.
 
-### Backend & Database
--   **API**: Next.js Server Components & Server Actions
--   **Database**: PostgreSQL
--   **ORM**: [Prisma](https://www.prisma.io/)
--   **Auth**: [NextAuth.js](https://next-auth.js.org/)
--   **Payments**: [Stripe](https://stripe.com/)
+---
 
-### DevOps & Testing
--   **Containerization**: Docker & Docker Compose
--   **Unit Testing**: [Vitest](https://vitest.dev/)
--   **E2E Testing**: [Playwright](https://playwright.dev/)
-
-## 📂 Project Structure
-
-```bash
-.
-├── app
-│   ├── (auth)          # Authentication routes (login, register)
-│   ├── (dashboard)     # Protected dashboard routes (student & instructor)
-│   ├── (public)        # Public facing pages (landing page, course details)
-│   └── api             # API routes and webhooks
-├── components          # Reusable UI components
-├── lib                 # Utility functions and shared logic
-├── prisma              # Database schema and migrations
-├── actions             # Server actions for mutations
-├── public              # Static assets
-└── e2e_tests           # End-to-end tests
-```
-
-## 🔄 Workflow
+## 🔄 Application Workflow
 
 ```mermaid
 graph TD
@@ -58,121 +30,157 @@ graph TD
     Landing -->|Sign Up / Login| Auth{Authenticated?}
     Auth -- No --> Login[Login Page]
     Auth -- Yes --> Dashboard[Dashboard]
-    
-    subgraph Student Flow
+
+    subgraph "Purchase & Enrollment Flow"
         Dashboard --> Browse[Browse Courses]
-        Browse -->|Select Course| CourseDetails[Course Details]
-        CourseDetails -->|Free Course| Enroll[Enroll]
-        CourseDetails -->|Pro Course| Subscription{Has Pro Membership?}
-        Subscription -- No --> Checkout[Stripe Checkout]
-        Checkout -->|Success| Enroll
-        Subscription -- Yes --> Enroll
-        Enroll --> Watch[Watch Lessons]
-        Watch --> Progress[Track Progress]
+        Browse -->|Select Course| Details[Course Details]
+        Details -->|Free| Enroll[Auto Enroll]
+        Details -->|Pro| CheckSub{Has Pro?}
+        CheckSub -- No --> Stripe[Stripe Checkout]
+        Stripe -->|Success Redirect| Polling[Payment Processing Page]
+        Polling -->|Poll API| CheckDB{Webhook Done?}
+        CheckDB -- No --> Polling
+        CheckDB -- Yes --> Success[Success & Auto-Enroll]
+        Success --> Learning
     end
 
-    subgraph Instructor Flow
-        Dashboard --> Manage[Manage Courses]
-        Manage --> Create[Create/Edit Course]
-        Create --> AddContent[Add Modules & Lessons]
-        AddContent --> Publish[Publish Course]
+    subgraph "Learning & Persistence Flow"
+        Learning[Learning Page] --> Play[Play Video]
+        Play -->|Local Progress| UI[Update Progress Bar]
+        Play -->|Throttled 5s| DB[(Save to PostgreSQL)]
+        DB -->|Resume| Play
+    end
+
+    subgraph "Instructor Flow"
+        Dashboard --> Manage[Manage Content]
+        Manage --> Create[Create Course/Module/Lesson]
+        Create --> Publish[Publish to Catalog]
     end
 ```
 
-## ⚙️ Environment Variables
+---
 
-Create a `.env` or `.env.local` file in the root directory with the following variables:
+## 🛠 Tech Stack & Strategies
 
-```bash
-# Database Connect URL
-DATABASE_URL="postgresql://user:password@localhost:5432/online_courses"
+### Core Technologies
+-   **Framework**: [Next.js 16](https://nextjs.org/) (App Router, Server Actions)
+-   **Language**: [TypeScript](https://www.typescriptlang.org/)
+-   **Database**: PostgreSQL via [Prisma ORM](https://www.prisma.io/)
+-   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) (using `@theme` design tokens)
+-   **Authentication**: [NextAuth.js](https://next-auth.js.org/) (Custom RBAC)
+-   **Payments**: [Stripe API](https://stripe.com/) (Checkout & Webhooks)
 
-# Authentication (NextAuth)
-NEXTAUTH_SECRET="your-super-secret-key"
-NEXTAUTH_URL="http://localhost:3000"
+### Client-Side Tools
+-   **Video**: `media-chrome`, `react-player`
+-   **Icons**: `lucide-react`
+-   **State Management**: React Context (Course Provider) + Server Actions
+-   **Validation**: `zod`
 
-# Stripe Configuration
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+### Implementation Details
+-   **Path Aliases**: Uses `@/` imports for cleaner code organization.
+-   **Throttled Updates**: Video progress is saved every 5 seconds to reduce database load.
+-   **Polling Strategy**: A `PaymentBeingProcessed` page polls the backend to verify webhook completion.
+-   **Dockerization**: Multi-stage Docker builds for development and production.
 
-# Application URLs
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
+---
+
+## 🏗 Deep Dive: Technical Implementation
+
+### 💳 Payment Flow
+To handle potential timing issues with webhooks, the checkout flow includes a polling mechanism:
+
+1.  **Checkout Initiation**: User is redirected to Stripe Checkout with metadata (studentId, courseSlug).
+2.  **Webhook Processing**: Stripe sends a `checkout.session.completed` event to our API. Our server updates the Student record and **auto-enrolls** the student in the target course.
+3.  **Client-Side Polling (`payment-being-processed.tsx`)**: 
+    -   While the webhook processes in the background, the user is redirected to a processing page.
+    -   This page polls `/api/check-subscription` and `/api/enrollment` every 2 seconds.
+    -   Once the database reflects the changes from the webhook, the UI shows a "Success" state and redirects the user to the course.
+    -   Includes a 60-second timeout and manual dashboard redirect option if needed.
+
+### 🎥 Progress Tracking & Persistence
+The platform includes a persistence layer for tracking student progress:
+
+-   **Client-Side**: The `VideoPlayer` component listens to `onProgress` events. It updates the global `CourseProvider` context immediately to reflect progress in the sidebar and UI.
+-   **Server-Side**: To avoid overwhelming the database with every second of video playback, the `updateLessonProgress` Server Action is **throttled**. It only commits to PostgreSQL when:
+    1.  The user has watched 5 new seconds of content.
+    2.  The user manually seeks to a different part of the video.
+-   **Resume Logic**: When a student opens a lesson, the system fetches their `LessonProgress` and automatically seeks the video to their last saved timestamp.
+
+---
+
+## 📂 Project Structure
+
+The project follows a modular structure:
+
+```text
+.
+├── actions/                # Server Actions (Business logic & Database mutations)
+│   ├── checkEnrollment.ts  # Logic to verify student course access
+│   ├── createEnrollment.ts # Enrollment creation logic
+│   ├── getAllCategories.ts # Fetching course categories for filtering
+│   ├── getAllCourses.ts    # Main course retrieval with search/pagination
+│   ├── progress.ts         # Video progress & lesson completion tracking
+│   ├── subscription.ts     # Stripe subscription state management
+│   └── register.ts         # User registration & profile initialization
+├── app/                    # Next.js App Router (Routing & Pages)
+│   ├── (auth)/             # Authentication routes (Login, Register)
+│   ├── (dashboard)/        # Protected student & billing routes
+│   │   ├── billing/        # Subscription & payment management
+│   │   ├── learning/       # Course learning environment
+│   │   ├── overview/       # Student progress summary
+│   │   └── settings/       # Account & profile management
+│   ├── (public)/           # Unprotected routes (Landing, Course Catalog)
+│   │   ├── courses/        # Catalog with search & filtering
+│   │   └── pricing/        # Membership plan comparison
+│   └── api/                # API Route Handlers
+│       ├── auth/           # NextAuth configuration
+│       ├── checkout/       # Stripe Checkout Session creation
+│       └── webhooks/       # Stripe Webhook event handlers
+├── components/             # Reusable UI Components
+│   ├── layout/             # Shared structural components (Sidebar, Navbar)
+│   ├── provider/           # React Context Providers (Course, Session)
+│   └── ui/                 # Core UI building blocks (VideoPlayer, Cards)
+├── lib/                    # Shared Utilities & Configurations
+│   ├── auth.ts             # NextAuth strategies & callbacks
+│   ├── prisma.ts           # Database client singleton
+│   ├── stripe.ts           # Stripe client initialization
+│   └── courseUtils.ts      # Formatting & course-specific helpers
+├── prisma/                 # Database Layer
+│   ├── schema.prisma       # Database model definitions
+│   └── seed.ts             # Production & development seeding logic
+└── e2e_tests/              # Playwright End-to-End test suites
 ```
 
-*See `STRIPE_SETUP.md` for detailed Stripe configuration.*
+---
 
 ## 🏁 Getting Started
 
-1.  **Clone the repository:**
+1.  **Clone & Install**:
     ```bash
     git clone https://github.com/yourusername/online-courses.git
-    cd online-courses
-    ```
-
-2.  **Install dependencies:**
-    ```bash
     npm install
     ```
-
-3.  **Set up the database:**
-    Ensure you have PostgreSQL running (or use Docker).
+2.  **Database Setup**:
     ```bash
     npx prisma generate
     npx prisma db push
     ```
-
-4.  **Run the development server:**
+3.  **Environment Variables**:
+    Configure `.env` with `DATABASE_URL`, `NEXTAUTH_SECRET`, and `STRIPE_SECRET_KEY`.
+4.  **Run**:
     ```bash
     npm run dev
     ```
 
-    Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🧪 Quality Assurance
 
-## 🐳 Docker Support
+-   **Unit Tests**: `npm run test` (Vitest + React Testing Library)
+-   **E2E Tests**: `npm run test:e2e` (Playwright)
+-   **Linting**: `npm run lint` (ESLint 9)
 
-To run the application using Docker Compose:
+## 🐳 Deployment
 
-```bash
-# Start development environment
-npm run docker:dev
+Configured for **Vercel** + **Neon PostgreSQL**. See [DEPLOYMENT.md](DEPLOYMENT.md) for deployment details.
 
-# Start production build
-npm run docker:start
-```
-
-## 🧪 Testing
-
--   **Unit Tests**: `npm run test`
--   **E2E Tests**: `npm run test:e2e`
-
-## 🚀 Deployment
-
-Ready to deploy to production? See the comprehensive deployment guides:
-
-- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Complete step-by-step guide for deploying to Vercel with Neon Database
-- **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Common commands, API routes, and troubleshooting tips
-
-### Quick Deployment Overview
-
-1. **Database**: Sign up for [Neon](https://neon.tech) (serverless PostgreSQL)
-2. **Hosting**: Deploy to [Vercel](https://vercel.com) (optimized for Next.js)
-3. **Payments**: Configure [Stripe](https://stripe.com) webhooks
-4. **Seed**: Use production-safe seeding with secure credentials
-
-```bash
-# Helper script for production seeding
-./scripts/seed-production.sh
-```
-
-See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions on:
-- Creating Neon database account
-- Configuring Vercel environment variables
-- Running production migrations
-- Secure database seeding
-- Stripe webhook setup
-- Production verification checklist
-
-## 📄 License
-
-This project is licensed under the MIT License.
+---
+*Built with ❤️*
