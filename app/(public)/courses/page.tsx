@@ -134,7 +134,7 @@ export default async function CoursesPage({ searchParams }: PageProps) {
     };
   });
 
-  const startResult = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+  const startResult = totalCourses > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0;
   const endResult = Math.min(currentPage * ITEMS_PER_PAGE, totalCourses);
 
   return (
