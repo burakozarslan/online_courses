@@ -17,6 +17,7 @@ import type {
   LessonType,
   ModuleType,
 } from "@components/provider/CourseProvider";
+import { getInitials } from "@/lib/stringUtils";
 
 export default function CourseDetails() {
   const { course } = useCourse();
@@ -83,15 +84,6 @@ export default function CourseDetails() {
 
     if (totalDuration === 0) return 0;
     return Math.round((totalProgress / totalDuration) * 100);
-  }
-
-  function getInitials(name: string) {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
   }
 
   if (!course) return <div>Loading...</div>;

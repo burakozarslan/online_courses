@@ -13,6 +13,7 @@ import {
   HomeIcon
 } from "lucide-react";
 import DashboardLogoutButton from "@components/auth/DashboardLogoutButton";
+import { getInitials } from "@/lib/stringUtils";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -38,7 +39,7 @@ export default function Sidebar() {
       <div className="p-6 border-b border-neutral-800">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-neutral-800 border border-neutral-700 flex items-center justify-center text-neutral-200 font-bold">
-            JD
+            {getInitials(session.data?.user?.name || "User")}
           </div>
           <div>
             <div className="text-body text-neutral-200">{session.data?.user?.name}</div>
