@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getAllCourses } from "@actions/getAllCourses";
 import { getAllCategories } from "@actions/getAllCategories";
 import { CourseSearchBar } from "./_components/CourseSearchBar";
+import { formatDurationFromMinutes } from "@lib/courseUtils";
 
 const ITEMS_PER_PAGE = 3;
 
@@ -34,12 +35,6 @@ function getDifficultyDots(difficulty: "BEGINNER" | "INTERMEDIATE" | "ADVANCED")
   );
 }
 
-// Helper function to format duration from minutes
-function formatDuration(totalMinutes: number) {
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-  return `${hours}h ${minutes}m`;
-}
 
 // Helper function to map category name to badge text
 function getCategoryBadge(categories: { name: string }[]) {
@@ -253,7 +248,7 @@ export default async function CoursesPage({ searchParams }: PageProps) {
                     <div className="flex items-center justify-between pt-4 border-t border-neutral-100 text-caption text-neutral-600">
                       <span className="flex items-center gap-1.5">
                         <i data-lucide="clock" className="w-3 h-3"></i>{" "}
-                        {formatDuration(course.totalDuration)}
+                        {formatDurationFromMinutes(course.totalDuration)}
                       </span>
                       <span>{course._count.modules} Modules</span>
                     </div>

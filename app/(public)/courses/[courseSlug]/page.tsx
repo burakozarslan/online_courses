@@ -21,6 +21,7 @@ import {
   calculateModuleDurationInSeconds,
   calculateFormattedCourseDuration,
 } from "@lib/courseUtils";
+import { getInitials } from "@/lib/stringUtils";
 
 import type { Metadata } from "next";
 
@@ -135,10 +136,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
                   </p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-neutral-800 flex items-center justify-center font-bold text-neutral-400">
-                      {course.instructor.user.name
-                        ?.split(" ")
-                        .map((n) => n[0])
-                        .join("") || "?"}
+                      {getInitials(course.instructor.user.name || "?")}
                     </div>
                     <div>
                       <p className="text-body font-medium">

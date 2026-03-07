@@ -18,7 +18,12 @@ import type {
   ModuleType,
 } from "@components/provider/CourseProvider";
 import { getInitials } from "@/lib/stringUtils";
-
+import {
+  formatCourseDifficulty,
+  formatDurationFromSeconds,
+  calculateModuleDurationInSeconds,
+  calculateFormattedCourseDuration,
+} from "@lib/courseUtils";
 export default function CourseDetails() {
   const { course } = useCourse();
   const [showCopied, setShowCopied] = useState(false);
@@ -33,38 +38,6 @@ export default function CourseDetails() {
     }
   };
 
-  function formatCourseDifficulty(difficulty: string) {
-    if (difficulty === "BEGINNER") return "Beginner";
-    else if (difficulty === "INTERMEDIATE") return "Intermediate";
-    else return "Advanced";
-  }
-
-  function formatToHoursMinutes(totalSeconds: number) {
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-
-    if (hours > 0) {
-      return `${hours}h ${minutes}m`;
-    }
-    return `${minutes}m`;
-  }
-
-  function calculateModuleDurationInSeconds(lessons: LessonType[]) {
-    const totalDurationInSeconds = lessons.reduce(
-      (prev, current) => prev + current.duration,
-      0
-    );
-    return totalDurationInSeconds;
-  }
-
-  function calculateFormattedCourseDuration(modules: ModuleType[]) {
-    const totalDurationInSeconds = modules.reduce(
-      (prev, current) =>
-        prev + calculateModuleDurationInSeconds(current.lessons),
-      0
-    );
-    return formatToHoursMinutes(totalDurationInSeconds);
-  }
 
   function calculateOverallProgress(modules: ModuleType[]) {
     const totalDuration = modules.reduce(

@@ -7,6 +7,7 @@ import { Dispatch, SetStateAction } from "react";
 import type { LessonType } from "@components/provider/CourseProvider";
 import { useCourse } from "@components/provider/CourseProvider";
 import { resetLessonProgress } from "@actions/progress";
+import { formatVideoDuration } from "@lib/courseUtils";
 
 interface ModuleLessonProps {
   lesson: LessonType;
@@ -34,11 +35,6 @@ const InactiveIcon = () => {
   );
 };
 
-function formatDurationhhmm(seconds: number) {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  return `${m}:${s.toString().padStart(2, "0")}`;
-}
 
 function handleScrollToVideoPlayer() {
   window.scrollTo({ top: 280, left: 0, behavior: "smooth" });
@@ -110,7 +106,7 @@ export default function ModuleLesson({ lesson }: ModuleLessonProps) {
           </div>
         </div>
         <span className="absolute bottom-1 right-1 bg-neutral-900 text-white text-[10px] px-1">
-          {formatDurationhhmm(lesson.duration)}
+          {formatVideoDuration(lesson.duration)}
         </span>
       </div>
       <div className="flex-1">
