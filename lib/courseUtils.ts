@@ -18,6 +18,17 @@ export function formatDurationFromSeconds(totalSeconds: number): string {
 }
 
 /**
+ * Formats duration from seconds to mm:ss format
+ * @param seconds - Total duration in seconds
+ * @returns Formatted string like "12:05" or "2:30"
+ */
+export function formatVideoDuration(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
+/**
  * Formats duration from minutes to hours and minutes
  * @param totalMinutes - Total duration in minutes
  * @returns Formatted string like "2h 30m"
